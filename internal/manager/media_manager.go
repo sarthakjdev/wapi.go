@@ -1,4 +1,4 @@
-package wapi
+package manager
 
 type MediaManager struct {
 	requester requestClient

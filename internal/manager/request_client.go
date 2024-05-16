@@ -1,4 +1,4 @@
-package wapi
+package manager
 
 import (
 	"fmt"
