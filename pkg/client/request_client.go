@@ -1,6 +1,8 @@
-package client
+package wapi
 
-import "fmt"
+import (
+	"fmt"
+)
 
 type requestClient struct {
 }
@@ -9,6 +11,6 @@ func NewRequestClient() *requestClient {
 	return &requestClient{}
 }
 
-func (*requestClient) requestCloudApi() {
+func (requestClientInstance *requestClient) requestCloudApi() {
 	fmt.Println("Requesting cloud api")
 }

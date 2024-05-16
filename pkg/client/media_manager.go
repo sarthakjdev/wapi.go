@@ -1,21 +1,24 @@
-package manager
+package wapi
 
 type MediaManager struct {
-	BaseManager
+	requester requestClient
 }
 
-func NewMediaManager() *MediaManager {
-	return &MediaManager{}
+func NewMediaManager(requester requestClient) *MediaManager {
+	return &MediaManager{
+		requester: requester,
+	}
 }
 
 func (mm *MediaManager) UploadMedia() {
-	// Play media
+	// upload media
+
 }
 
 func (mm *MediaManager) GetMediaUrlById() {
-	// Play media
+
 }
 
 func (mm *MediaManager) GetMediaIdByUrl() {
-	// Play media
+
 }
