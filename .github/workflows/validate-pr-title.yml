@@ -1,0 +1,30 @@
+name: Check PR title
+
+on:
+    pull_request:
+        types:
+            - opened
+            - reopened
+            - edited
+            - synchronize
+            - review_requested
+            - auto_merge_enabled
+
+concurrency:
+    group: check-pr-title-${{ github.head_ref || github.run_id }}
+    cancel-in-progress: true
+
+jobs:
+    validate-pr-title:
+        name: Validate PR title
+        runs-on: ubuntu-latest
+        permissions:
+            statuses: write
+        timeout-minutes: 10
+        steps:
+            - uses: aslafy-z/conventional-pr-title-action@v3
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              with:
+                  success-state: "PR Title follows the Conventional Commits spec"
+                  failure-state: "PR Title does not follow the Conventional Commits spec"
