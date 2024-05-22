@@ -14,7 +14,12 @@ type TextMessage struct {
 
 type TextMessageConfigs struct {
 	Text         string `json:"text" validate:"required"`
-	AllowPreview bool   `json:"allowPreview"`
+	AllowPreview bool   `json:"allowPreview,omitempty"`
+}
+
+type TextMessageApiPayloadText struct {
+	Body         string `json:"body" validate:"required"`
+	AllowPreview bool   `json:"preview_url,omitempty"`
 }
 
 func (m *TextMessage) SetText(text string) {
@@ -23,7 +28,6 @@ func (m *TextMessage) SetText(text string) {
 
 func NewTextMessage(configs TextMessageConfigs) (*TextMessage, error) {
 	err := utils.GetValidator().Struct(configs)
-	fmt.Println("error validating text message config", err)
 	if err != nil {
 		return nil, fmt.Errorf("error validating text message config: %v", err)
 	}
@@ -35,30 +39,25 @@ func NewTextMessage(configs TextMessageConfigs) (*TextMessage, error) {
 
 // This function convert the TextMessage struct to WhatsApp API compatible JSON
 func (m *TextMessage) ToJson(configs ApiCompatibleJsonConverterConfigs) ([]byte, error) {
-	// validate the configs
-	err := utils.GetValidator().Struct(configs)
-	if err != nil {
+	if err := utils.GetValidator().Struct(configs); err != nil {
 		return nil, fmt.Errorf("error validating configs: %v", err)
 	}
 
-	data := make(map[string]interface{})
+	jsonData := TextMessageApiPayload{
+		BaseMessagePayload: NewBaseMessagePayload(configs.SendToPhoneNumber, "text"),
+		Text: TextMessageApiPayloadText{
+			Body:         m.Text,
+			AllowPreview: m.AllowPreview,
+		},
+	}
+
 	if configs.ReplyToMessageId != "" {
-		// add the context key to the json
-		data["context"] = map[string]interface{}{
-			"message_id": configs.ReplyToMessageId,
+		jsonData.Context = &Context{
+			MessageId: configs.ReplyToMessageId,
 		}
 	}
 
-	data["type"] = "text"
-	data["messaging_product"] = "whatsapp"
-	data["recipient_type"] = "individual"
-	data["text"] = map[string]interface{}{
-		"body":        m.Text,
-		"preview_url": m.AllowPreview,
-	}
-	data["to"] = configs.SendToPhoneNumber
-
-	jsonToReturn, err := json.Marshal(data)
+	jsonToReturn, err := json.Marshal(jsonData)
 
 	if err != nil {
 		return nil, fmt.Errorf("error marshalling json: %v", err)
