@@ -1,47 +1,50 @@
 package wapi
 
 import (
+	"fmt"
+
 	manager "github.com/sarthakjdev/wapi.go/internal/manager"
 	"github.com/sarthakjdev/wapi.go/internal/webhook"
+	"github.com/sarthakjdev/wapi.go/utils"
 )
 
 // Client represents a WhatsApp client.
 type Client struct {
 	Media             manager.MediaManager
-	message           manager.MessageManager
+	Message           manager.MessageManager
 	Phone             manager.PhoneNumbersManager
 	webhook           webhook.Webhook
 	phoneNumberId     string
 	apiAccessToken    string
-	host              string
 	businessAccountId string
-	apiVersion        string
 }
 
 // ClientConfig represents the configuration options for the WhatsApp client.
 type ClientConfig struct {
-	phoneNumberId     string
-	apiAccessToken    string
-	businessAccountId string
-	webhookPath       string
-	webhookSecret     string
-	webhookServerPort int
+	PhoneNumberId     string `validate:"required"`
+	ApiAccessToken    string `validate:"required"`
+	BusinessAccountId string `validate:"required"`
+	WebhookPath       string `validate:"required"`
+	WebhookSecret     string `validate:"required"`
+	WebhookServerPort int
 }
 
 // NewWapiClient creates a new instance of Client.
-func NewWapiClient(options ClientConfig) *Client {
-	requester := *manager.NewRequestClient()
-
+func New(configs ClientConfig) *Client {
+	err := utils.GetValidator().Struct(configs)
+	if err != nil {
+		fmt.Println("error validating client config", err)
+		return nil
+	}
+	requester := *manager.NewRequestClient(configs.PhoneNumberId, configs.ApiAccessToken)
 	return &Client{
 		Media:             *manager.NewMediaManager(requester),
-		message:           *manager.NewMessageManager(requester),
+		Message:           *manager.NewMessageManager(requester),
 		Phone:             *manager.NewPhoneNumbersManager(requester),
-		webhook:           *webhook.NewWebhook(webhook.WebhookManagerConfig{Path: options.webhookPath, Secret: options.webhookSecret, Port: options.webhookServerPort}),
-		phoneNumberId:     options.phoneNumberId,
-		apiAccessToken:    options.apiAccessToken,
-		host:              "graph.facebook.com",
-		businessAccountId: options.businessAccountId,
-		apiVersion:        "v19.0",
+		webhook:           *webhook.NewWebhook(webhook.WebhookManagerConfig{Path: configs.WebhookPath, Secret: configs.WebhookSecret, Port: configs.WebhookServerPort}),
+		phoneNumberId:     configs.PhoneNumberId,
+		apiAccessToken:    configs.ApiAccessToken,
+		businessAccountId: configs.BusinessAccountId,
 	}
 }
 

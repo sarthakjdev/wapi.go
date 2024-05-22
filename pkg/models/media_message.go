@@ -1,7 +1,6 @@
 package models
 
 type BaseMediaMessage struct {
-	BaseMessage
 }
 
 type AudioMessage struct {

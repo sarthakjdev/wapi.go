@@ -12,7 +12,6 @@ func NewMediaManager(requester requestClient) *MediaManager {
 
 func (mm *MediaManager) UploadMedia() {
 	// upload media
-
 }
 
 func (mm *MediaManager) GetMediaUrlById() {
