@@ -1,6 +1,4 @@
-package models 
-
+package models
 
 type LocateMessage struct {
-	
 }
