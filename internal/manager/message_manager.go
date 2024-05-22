@@ -22,7 +22,9 @@ type SendMessageParams struct {
 // ! TODO: return the structured response from here
 func (mm *MessageManager) Send(params SendMessageParams) {
 	// pass the phone number in this toJson method of every message
-	body, err := params.Message.ToJson()
+	body, err := params.Message.ToJson(models.ApiCompatibleJsonConverterConfigs{
+		SendToPhoneNumber: params.PhoneNumber,
+	})
 	if err != nil {
 		// emit a error event here
 		return

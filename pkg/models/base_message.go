@@ -14,6 +14,11 @@ const (
 	MessageTypeTemplate    MessageType = "template"
 )
 
+type ApiCompatibleJsonConverterConfigs struct {
+	ReplyToMessageId  string
+	SendToPhoneNumber string
+}
+
 type BaseMessage interface {
-	ToJson() ([]byte, error)
+	ToJson(configs ApiCompatibleJsonConverterConfigs) ([]byte, error)
 }

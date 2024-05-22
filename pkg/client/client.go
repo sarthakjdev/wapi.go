@@ -30,11 +30,10 @@ type ClientConfig struct {
 }
 
 // NewWapiClient creates a new instance of Client.
-func New(configs ClientConfig) *Client {
+func New(configs ClientConfig) (*Client, error) {
 	err := utils.GetValidator().Struct(configs)
 	if err != nil {
-		fmt.Println("error validating client config", err)
-		return nil
+		return nil, fmt.Errorf("error validating client config", err)
 	}
 	requester := *manager.NewRequestClient(configs.PhoneNumberId, configs.ApiAccessToken)
 	return &Client{
@@ -45,7 +44,7 @@ func New(configs ClientConfig) *Client {
 		phoneNumberId:     configs.PhoneNumberId,
 		apiAccessToken:    configs.ApiAccessToken,
 		businessAccountId: configs.BusinessAccountId,
-	}
+	}, nil
 }
 
 // GetPhoneNumberId returns the phone number ID associated with the client.
