@@ -3,7 +3,7 @@ package wapi
 import (
 	"fmt"
 
-	manager "github.com/sarthakjdev/wapi.go/internal/manager"
+	"github.com/sarthakjdev/wapi.go/internal/manager"
 	"github.com/sarthakjdev/wapi.go/internal/webhook"
 	"github.com/sarthakjdev/wapi.go/utils"
 )
