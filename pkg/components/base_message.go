@@ -13,6 +13,7 @@ const (
 	TemplateMessageType    MessageType = "template"
 	ReactionMessageType    MessageType = "reaction"
 	StickerMessageType     MessageType = "sticker"
+	ImageMessageType       MessageType = "image"
 )
 
 type ApiCompatibleJsonConverterConfigs struct {
