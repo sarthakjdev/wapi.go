@@ -69,7 +69,7 @@ type listMessage struct {
 
 type ListMessageParams struct {
 	ButtonText string `json:"-" validate:"required"`
-	BodyText   string `json:"-" validate:"required`
+	BodyText   string `json:"-" validate:"required"`
 }
 
 func NewListMessage(params ListMessageParams) (*listMessage, error) {
