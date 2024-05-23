@@ -56,9 +56,20 @@ func main() {
 		return
 	}
 
+	reactionMessage, err := wapiComponents.NewReactionMessage(wapiComponents.ReactionMessageParams{
+		MessageId: "wamid.HBgMOTE5NjQzNTAwNTQ1FQIAERgSQzVGOTlFMzExQ0VCQTg0MUFCAA==",
+		Emoji:     "😍",
+	})
+
+	if err != nil {
+		fmt.Println("error creating reaction message", err)
+		return
+	}
+
 	// send the message
 	whatsappClient.Message.Send(manager.SendMessageParams{Message: textMessage, PhoneNumber: "919643500545"})
 	whatsappClient.Message.Send(manager.SendMessageParams{Message: contactMessage, PhoneNumber: "919643500545"})
 	whatsappClient.Message.Send(manager.SendMessageParams{Message: locationMessage, PhoneNumber: "919643500545"})
+	whatsappClient.Message.Send(manager.SendMessageParams{Message: reactionMessage, PhoneNumber: "919643500545"})
 
 }
