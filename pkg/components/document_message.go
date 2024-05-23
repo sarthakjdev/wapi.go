@@ -23,9 +23,7 @@ func NewDocumentMessage(params DocumentMessageConfigs) (*DocumentMessage, error)
 		return nil, fmt.Errorf("error validating configs: %v", err)
 	}
 
-	return &DocumentMessage{
-		
-	}, nil
+	return &DocumentMessage{}, nil
 }
 
 func (dm *DocumentMessage) ToJson(configs ApiCompatibleJsonConverterConfigs) ([]byte, error) {
