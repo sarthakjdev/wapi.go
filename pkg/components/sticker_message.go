@@ -48,7 +48,7 @@ func (sticker *StickerMessage) ToJson(configs ApiCompatibleJsonConverterConfigs)
 	}
 
 	jsonData := StickerMessageApiPayload{
-		BaseMessagePayload: NewBaseMessagePayload(configs.SendToPhoneNumber, StickerMessageType),
+		BaseMessagePayload: NewBaseMessagePayload(configs.SendToPhoneNumber, MessageTypeSticker),
 		Sticker:            *sticker,
 	}
 

@@ -43,7 +43,7 @@ func (audio *AudioMessage) ToJson(configs ApiCompatibleJsonConverterConfigs) ([]
 	}
 
 	jsonData := AudioMessageApiPayload{
-		BaseMessagePayload: NewBaseMessagePayload(configs.SendToPhoneNumber, AudioMessageType),
+		BaseMessagePayload: NewBaseMessagePayload(configs.SendToPhoneNumber, MessageTypeAudio),
 		Audio:              *audio,
 	}
 

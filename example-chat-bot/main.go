@@ -32,44 +32,80 @@ func main() {
 		Text: "Hello, from wapi.go",
 	})
 
-	if err != nil {
-		fmt.Println("error creating text message", err)
-		return
-	}
+	// if err != nil {
+	// 	fmt.Println("error creating text message", err)
+	// 	return
+	// }
 
-	contact := wapiComponents.NewContact(wapiComponents.ContactName{
-		FormattedName: "Sarthak Jain",
-		FirstName:     "Sarthak",
-	})
+	// contactMessage, err := wapiComponents.NewContactMessage([]wapiComponents.Contact{
+	// 	*wapiComponents.NewContact(wapiComponents.ContactName{
+	// 		FormattedName: "Sarthak Jain",
+	// 		FirstName:     "Sarthak",
+	// 	})})
 
-	contactMessage, err := wapiComponents.NewContactMessage([]wapiComponents.Contact{*contact})
+	// if err != nil {
+	// 	fmt.Println("error creating contact message", err)
+	// 	return
+	// }
 
-	if err != nil {
-		fmt.Println("error creating contact message", err)
-		return
-	}
+	// locationMessage, err := wapiComponents.NewLocationMessage(28.7041, 77.1025)
 
-	locationMessage, err := wapiComponents.NewLocationMessage(28.7041, 77.1025)
+	// if err != nil {
+	// 	fmt.Println("error creating location message", err)
+	// 	return
+	// }
 
-	if err != nil {
-		fmt.Println("error creating location message", err)
-		return
-	}
+	// reactionMessage, err := wapiComponents.NewReactionMessage(wapiComponents.ReactionMessageParams{
+	// 	MessageId: "wamid.HBgMOTE5NjQzNTAwNTQ1FQIAERgSQzVGOTlFMzExQ0VCQTg0MUFCAA==",
+	// 	Emoji:     "😍",
+	// })
 
-	reactionMessage, err := wapiComponents.NewReactionMessage(wapiComponents.ReactionMessageParams{
-		MessageId: "wamid.HBgMOTE5NjQzNTAwNTQ1FQIAERgSQzVGOTlFMzExQ0VCQTg0MUFCAA==",
-		Emoji:     "😍",
-	})
-
-	if err != nil {
-		fmt.Println("error creating reaction message", err)
-		return
-	}
+	// if err != nil {
+	// 	fmt.Println("error creating reaction message", err)
+	// 	return
+	// }
 
 	// send the message
 	whatsappClient.Message.Send(manager.SendMessageParams{Message: textMessage, PhoneNumber: "919643500545"})
-	whatsappClient.Message.Send(manager.SendMessageParams{Message: contactMessage, PhoneNumber: "919643500545"})
-	whatsappClient.Message.Send(manager.SendMessageParams{Message: locationMessage, PhoneNumber: "919643500545"})
-	whatsappClient.Message.Send(manager.SendMessageParams{Message: reactionMessage, PhoneNumber: "919643500545"})
+	// whatsappClient.Message.Send(manager.SendMessageParams{Message: contactMessage, PhoneNumber: "919643500545"})
+	// whatsappClient.Message.Send(manager.SendMessageParams{Message: locationMessage, PhoneNumber: "919643500545"})
+	// whatsappClient.Message.Send(manager.SendMessageParams{Message: reactionMessage, PhoneNumber: "919643500545"})
+
+	listMessage, err := wapiComponents.NewListMessage(wapiComponents.ListMessageParams{
+		ButtonText: "Button 1",
+		BodyText:   "Body 1",
+	})
+
+	if err != nil {
+		fmt.Println("error creating list message", err)
+		return
+	}
+
+	listSectionRow, err := wapiComponents.NewListSectionRow("1", "Title 1", "Description 1")
+
+	if err != nil {
+		fmt.Println("error creating list section row", err)
+		return
+	}
+
+	listSection, err := wapiComponents.NewListSection("Section1")
+
+	if err != nil {
+		fmt.Println("error creating list section row", err)
+		return
+	}
+
+	listSection.AddRow(listSectionRow)
+	listMessage.AddSection(listSection)
+	jsonData, err := listMessage.ToJson(wapiComponents.ApiCompatibleJsonConverterConfigs{SendToPhoneNumber: "919643500545"})
+
+	if err != nil {
+		fmt.Println("error converting message to json", err)
+		return
+	}
+
+	fmt.Println(string(jsonData))
+
+	whatsappClient.Message.Send(manager.SendMessageParams{Message: listMessage, PhoneNumber: "919643500545"})
 
 }

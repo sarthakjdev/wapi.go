@@ -48,7 +48,7 @@ func (image *ImageMessage) ToJson(configs ApiCompatibleJsonConverterConfigs) ([]
 	}
 
 	jsonData := ImageMessageApiPayload{
-		BaseMessagePayload: NewBaseMessagePayload(configs.SendToPhoneNumber, ImageMessageType),
+		BaseMessagePayload: NewBaseMessagePayload(configs.SendToPhoneNumber, MessageTypeImage),
 		Image:              *image,
 	}
 

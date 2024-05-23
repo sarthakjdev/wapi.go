@@ -156,7 +156,7 @@ func (m *ContactMessage) ToJson(configs ApiCompatibleJsonConverterConfigs) ([]by
 		return nil, fmt.Errorf("error validating configs: %v", err)
 	}
 	jsonData := ContactMessageApiPayload{
-		BaseMessagePayload: NewBaseMessagePayload(configs.SendToPhoneNumber, ContactMessageType),
+		BaseMessagePayload: NewBaseMessagePayload(configs.SendToPhoneNumber, MessageTypeContact),
 		Contacts:           m.Contacts,
 	}
 

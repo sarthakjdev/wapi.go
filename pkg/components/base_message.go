@@ -3,17 +3,17 @@ package components
 type MessageType string
 
 const (
-	LocationMessageType    MessageType = "location"
-	AudioMessageType       MessageType = "audio"
-	VideoMessageType       MessageType = "video"
-	DocumentMessageType    MessageType = "document"
-	TextMessageType        MessageType = "text"
-	ContactMessageType     MessageType = "contacts"
-	InteractiveMessageType MessageType = "interactive"
-	TemplateMessageType    MessageType = "template"
-	ReactionMessageType    MessageType = "reaction"
-	StickerMessageType     MessageType = "sticker"
-	ImageMessageType       MessageType = "image"
+	MessageTypeLocation    MessageType = "location"
+	MessageTypeAudio       MessageType = "audio"
+	MessageTypeVideo       MessageType = "video"
+	MessageTypeDocument    MessageType = "document"
+	MessageTypeText        MessageType = "text"
+	MessageTypeContact     MessageType = "contacts"
+	MessageTypeInteractive MessageType = "interactive"
+	MessageTypeTemplate    MessageType = "template"
+	MessageTypeReaction    MessageType = "reaction"
+	MessageTypeSticker     MessageType = "sticker"
+	MessageTypeImage       MessageType = "image"
 )
 
 type ApiCompatibleJsonConverterConfigs struct {

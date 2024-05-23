@@ -7,33 +7,33 @@ import (
 	"github.com/sarthakjdev/wapi.go/utils"
 )
 
-type DocumentMessage struct {
+type ProductListMessage struct {
 }
 
-type DocumentMessageApiPayload struct {
+type ProductListMessageParams struct {
+}
+
+type ProductListMessageApiPayload struct {
 	BaseMessagePayload
-	Document DocumentMessage `json:"document" validate:"required"`
+	Interactive ProductListMessage `json:"interactive" validate:"required"`
 }
 
-type DocumentMessageConfigs struct {
-}
-
-func NewDocumentMessage(params DocumentMessageConfigs) (*DocumentMessage, error) {
+func NewProductListMessage(params ProductListMessageParams) (*ProductListMessage, error) {
 	if err := utils.GetValidator().Struct(params); err != nil {
 		return nil, fmt.Errorf("error validating configs: %v", err)
 	}
 
-	return &DocumentMessage{}, nil
+	return &ProductListMessage{}, nil
 }
 
-func (dm *DocumentMessage) ToJson(configs ApiCompatibleJsonConverterConfigs) ([]byte, error) {
+func (m *ProductListMessage) ToJson(configs ApiCompatibleJsonConverterConfigs) ([]byte, error) {
 	if err := utils.GetValidator().Struct(configs); err != nil {
 		return nil, fmt.Errorf("error validating configs: %v", err)
 	}
 
-	jsonData := DocumentMessageApiPayload{
-		BaseMessagePayload: NewBaseMessagePayload(configs.SendToPhoneNumber, MessageTypeDocument),
-		Document:           *dm,
+	jsonData := ProductListMessageApiPayload{
+		BaseMessagePayload: NewBaseMessagePayload(configs.SendToPhoneNumber, MessageTypeInteractive),
+		Interactive:        *m,
 	}
 
 	if configs.ReplyToMessageId != "" {

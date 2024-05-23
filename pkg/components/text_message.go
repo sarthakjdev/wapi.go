@@ -7,7 +7,7 @@ import (
 	"github.com/sarthakjdev/wapi.go/utils"
 )
 
-type TextMessage struct {
+type textMessage struct {
 	Text         string
 	AllowPreview bool
 }
@@ -22,7 +22,7 @@ type TextMessageApiPayloadText struct {
 	AllowPreview bool   `json:"preview_url,omitempty"`
 }
 
-func (m *TextMessage) SetText(text string) {
+func (m *textMessage) SetText(text string) {
 	m.Text = text
 }
 
@@ -31,25 +31,25 @@ type TextMessageApiPayload struct {
 	Text               TextMessageApiPayloadText `json:"text" validate:"required"`
 }
 
-func NewTextMessage(configs TextMessageConfigs) (*TextMessage, error) {
+func NewTextMessage(configs TextMessageConfigs) (*textMessage, error) {
 	err := utils.GetValidator().Struct(configs)
 	if err != nil {
 		return nil, fmt.Errorf("error validating text message config: %v", err)
 	}
-	return &TextMessage{
+	return &textMessage{
 		Text:         configs.Text,
 		AllowPreview: configs.AllowPreview,
 	}, nil
 }
 
 // This function convert the TextMessage struct to WhatsApp API compatible JSON
-func (m *TextMessage) ToJson(configs ApiCompatibleJsonConverterConfigs) ([]byte, error) {
+func (m *textMessage) ToJson(configs ApiCompatibleJsonConverterConfigs) ([]byte, error) {
 	if err := utils.GetValidator().Struct(configs); err != nil {
 		return nil, fmt.Errorf("error validating configs: %v", err)
 	}
 
 	jsonData := TextMessageApiPayload{
-		BaseMessagePayload: NewBaseMessagePayload(configs.SendToPhoneNumber, TextMessageType),
+		BaseMessagePayload: NewBaseMessagePayload(configs.SendToPhoneNumber, MessageTypeText),
 		Text: TextMessageApiPayloadText{
 			Body:         m.Text,
 			AllowPreview: m.AllowPreview,
