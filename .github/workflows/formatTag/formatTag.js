@@ -8,7 +8,7 @@ export function formatTag(tag) {
     const isSubPackage = typeof parsed.groups.package === "string";
     const pkg = isSubPackage
       ? parsed.groups.package
-      : parsedPackage?.groups?.package ?? "wapi.js";
+      : parsedPackage?.groups?.package ?? "wapi.go";
     const semver = parsed.groups.semver;
 
     return {

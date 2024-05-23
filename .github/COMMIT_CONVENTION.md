@@ -1,6 +1,6 @@
 # 📘 Commit and Branch Conventions
 
-At `wapi.js`, we follow a strict set of conventions for commit messages and branch names to ensure that our repository stays organized, and our commit history remains crystal clear. Here's a guide on our conventions:
+At `wapi.go`, we follow a strict set of conventions for commit messages and branch names to ensure that our repository stays organized, and our commit history remains crystal clear. Here's a guide on our conventions:
 
 ---
 
@@ -93,6 +93,6 @@ fix/login-issue
 
 ---
 
-🙌 Thanks for contributing to `wapi.js`! By adhering to these conventions, we're making our repository a better place. If you're new, welcome aboard, and if you've been here, thanks for sticking around!
+🙌 Thanks for contributing to `wapi.go`! By adhering to these conventions, we're making our repository a better place. If you're new, welcome aboard, and if you've been here, thanks for sticking around!
 
 ---
