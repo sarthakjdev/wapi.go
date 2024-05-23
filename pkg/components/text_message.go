@@ -1,4 +1,4 @@
-package models
+package components
 
 import (
 	"encoding/json"
@@ -26,6 +26,11 @@ func (m *TextMessage) SetText(text string) {
 	m.Text = text
 }
 
+type TextMessageApiPayload struct {
+	BaseMessagePayload `json:",inline"`
+	Text               TextMessageApiPayloadText `json:"text" validate:"required"`
+}
+
 func NewTextMessage(configs TextMessageConfigs) (*TextMessage, error) {
 	err := utils.GetValidator().Struct(configs)
 	if err != nil {
@@ -44,7 +49,7 @@ func (m *TextMessage) ToJson(configs ApiCompatibleJsonConverterConfigs) ([]byte,
 	}
 
 	jsonData := TextMessageApiPayload{
-		BaseMessagePayload: NewBaseMessagePayload(configs.SendToPhoneNumber, "text"),
+		BaseMessagePayload: NewBaseMessagePayload(configs.SendToPhoneNumber, TextMessageType),
 		Text: TextMessageApiPayloadText{
 			Body:         m.Text,
 			AllowPreview: m.AllowPreview,

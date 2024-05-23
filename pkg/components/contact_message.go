@@ -1,4 +1,4 @@
-package models
+package components
 
 import (
 	"encoding/json"
@@ -99,13 +99,16 @@ func (contact *ContactMessage) AddContact(params Contact) {
 	contact.Contacts = append(contact.Contacts, params)
 }
 
-func (contact *Contact) SetFirstName() {
+func (contact *Contact) SetFirstName(firstName string) {
+	contact.Name.FirstName = firstName
 }
 
-func (contact *Contact) SetLastName() {
+func (contact *Contact) SetLastName(lastName string) {
+	contact.Name.LastName = lastName
 }
 
-func (contact *Contact) SetMiddleName() {
+func (contact *Contact) SetMiddleName(middleName string) {
+	contact.Name.MiddleName = middleName
 }
 
 func (contact *Contact) SetOrg(params ContactOrg) {
@@ -153,7 +156,7 @@ func (m *ContactMessage) ToJson(configs ApiCompatibleJsonConverterConfigs) ([]by
 		return nil, fmt.Errorf("error validating configs: %v", err)
 	}
 	jsonData := ContactMessageApiPayload{
-		BaseMessagePayload: NewBaseMessagePayload(configs.SendToPhoneNumber, "contacts"),
+		BaseMessagePayload: NewBaseMessagePayload(configs.SendToPhoneNumber, ContactMessageType),
 		Contacts:           m.Contacts,
 	}
 

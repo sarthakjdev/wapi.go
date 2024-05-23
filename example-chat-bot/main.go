@@ -5,7 +5,7 @@ import (
 
 	"github.com/sarthakjdev/wapi.go/internal/manager"
 	wapi "github.com/sarthakjdev/wapi.go/pkg/client"
-	wapiModels "github.com/sarthakjdev/wapi.go/pkg/models"
+	wapiComponents "github.com/sarthakjdev/wapi.go/pkg/components"
 )
 
 func main() {
@@ -28,7 +28,7 @@ func main() {
 	}
 
 	// create a message
-	textMessage, err := wapiModels.NewTextMessage(wapiModels.TextMessageConfigs{
+	textMessage, err := wapiComponents.NewTextMessage(wapiComponents.TextMessageConfigs{
 		Text: "Hello, from wapi.go",
 	})
 
@@ -37,24 +37,28 @@ func main() {
 		return
 	}
 
-	contact := wapiModels.NewContact(wapiModels.ContactName{
+	contact := wapiComponents.NewContact(wapiComponents.ContactName{
 		FormattedName: "Sarthak Jain",
 		FirstName:     "Sarthak",
 	})
 
-	contactMessage, err := wapiModels.NewContactMessage([]wapiModels.Contact{*contact})
+	contactMessage, err := wapiComponents.NewContactMessage([]wapiComponents.Contact{*contact})
 
 	if err != nil {
 		fmt.Println("error creating contact message", err)
 		return
 	}
 
+	locationMessage, err := wapiComponents.NewLocationMessage(28.7041, 77.1025)
+
 	if err != nil {
-		fmt.Println("error creating text message", err)
+		fmt.Println("error creating location message", err)
 		return
 	}
 
 	// send the message
 	whatsappClient.Message.Send(manager.SendMessageParams{Message: textMessage, PhoneNumber: "919643500545"})
 	whatsappClient.Message.Send(manager.SendMessageParams{Message: contactMessage, PhoneNumber: "919643500545"})
+	whatsappClient.Message.Send(manager.SendMessageParams{Message: locationMessage, PhoneNumber: "919643500545"})
+
 }
