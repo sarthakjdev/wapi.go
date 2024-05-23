@@ -34,7 +34,10 @@ func NewAudioMessage(params AudioMessageConfigs) (*AudioMessage, error) {
 		return nil, fmt.Errorf("either ID or Link must be provided")
 	}
 
-	return &AudioMessage{}, nil
+	return &AudioMessage{
+		Id:   params.Id,
+		Link: params.Link,
+	}, nil
 }
 
 func (audio *AudioMessage) ToJson(configs ApiCompatibleJsonConverterConfigs) ([]byte, error) {

@@ -35,7 +35,10 @@ func NewVideoMessage(params VideoMessageConfigs) (*VideoMessage, error) {
 		return nil, fmt.Errorf("either ID or Link must be provided")
 	}
 
-	return &VideoMessage{}, nil
+	return &VideoMessage{
+		Id:   params.Id,
+		Link: params.Link,
+	}, nil
 }
 
 func (video *VideoMessage) SetCaption(params string) {

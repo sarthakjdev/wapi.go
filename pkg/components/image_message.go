@@ -39,7 +39,11 @@ func NewImageMessage(params ImageMessageConfigs) (*ImageMessage, error) {
 		return nil, fmt.Errorf("either ID or Link must be provided")
 	}
 
-	return &ImageMessage{}, nil
+	return &ImageMessage{
+		Id:      params.Id,
+		Link:    params.Link,
+		Caption: params.Caption,
+	}, nil
 }
 
 func (image *ImageMessage) ToJson(configs ApiCompatibleJsonConverterConfigs) ([]byte, error) {
