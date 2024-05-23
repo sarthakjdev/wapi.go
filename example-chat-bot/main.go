@@ -108,4 +108,16 @@ func main() {
 
 	whatsappClient.Message.Send(manager.SendMessageParams{Message: listMessage, PhoneNumber: "919643500545"})
 
+	buttonMessage, err := wapiComponents.NewQuickReplyButtonMessage("Body 1")
+
+	if err != nil {
+		fmt.Println("error creating button message", err)
+		return
+	}
+
+	buttonMessage.AddButton("1", "Button 1")
+	buttonMessage.AddButton("2", "Button 2")
+
+	whatsappClient.Message.Send(manager.SendMessageParams{Message: buttonMessage, PhoneNumber: "919643500545"})
+
 }
