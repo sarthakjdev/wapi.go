@@ -3,6 +3,7 @@ package wapi
 import (
 	"fmt"
 
+	"github.com/labstack/echo/v4"
 	"github.com/sarthakjdev/wapi.go/internal/manager"
 	requestclient "github.com/sarthakjdev/wapi.go/internal/request_client"
 	"github.com/sarthakjdev/wapi.go/pkg/events"
@@ -65,6 +66,14 @@ func (client *Client) InitiateClient() bool {
 
 	client.webhook.ListenToEvents()
 	return true
+}
+
+func (client *Client) GetWebhookGetRequestHandler() func(c echo.Context) {
+	return client.webhook.GetRequestHandler
+}
+
+func (client *Client) GetWebhookPostRequestHandler() func(c echo.Context) {
+	return client.webhook.PostRequestHandler
 }
 
 // OnMessage registers a handler for a specific event type.

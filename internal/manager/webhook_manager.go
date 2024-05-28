@@ -47,16 +47,14 @@ func (wh *WebhookManager) createEchoHttpServer() *echo.Echo {
 
 }
 
-func (wh *WebhookManager) getRequestHandler(c echo.Context) {
-
+func (wh *WebhookManager) GetRequestHandler(c echo.Context) {
 	// this endpoint is used to verify the webhook
-
 	request := c.Request()
 	fmt.Println(request)
 
 }
 
-func (wh *WebhookManager) postRequestHandler(c echo.Context) {
+func (wh *WebhookManager) PostRequestHandler(c echo.Context) {
 	// emits events based on the payload of the request
 
 	request := c.Request()
@@ -82,12 +80,12 @@ func (wh *WebhookManager) ListenToEvents() {
 	server := wh.createEchoHttpServer()
 
 	server.GET(wh.path, func(c echo.Context) error {
-		wh.getRequestHandler(c)
+		wh.GetRequestHandler(c)
 		return c.String(200, "ok")
 	})
 
 	server.POST(wh.path, func(c echo.Context) error {
-		wh.postRequestHandler(c)
+		wh.PostRequestHandler(c)
 		return c.String(200, "ok")
 	})
 
