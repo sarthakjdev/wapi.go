@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/sarthakjdev/wapi.go/internal/manager"
-	"github.com/sarthakjdev/wapi.go/internal/webhook"
+	"github.com/sarthakjdev/wapi.go/pkg/events"
 	"github.com/sarthakjdev/wapi.go/utils"
 )
 
@@ -13,7 +13,7 @@ type Client struct {
 	Media             manager.MediaManager
 	Message           manager.MessageManager
 	Phone             manager.PhoneNumbersManager
-	webhook           webhook.Webhook
+	webhook           manager.WebhookManager
 	phoneNumberId     string
 	apiAccessToken    string
 	businessAccountId string
@@ -36,11 +36,12 @@ func New(configs ClientConfig) (*Client, error) {
 		return nil, fmt.Errorf("error validating client config", err)
 	}
 	requester := *manager.NewRequestClient(configs.PhoneNumberId, configs.ApiAccessToken)
+	eventManager := *manager.NewEventManager()
 	return &Client{
 		Media:             *manager.NewMediaManager(requester),
 		Message:           *manager.NewMessageManager(requester),
 		Phone:             *manager.NewPhoneNumbersManager(requester),
-		webhook:           *webhook.NewWebhook(webhook.WebhookManagerConfig{Path: configs.WebhookPath, Secret: configs.WebhookSecret, Port: configs.WebhookServerPort}),
+		webhook:           *manager.NewWebhook(&manager.WebhookManagerConfig{Path: configs.WebhookPath, Secret: configs.WebhookSecret, Port: configs.WebhookServerPort, EventManager: eventManager, Requester: requester}),
 		phoneNumberId:     configs.PhoneNumberId,
 		apiAccessToken:    configs.ApiAccessToken,
 		businessAccountId: configs.BusinessAccountId,
@@ -60,6 +61,12 @@ func (client *Client) SetPhoneNumberId(phoneNumberId string) {
 // InitiateClient initializes the client and starts listening to events from the webhook.
 // It returns true if the client was successfully initiated.
 func (client *Client) InitiateClient() bool {
+
 	client.webhook.ListenToEvents()
 	return true
+}
+
+// OnMessage registers a handler for a specific event type.
+func (client *Client) On(eventType manager.EventType, handler func(events.BaseEvent)) {
+	client.webhook.EventManager.On(eventType, handler)
 }

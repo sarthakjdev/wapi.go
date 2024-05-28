@@ -13,15 +13,15 @@ const (
 	REQUEST_PROTOCOL = "https"
 )
 
-type requestClient struct {
+type RequestClient struct {
 	apiVersion     string
 	phoneNumberId  string
 	baseUrl        string
 	apiAccessToken string
 }
 
-func NewRequestClient(phoneNumberId string, apiAccessToken string) *requestClient {
-	return &requestClient{
+func NewRequestClient(phoneNumberId string, apiAccessToken string) *RequestClient {
+	return &RequestClient{
 		apiVersion:     API_VERSION,
 		baseUrl:        BASE_URL,
 		phoneNumberId:  phoneNumberId,
@@ -34,7 +34,7 @@ type requestCloudApiParams struct {
 	path string
 }
 
-func (requestClientInstance *requestClient) requestCloudApi(params requestCloudApiParams) {
+func (requestClientInstance *RequestClient) requestCloudApi(params requestCloudApiParams) {
 	httpRequest, err := http.NewRequest("POST", fmt.Sprintf("%s://%s/%s", REQUEST_PROTOCOL, requestClientInstance.baseUrl, params.path), strings.NewReader(params.body))
 	if err != nil {
 		return

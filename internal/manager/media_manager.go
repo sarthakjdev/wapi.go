@@ -1,10 +1,10 @@
 package manager
 
 type MediaManager struct {
-	requester requestClient
+	requester RequestClient
 }
 
-func NewMediaManager(requester requestClient) *MediaManager {
+func NewMediaManager(requester RequestClient) *MediaManager {
 	return &MediaManager{
 		requester: requester,
 	}

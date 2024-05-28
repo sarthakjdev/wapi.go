@@ -7,10 +7,10 @@ import (
 )
 
 type MessageManager struct {
-	requester requestClient
+	requester RequestClient
 }
 
-func NewMessageManager(requester requestClient) *MessageManager {
+func NewMessageManager(requester RequestClient) *MessageManager {
 	return &MessageManager{
 		requester: requester,
 	}

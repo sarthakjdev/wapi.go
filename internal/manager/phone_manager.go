@@ -1,10 +1,10 @@
 package manager
 
 type PhoneNumbersManager struct {
-	requester requestClient
+	requester RequestClient
 }
 
-func NewPhoneNumbersManager(requester requestClient) *PhoneNumbersManager {
+func NewPhoneNumbersManager(requester RequestClient) *PhoneNumbersManager {
 	return &PhoneNumbersManager{
 		requester: requester,
 	}

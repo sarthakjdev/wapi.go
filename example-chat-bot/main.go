@@ -5,7 +5,7 @@ import (
 
 	"github.com/sarthakjdev/wapi.go/internal/manager"
 	wapi "github.com/sarthakjdev/wapi.go/pkg/client"
-	wapiComponents "github.com/sarthakjdev/wapi.go/pkg/components"
+	"github.com/sarthakjdev/wapi.go/pkg/events"
 )
 
 func main() {
@@ -28,9 +28,9 @@ func main() {
 	}
 
 	// create a message
-	textMessage, err := wapiComponents.NewTextMessage(wapiComponents.TextMessageConfigs{
-		Text: "Hello, from wapi.go",
-	})
+	// textMessage, err := wapiComponents.NewTextMessage(wapiComponents.TextMessageConfigs{
+	// 	Text: "Hello, from wapi.go",
+	// })
 
 	// if err != nil {
 	// 	fmt.Println("error creating text message", err)
@@ -66,58 +66,64 @@ func main() {
 	// }
 
 	// send the message
-	whatsappClient.Message.Send(manager.SendMessageParams{Message: textMessage, PhoneNumber: "919643500545"})
+	// whatsappClient.Message.Send(manager.SendMessageParams{Message: textMessage, PhoneNumber: "919643500545"})
 	// whatsappClient.Message.Send(manager.SendMessageParams{Message: contactMessage, PhoneNumber: "919643500545"})
 	// whatsappClient.Message.Send(manager.SendMessageParams{Message: locationMessage, PhoneNumber: "919643500545"})
 	// whatsappClient.Message.Send(manager.SendMessageParams{Message: reactionMessage, PhoneNumber: "919643500545"})
 
-	listMessage, err := wapiComponents.NewListMessage(wapiComponents.ListMessageParams{
-		ButtonText: "Button 1",
-		BodyText:   "Body 1",
+	// listMessage, err := wapiComponents.NewListMessage(wapiComponents.ListMessageParams{
+	// 	ButtonText: "Button 1",
+	// 	BodyText:   "Body 1",
+	// })
+
+	// if err != nil {
+	// 	fmt.Println("error creating list message", err)
+	// 	return
+	// }
+
+	// listSectionRow, err := wapiComponents.NewListSectionRow("1", "Title 1", "Description 1")
+
+	// if err != nil {
+	// 	fmt.Println("error creating list section row", err)
+	// 	return
+	// }
+
+	// listSection, err := wapiComponents.NewListSection("Section1")
+
+	// if err != nil {
+	// 	fmt.Println("error creating list section row", err)
+	// 	return
+	// }
+
+	// listSection.AddRow(listSectionRow)
+	// listMessage.AddSection(listSection)
+	// jsonData, err := listMessage.ToJson(wapiComponents.ApiCompatibleJsonConverterConfigs{SendToPhoneNumber: "919643500545"})
+
+	// if err != nil {
+	// 	fmt.Println("error converting message to json", err)
+	// 	return
+	// }
+
+	// fmt.Println(string(jsonData))
+
+	// whatsappClient.Message.Send(manager.SendMessageParams{Message: listMessage, PhoneNumber: "919643500545"})
+
+	// buttonMessage, err := wapiComponents.NewQuickReplyButtonMessage("Body 1")
+
+	// if err != nil {
+	// 	fmt.Println("error creating button message", err)
+	// 	return
+	// }
+
+	// buttonMessage.AddButton("1", "Button 1")
+	// buttonMessage.AddButton("2", "Button 2")
+
+	// whatsappClient.Message.Send(manager.SendMessageParams{Message: buttonMessage, PhoneNumber: "919643500545"})
+
+	whatsappClient.On(manager.ReadyEvent, func(event events.BaseEvent) {
+		fmt.Println("client is ready")
 	})
 
-	if err != nil {
-		fmt.Println("error creating list message", err)
-		return
-	}
-
-	listSectionRow, err := wapiComponents.NewListSectionRow("1", "Title 1", "Description 1")
-
-	if err != nil {
-		fmt.Println("error creating list section row", err)
-		return
-	}
-
-	listSection, err := wapiComponents.NewListSection("Section1")
-
-	if err != nil {
-		fmt.Println("error creating list section row", err)
-		return
-	}
-
-	listSection.AddRow(listSectionRow)
-	listMessage.AddSection(listSection)
-	jsonData, err := listMessage.ToJson(wapiComponents.ApiCompatibleJsonConverterConfigs{SendToPhoneNumber: "919643500545"})
-
-	if err != nil {
-		fmt.Println("error converting message to json", err)
-		return
-	}
-
-	fmt.Println(string(jsonData))
-
-	whatsappClient.Message.Send(manager.SendMessageParams{Message: listMessage, PhoneNumber: "919643500545"})
-
-	buttonMessage, err := wapiComponents.NewQuickReplyButtonMessage("Body 1")
-
-	if err != nil {
-		fmt.Println("error creating button message", err)
-		return
-	}
-
-	buttonMessage.AddButton("1", "Button 1")
-	buttonMessage.AddButton("2", "Button 2")
-
-	whatsappClient.Message.Send(manager.SendMessageParams{Message: buttonMessage, PhoneNumber: "919643500545"})
+	whatsappClient.InitiateClient()
 
 }
