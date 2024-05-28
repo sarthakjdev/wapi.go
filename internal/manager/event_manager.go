@@ -45,18 +45,18 @@ type ChannelEvent struct {
 }
 
 type EventManger struct {
-	subscribers map[string]chan ChannelEvent
+	subscribers map[EventType]chan ChannelEvent
 	sync.RWMutex
 }
 
 func NewEventManager() *EventManger {
 	return &EventManger{
-		subscribers: make(map[string]chan ChannelEvent),
+		subscribers: make(map[EventType]chan ChannelEvent),
 	}
 }
 
 // subscriber to this event listener will be notified when the event is published
-func (em *EventManger) Subscribe(eventName string) (chan ChannelEvent, error) {
+func (em *EventManger) Subscribe(eventName EventType) (chan ChannelEvent, error) {
 	em.Lock()
 	defer em.Unlock()
 	if ch, ok := em.subscribers[eventName]; ok {
@@ -64,11 +64,10 @@ func (em *EventManger) Subscribe(eventName string) (chan ChannelEvent, error) {
 	}
 	em.subscribers[eventName] = make(chan ChannelEvent, 100)
 	return em.subscribers[eventName], nil
-
 }
 
 // subscriber to this event listener will be notified when the event is published
-func (em *EventManger) Unsubscribe(id string) {
+func (em *EventManger) Unsubscribe(id EventType) {
 	em.Lock()
 	defer em.Unlock()
 	delete(em.subscribers, id)
@@ -93,8 +92,8 @@ func (em *EventManger) Publish(eventType EventType, data events.BaseEvent) error
 	return nil
 }
 
-func (em *EventManger) On(name EventType, handler func(events.BaseEvent)) string {
-	ch, _ := em.Subscribe(string(name))
+func (em *EventManger) On(eventName EventType, handler func(events.BaseEvent)) EventType {
+	ch, _ := em.Subscribe(eventName)
 	go func() {
 		for {
 			select {
@@ -103,5 +102,5 @@ func (em *EventManger) On(name EventType, handler func(events.BaseEvent)) string
 			}
 		}
 	}()
-	return string(name)
+	return eventName
 }
