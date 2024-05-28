@@ -3,14 +3,15 @@ package manager
 import (
 	"fmt"
 
+	requestclient "github.com/sarthakjdev/wapi.go/internal/request_client"
 	"github.com/sarthakjdev/wapi.go/pkg/components"
 )
 
 type MessageManager struct {
-	requester RequestClient
+	requester requestclient.RequestClient
 }
 
-func NewMessageManager(requester RequestClient) *MessageManager {
+func NewMessageManager(requester requestclient.RequestClient) *MessageManager {
 	return &MessageManager{
 		requester: requester,
 	}
@@ -31,9 +32,9 @@ func (mm *MessageManager) Send(params SendMessageParams) (string, error) {
 		// ! TODO: emit a error event here
 		return "", fmt.Errorf("error converting message to json: %v", err)
 	}
-	mm.requester.requestCloudApi(requestCloudApiParams{
-		body: string(body),
-		path: "/" + mm.requester.phoneNumberId + "/messages",
+	mm.requester.RequestCloudApi(requestclient.RequestCloudApiParams{
+		Body: string(body),
+		Path: "/" + mm.requester.PhoneNumberId + "/messages",
 	})
 	return "ok", nil
 }

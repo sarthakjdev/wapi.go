@@ -1,10 +1,12 @@
 package manager
 
+import requestclient "github.com/sarthakjdev/wapi.go/internal/request_client"
+
 type MediaManager struct {
-	requester RequestClient
+	requester requestclient.RequestClient
 }
 
-func NewMediaManager(requester RequestClient) *MediaManager {
+func NewMediaManager(requester requestclient.RequestClient) *MediaManager {
 	return &MediaManager{
 		requester: requester,
 	}

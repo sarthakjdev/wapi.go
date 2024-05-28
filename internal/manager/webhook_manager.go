@@ -4,12 +4,12 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"net/http"
 	"os"
 	"os/signal"
 	"time"
 
 	"github.com/labstack/echo/v4"
+	requestclient "github.com/sarthakjdev/wapi.go/internal/request_client"
 	"github.com/sarthakjdev/wapi.go/pkg/events"
 )
 
@@ -19,7 +19,7 @@ type WebhookManager struct {
 	path         string
 	port         int
 	EventManager EventManger
-	Requester    RequestClient
+	Requester    requestclient.RequestClient
 }
 
 type WebhookManagerConfig struct {
@@ -27,7 +27,7 @@ type WebhookManagerConfig struct {
 	Path         string
 	Port         int
 	EventManager EventManger
-	Requester    RequestClient
+	Requester    requestclient.RequestClient
 }
 
 func NewWebhook(options *WebhookManagerConfig) *WebhookManager {
@@ -47,16 +47,31 @@ func (wh *WebhookManager) createEchoHttpServer() *echo.Echo {
 
 }
 
-func (wh *WebhookManager) getRequestHandler(req *http.Request) {
+func (wh *WebhookManager) getRequestHandler(c echo.Context) {
+
+	// this endpoint is used to verify the webhook
+
+	request := c.Request()
+	fmt.Println(request)
+
 }
 
-func (wh *WebhookManager) postRequestHandler(req *http.Request) {
+func (wh *WebhookManager) postRequestHandler(c echo.Context) {
 	// emits events based on the payload of the request
+
+	request := c.Request()
+
+	fmt.Println(request)
+
+	// parse the request here
+	// get the type of message
+	// emit the event based on the type of message
 
 	wh.EventManager.Publish(TextMessageEvent, events.NewTextMessageEvent(
 		"wiuhbiueqwdqwd",
 		"2134141414",
 		"hello",
+		wh.Requester,
 	))
 
 }
@@ -65,6 +80,16 @@ func (wh *WebhookManager) ListenToEvents() {
 
 	fmt.Println("Listening to events")
 	server := wh.createEchoHttpServer()
+
+	server.GET(wh.path, func(c echo.Context) error {
+		wh.getRequestHandler(c)
+		return c.String(200, "ok")
+	})
+
+	server.POST(wh.path, func(c echo.Context) error {
+		wh.postRequestHandler(c)
+		return c.String(200, "ok")
+	})
 
 	// Start server in a goroutine
 	go func() {

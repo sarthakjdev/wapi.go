@@ -1,4 +1,4 @@
-package manager
+package requestclient
 
 import (
 	"fmt"
@@ -8,14 +8,14 @@ import (
 )
 
 const (
-	API_VERSION      = "v.19"
+	API_VERSION      = "v19.0"
 	BASE_URL         = "graph.facebook.com"
 	REQUEST_PROTOCOL = "https"
 )
 
 type RequestClient struct {
 	apiVersion     string
-	phoneNumberId  string
+	PhoneNumberId  string
 	baseUrl        string
 	apiAccessToken string
 }
@@ -24,18 +24,18 @@ func NewRequestClient(phoneNumberId string, apiAccessToken string) *RequestClien
 	return &RequestClient{
 		apiVersion:     API_VERSION,
 		baseUrl:        BASE_URL,
-		phoneNumberId:  phoneNumberId,
+		PhoneNumberId:  phoneNumberId,
 		apiAccessToken: apiAccessToken,
 	}
 }
 
-type requestCloudApiParams struct {
-	body string
-	path string
+type RequestCloudApiParams struct {
+	Body string
+	Path string
 }
 
-func (requestClientInstance *RequestClient) requestCloudApi(params requestCloudApiParams) {
-	httpRequest, err := http.NewRequest("POST", fmt.Sprintf("%s://%s/%s", REQUEST_PROTOCOL, requestClientInstance.baseUrl, params.path), strings.NewReader(params.body))
+func (requestClientInstance *RequestClient) RequestCloudApi(params RequestCloudApiParams) {
+	httpRequest, err := http.NewRequest("POST", fmt.Sprintf("%s://%s/%s", REQUEST_PROTOCOL, requestClientInstance.baseUrl, params.Path), strings.NewReader(params.Body))
 	if err != nil {
 		return
 	}

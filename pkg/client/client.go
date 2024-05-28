@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/sarthakjdev/wapi.go/internal/manager"
+	requestclient "github.com/sarthakjdev/wapi.go/internal/request_client"
 	"github.com/sarthakjdev/wapi.go/pkg/events"
 	"github.com/sarthakjdev/wapi.go/utils"
 )
@@ -33,9 +34,9 @@ type ClientConfig struct {
 func New(configs ClientConfig) (*Client, error) {
 	err := utils.GetValidator().Struct(configs)
 	if err != nil {
-		return nil, fmt.Errorf("error validating client config", err)
+		return nil, fmt.Errorf("error validating client config: %w", err)
 	}
-	requester := *manager.NewRequestClient(configs.PhoneNumberId, configs.ApiAccessToken)
+	requester := *requestclient.NewRequestClient(configs.PhoneNumberId, configs.ApiAccessToken)
 	eventManager := *manager.NewEventManager()
 	return &Client{
 		Media:             *manager.NewMediaManager(requester),

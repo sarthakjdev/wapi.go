@@ -1,5 +1,10 @@
 package events
 
+import (
+	requestclient "github.com/sarthakjdev/wapi.go/internal/request_client"
+	"github.com/sarthakjdev/wapi.go/pkg/components"
+)
+
 type MessageContext struct {
 	From string `json:"from"`
 }
@@ -19,16 +24,18 @@ type BaseSystemEventInterface interface {
 }
 
 type BaseMessageEvent struct {
+	requester requestclient.RequestClient
 	MessageId string         `json:"message_id"`
 	Context   MessageContext `json:"context"`
 }
 
-func NewBaseMessageEvent(messageId, from string) BaseMessageEvent {
+func NewBaseMessageEvent(messageId, from string, requester requestclient.RequestClient) BaseMessageEvent {
 	return BaseMessageEvent{
 		MessageId: messageId,
 		Context: MessageContext{
 			From: from,
 		},
+		requester: requester,
 	}
 }
 
@@ -36,14 +43,37 @@ func (bme BaseMessageEvent) GetEventType() string {
 	return "message"
 }
 
-func (baseMessageEvent *BaseMessageEvent) Reply() (string, error) {
-	// we need requester here
+// Reply to the message
+func (baseMessageEvent *BaseMessageEvent) Reply(Message components.BaseMessage) (string, error) {
+
+	body, err := Message.ToJson(components.ApiCompatibleJsonConverterConfigs{
+		SendToPhoneNumber: baseMessageEvent.Context.From,
+		ReplyToMessageId:  baseMessageEvent.MessageId,
+	})
+
+	if err != nil {
+		return "", err
+	}
+
+	baseMessageEvent.requester.RequestCloudApi(requestclient.RequestCloudApiParams{
+		Body: string(body),
+		Path: "/" + baseMessageEvent.requester.PhoneNumberId + "/messages",
+	})
+
 	return "", nil
 
 }
 
-func (baseMessageEvent *BaseMessageEvent) React() (string, error) {
-	// we need requester here
+// React to the message
+func (baseMessageEvent *BaseMessageEvent) React(emoji string) (string, error) {
+	reactionMessage, err := components.NewReactionMessage(components.ReactionMessageParams{
+		Emoji:     emoji,
+		MessageId: baseMessageEvent.MessageId,
+	})
+	if err != nil {
+		return "", err
+	}
+	baseMessageEvent.Reply(reactionMessage)
 	return "", nil
 }
 
