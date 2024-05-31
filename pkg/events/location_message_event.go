@@ -1,6 +1,5 @@
 package events
 
-
 type LocationMessageEvent struct {
 	BaseMessageEvent
 }

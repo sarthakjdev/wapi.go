@@ -87,4 +87,3 @@ type BaseSystemEvent struct {
 func (bme BaseSystemEvent) GetEventType() string {
 	return "system"
 }
-
