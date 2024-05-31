@@ -5,6 +5,7 @@ import (
 
 	"github.com/sarthakjdev/wapi.go/internal/manager"
 	wapi "github.com/sarthakjdev/wapi.go/pkg/client"
+	wapiComponents "github.com/sarthakjdev/wapi.go/pkg/components"
 	"github.com/sarthakjdev/wapi.go/pkg/events"
 )
 
@@ -15,10 +16,10 @@ func main() {
 	// creating a client
 	whatsappClient, err := wapi.New(wapi.ClientConfig{
 		PhoneNumberId:     "113269274970227",
-		ApiAccessToken:    "EABhCftGVaeIBOZCgZCHPf8eF7ZBayGCyVLvpGVbZC8oqjgZCzmhqVXn7TMiQ3JTQ77WxOE4K7DVIgFC8ZA7qSG2ANHQ3BbG09iXezHDHnu2iiC0K5VVcITzHZCMoy5aKkLhILxLNsOQ5s9nQg3dRj1VewJ1PuMJY2n9tcIP29qn0Ht30fpUirvG6tgE9CVdRlMHuHU54U4hFjqcNfbO4Q8jW1QvhKCZBv95do3YFd71v1ucZD",
+		ApiAccessToken:    "EABhCftGVaeIBO27nfwWbjXQWIxFbXFbcRLNbtavOmdGQSZBq7cQ0L6pqACzW2VZBEy53fUohFJQNLdVqeS4hnthQrKS2X9d0Wm1rXih7ej8nkEUjxI0odIq3VLCjlD2RaPK7ZA0BA0lBhkDVmoDbQX7cUIObu6yqUvY2rsDiKZCZA6qNQocjU40e0z6a97kjbt3t7Inkp5R55BSF8uzVEv5zKN0ZBU71Rap7aEoZBplAsjy",
 		BusinessAccountId: "103043282674158",
 		WebhookPath:       "/webhook",
-		WebhookSecret:     "123456789",
+		WebhookSecret:     "1234567890",
 		WebhookServerPort: 8080,
 	})
 
@@ -28,14 +29,14 @@ func main() {
 	}
 
 	// create a message
-	// textMessage, err := wapiComponents.NewTextMessage(wapiComponents.TextMessageConfigs{
-	// 	Text: "Hello, from wapi.go",
-	// })
+	textMessage, err := wapiComponents.NewTextMessage(wapiComponents.TextMessageConfigs{
+		Text: "Hello, from wapi.go",
+	})
 
-	// if err != nil {
-	// 	fmt.Println("error creating text message", err)
-	// 	return
-	// }
+	if err != nil {
+		fmt.Println("error creating text message", err)
+		return
+	}
 
 	// contactMessage, err := wapiComponents.NewContactMessage([]wapiComponents.Contact{
 	// 	*wapiComponents.NewContact(wapiComponents.ContactName{
@@ -122,6 +123,15 @@ func main() {
 
 	whatsappClient.On(manager.ReadyEvent, func(event events.BaseEvent) {
 		fmt.Println("client is ready")
+	})
+
+	whatsappClient.On(manager.TextMessageEvent, func(event events.BaseEvent) {
+		fmt.Println("text message event received")
+
+		textMessageEvent := event.(*events.TextMessageEvent)
+		fmt.Println(textMessageEvent.Context.From)
+		textMessageEvent.Reply(textMessage)
+
 	})
 
 	whatsappClient.InitiateClient()

@@ -2,7 +2,9 @@ package manager
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
+	"io"
 	"log"
 	"os"
 	"os/signal"
@@ -11,9 +13,9 @@ import (
 	"github.com/labstack/echo/v4"
 	requestclient "github.com/sarthakjdev/wapi.go/internal/request_client"
 	"github.com/sarthakjdev/wapi.go/pkg/events"
+	"github.com/sarthakjdev/wapi.go/utils"
 )
 
-// references for event driven architecture in golang:  https://medium.com/@souravchoudhary0306/implementation-of-event-driven-architecture-in-go-golang-28d9a1c01f91
 type WebhookManager struct {
 	secret       string
 	path         string
@@ -47,47 +49,231 @@ func (wh *WebhookManager) createEchoHttpServer() *echo.Echo {
 
 }
 
-func (wh *WebhookManager) GetRequestHandler(c echo.Context) {
-	// this endpoint is used to verify the webhook
-	request := c.Request()
-	fmt.Println(request)
-
+func (wh *WebhookManager) GetRequestHandler(c echo.Context) error {
+	hubVerificationToken := c.QueryParam("hub.verify_token")
+	hubChallenge := c.QueryParam("hub.challenge")
+	fmt.Println(hubVerificationToken, hubChallenge)
+	if hubVerificationToken == wh.secret {
+		return c.String(200, hubChallenge)
+	} else {
+		return c.String(400, "invalid token")
+	}
 }
 
-func (wh *WebhookManager) PostRequestHandler(c echo.Context) {
-	// emits events based on the payload of the request
+func (wh *WebhookManager) PostRequestHandler(c echo.Context) error {
+	body, err := io.ReadAll(c.Request().Body)
+	if err != nil {
+		fmt.Println("Error reading request body:", err)
+		c.String(400, "error reading request body")
+	}
 
-	request := c.Request()
+	var payload WhatsappApiNotificationPayloadSchemaType
 
-	fmt.Println(request)
+	if err := json.Unmarshal(body, &payload); err != nil {
+		fmt.Println("Error unmarshaling JSON:", err)
+		c.String(400, "Invalid JSON data")
+	}
 
-	// parse the request here
-	// get the type of message
-	// emit the event based on the type of message
+	if err := utils.GetValidator().Struct(payload); err != nil {
+		fmt.Println("Error validating JSON:", err)
+		c.String(400, "Invalid JSON data")
+	}
 
-	wh.EventManager.Publish(TextMessageEvent, events.NewTextMessageEvent(
-		"wiuhbiueqwdqwd",
-		"2134141414",
-		"hello",
-		wh.Requester,
-	))
+	for _, entry := range payload.Entry {
+		for _, change := range entry.Changes {
+			for _, message := range change.Value.Messages {
+				switch message.Type {
+				case NotificationMessageTypeText:
+					{
+						wh.EventManager.Publish(TextMessageEvent, events.NewReactionMessageEvent(
+							events.NewBaseMessageEvent(
+								message.Id,
+								"",
+								message.From,
+								message.Context.Forwarded,
+								wh.Requester),
+							message.Text.Body),
+						)
+					}
+				case NotificationMessageTypeImage:
+					{
 
+						wh.EventManager.Publish(ImageMessageEvent, events.NewReactionMessageEvent(
+							events.NewBaseMessageEvent(
+								message.Id,
+								"",
+								message.From,
+								message.Context.Forwarded,
+								wh.Requester),
+							message.Text.Body),
+						)
+
+					}
+				case NotificationMessageTypeVideo:
+					{
+
+						wh.EventManager.Publish(AudioMessageEvent, events.NewReactionMessageEvent(
+							events.NewBaseMessageEvent(
+								message.Id,
+								"",
+								message.From,
+								message.Context.Forwarded,
+								wh.Requester),
+							message.Text.Body),
+						)
+
+					}
+				case NotificationMessageTypeDocument:
+					{
+
+						wh.EventManager.Publish(DocumentMessageEvent, events.NewReactionMessageEvent(
+							events.NewBaseMessageEvent(
+								message.Id,
+								"",
+								message.From,
+								message.Context.Forwarded,
+								wh.Requester),
+							message.Text.Body),
+						)
+					}
+				case NotificationMessageTypeAudio:
+					{
+						wh.EventManager.Publish(AudioMessageEvent, events.NewReactionMessageEvent(
+							events.NewBaseMessageEvent(
+								message.Id,
+								"",
+								message.From,
+								message.Context.Forwarded,
+								wh.Requester),
+							message.Text.Body),
+						)
+					}
+				case NotificationMessageTypeLocation:
+					{
+						wh.EventManager.Publish(LocationMessageEvent, events.NewReactionMessageEvent(
+							events.NewBaseMessageEvent(
+								message.Id,
+								"",
+								message.From,
+								message.Context.Forwarded,
+								wh.Requester),
+							message.Text.Body),
+						)
+					}
+				case NotificationMessageTypeContacts:
+					{
+						wh.EventManager.Publish(ContactMessageEvent, events.NewReactionMessageEvent(
+							events.NewBaseMessageEvent(
+								message.Id,
+								"",
+								message.From,
+								message.Context.Forwarded,
+								wh.Requester),
+							message.Text.Body),
+						)
+					}
+				case NotificationMessageTypeSticker:
+					{
+						wh.EventManager.Publish(StickerMessageEvent, events.NewReactionMessageEvent(
+							events.NewBaseMessageEvent(
+								message.Id,
+								"",
+								message.From,
+								message.Context.Forwarded,
+								wh.Requester),
+							message.Text.Body),
+						)
+					}
+				case NotificationMessageTypeSystem:
+					{
+						wh.EventManager.Publish(TextMessageEvent, events.NewReactionMessageEvent(
+							events.NewBaseMessageEvent(
+								message.Id,
+								"",
+								message.From,
+								message.Context.Forwarded,
+								wh.Requester),
+							message.Text.Body),
+						)
+					}
+				case NotificationMessageTypeButton:
+					{
+						wh.EventManager.Publish(ReplyButtonInteractionEvent, events.NewReactionMessageEvent(
+							events.NewBaseMessageEvent(
+								message.Id,
+								"",
+								message.From,
+								message.Context.Forwarded,
+								wh.Requester),
+							message.Text.Body),
+						)
+					}
+				case NotificationMessageTypeInteractive:
+					{
+						wh.EventManager.Publish(ListInteractionMessageEvent, events.NewReactionMessageEvent(
+							events.NewBaseMessageEvent(
+								message.Id,
+								"",
+								message.From,
+								message.Context.Forwarded,
+								wh.Requester),
+							message.Text.Body),
+						)
+					}
+				case NotificationMessageTypeReaction:
+					{
+						wh.EventManager.Publish(ReactionMessageEvent, events.NewReactionMessageEvent(
+							events.NewBaseMessageEvent(
+								message.Id,
+								"",
+								message.From,
+								message.Context.Forwarded,
+								wh.Requester),
+							message.Text.Body),
+						)
+					}
+				case NotificationMessageTypeOrder:
+					{
+						wh.EventManager.Publish(OrderReceivedEvent, events.NewReactionMessageEvent(
+							events.NewBaseMessageEvent(
+								message.Id,
+								"",
+								message.From,
+								message.Context.Forwarded,
+								wh.Requester),
+							message.Text.Body),
+						)
+					}
+				case NotificationMessageTypeUnknown:
+					{
+						wh.EventManager.Publish(UnknownEvent, events.NewReactionMessageEvent(
+							events.NewBaseMessageEvent(
+								message.Id,
+								"",
+								message.From,
+								message.Context.Forwarded,
+								wh.Requester),
+							message.Text.Body),
+						)
+					}
+				}
+
+			}
+		}
+	}
+
+	c.String(200, "Message received")
+
+	fmt.Println("Received valid payload:", payload.Entry[0].Changes[0].Value.Messages[0].Type)
+
+	return nil
 }
 
 func (wh *WebhookManager) ListenToEvents() {
-
 	fmt.Println("Listening to events")
 	server := wh.createEchoHttpServer()
-
-	server.GET(wh.path, func(c echo.Context) error {
-		wh.GetRequestHandler(c)
-		return c.String(200, "ok")
-	})
-
-	server.POST(wh.path, func(c echo.Context) error {
-		wh.PostRequestHandler(c)
-		return c.String(200, "ok")
-	})
+	server.GET(wh.path, wh.GetRequestHandler)
+	server.POST(wh.path, wh.PostRequestHandler)
 
 	// Start server in a goroutine
 	go func() {
@@ -97,7 +283,6 @@ func (wh *WebhookManager) ListenToEvents() {
 	}()
 
 	wh.EventManager.Publish(ReadyEvent, events.NewReadyEvent())
-
 	// Wait for an interrupt signal (e.g., Ctrl+C)
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, os.Interrupt) // Capture SIGINT (Ctrl+C)
@@ -110,4 +295,8 @@ func (wh *WebhookManager) ListenToEvents() {
 		log.Fatal(err) // Handle shutdown errors gracefully
 	}
 
+}
+
+func (wh *WebhookManager) determineEventType() EventType {
+	return TextMessageEvent
 }

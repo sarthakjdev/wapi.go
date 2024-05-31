@@ -24,18 +24,22 @@ type BaseSystemEventInterface interface {
 }
 
 type BaseMessageEvent struct {
-	requester requestclient.RequestClient
-	MessageId string         `json:"message_id"`
-	Context   MessageContext `json:"context"`
+	requester   requestclient.RequestClient
+	MessageId   string         `json:"message_id"`
+	Context     MessageContext `json:"context"`
+	Timestamp   string         `json:"timestamp"`
+	IsForwarded bool           `json:"is_forwarded"`
 }
 
-func NewBaseMessageEvent(messageId, from string, requester requestclient.RequestClient) BaseMessageEvent {
+func NewBaseMessageEvent(messageId string, timestamp string, from string, isForwarded bool, requester requestclient.RequestClient) BaseMessageEvent {
 	return BaseMessageEvent{
 		MessageId: messageId,
 		Context: MessageContext{
 			From: from,
 		},
-		requester: requester,
+		requester:   requester,
+		Timestamp:   timestamp,
+		IsForwarded: isForwarded,
 	}
 }
 
@@ -83,3 +87,4 @@ type BaseSystemEvent struct {
 func (bme BaseSystemEvent) GetEventType() string {
 	return "system"
 }
+

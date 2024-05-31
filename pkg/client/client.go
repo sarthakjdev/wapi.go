@@ -68,11 +68,11 @@ func (client *Client) InitiateClient() bool {
 	return true
 }
 
-func (client *Client) GetWebhookGetRequestHandler() func(c echo.Context) {
+func (client *Client) GetWebhookGetRequestHandler() func(c echo.Context) error {
 	return client.webhook.GetRequestHandler
 }
 
-func (client *Client) GetWebhookPostRequestHandler() func(c echo.Context) {
+func (client *Client) GetWebhookPostRequestHandler() func(c echo.Context) error {
 	return client.webhook.PostRequestHandler
 }
 
