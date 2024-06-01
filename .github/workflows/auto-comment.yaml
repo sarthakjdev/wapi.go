@@ -1,0 +1,18 @@
+name: Auto Comment on New Issue Label
+# This workflow is triggered when a label is added to an issue.
+on:
+  issues:
+    types: [labeled]
+
+jobs:
+  processLabelAction:
+    name: Process Label Action
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Process Label Action
+        uses: hramos/respond-to-issue-based-on-label@v2
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          configuration-path: ".github/label-actions.yml"

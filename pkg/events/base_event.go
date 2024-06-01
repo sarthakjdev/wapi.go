@@ -1,20 +1,98 @@
 package events
 
-type BaseEvent struct {
+import (
+	requestclient "github.com/sarthakjdev/wapi.go/internal/request_client"
+	"github.com/sarthakjdev/wapi.go/pkg/components"
+)
+
+type MessageContext struct {
+	From string `json:"from"`
+}
+
+type BaseEvent interface {
+	GetEventType() string
+}
+
+type BaseMessageEventInterface interface {
+	BaseEvent
+	Reply() (string, error)
+	React() (string, error)
+}
+
+type BaseSystemEventInterface interface {
+	BaseEvent
 }
 
 type BaseMessageEvent struct {
-	BaseEvent
+	requester   requestclient.RequestClient
+	MessageId   string         `json:"message_id"`
+	Context     MessageContext `json:"context"`
+	Timestamp   string         `json:"timestamp"`
+	IsForwarded bool           `json:"is_forwarded"`
+}
+
+func NewBaseMessageEvent(messageId string, timestamp string, from string, isForwarded bool, requester requestclient.RequestClient) BaseMessageEvent {
+	return BaseMessageEvent{
+		MessageId: messageId,
+		Context: MessageContext{
+			From: from,
+		},
+		requester:   requester,
+		Timestamp:   timestamp,
+		IsForwarded: isForwarded,
+	}
+}
+
+func (bme BaseMessageEvent) GetEventType() string {
+	return "message"
+}
+
+// Reply to the message
+func (baseMessageEvent *BaseMessageEvent) Reply(Message components.BaseMessage) (string, error) {
+
+	body, err := Message.ToJson(components.ApiCompatibleJsonConverterConfigs{
+		SendToPhoneNumber: baseMessageEvent.Context.From,
+		ReplyToMessageId:  baseMessageEvent.MessageId,
+	})
+
+	if err != nil {
+		return "", err
+	}
+
+	baseMessageEvent.requester.RequestCloudApi(requestclient.RequestCloudApiParams{
+		Body: string(body),
+		Path: "/" + baseMessageEvent.requester.PhoneNumberId + "/messages",
+	})
+
+	return "", nil
+
+}
+
+// React to the message
+func (baseMessageEvent *BaseMessageEvent) React(emoji string) (string, error) {
+	reactionMessage, err := components.NewReactionMessage(components.ReactionMessageParams{
+		Emoji:     emoji,
+		MessageId: baseMessageEvent.MessageId,
+	})
+	if err != nil {
+		return "", err
+	}
+	baseMessageEvent.Reply(reactionMessage)
+	return "", nil
+}
+
+// BaseMediaMessageEvent represents a base media message event which contains media information.
+type BaseMediaMessageEvent struct {
+	BaseMessageEvent `json:",inline"`
+	MediaId          string `json:"media_id"`
+	MimeType         string `json:"mime_type"`
+	Sha256           string `json:"sha256"`
 }
 
 type BaseSystemEvent struct {
-	BaseEvent
+	Timestamp string `json:"timestamp"`
 }
 
-func (*BaseMessageEvent) Reply() {
-
-}
-
-func (*BaseMessageEvent) React() {
-
+func (bme BaseSystemEvent) GetEventType() string {
+	return "system"
 }
