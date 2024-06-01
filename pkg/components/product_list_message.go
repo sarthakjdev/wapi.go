@@ -7,17 +7,21 @@ import (
 	"github.com/sarthakjdev/wapi.go/utils"
 )
 
+// ProductListMessage represents a product list message.
 type ProductListMessage struct {
 }
 
+// ProductListMessageParams represents the parameters for creating a product list message.
 type ProductListMessageParams struct {
 }
 
+// ProductListMessageApiPayload represents the API payload for a product list message.
 type ProductListMessageApiPayload struct {
 	BaseMessagePayload
 	Interactive ProductListMessage `json:"interactive" validate:"required"`
 }
 
+// NewProductListMessage creates a new product list message.
 func NewProductListMessage(params ProductListMessageParams) (*ProductListMessage, error) {
 	if err := utils.GetValidator().Struct(params); err != nil {
 		return nil, fmt.Errorf("error validating configs: %v", err)
@@ -26,6 +30,7 @@ func NewProductListMessage(params ProductListMessageParams) (*ProductListMessage
 	return &ProductListMessage{}, nil
 }
 
+// ToJson converts the product list message to JSON.
 func (m *ProductListMessage) ToJson(configs ApiCompatibleJsonConverterConfigs) ([]byte, error) {
 	if err := utils.GetValidator().Struct(configs); err != nil {
 		return nil, fmt.Errorf("error validating configs: %v", err)
@@ -49,5 +54,4 @@ func (m *ProductListMessage) ToJson(configs ApiCompatibleJsonConverterConfigs) (
 	}
 
 	return jsonToReturn, nil
-
 }

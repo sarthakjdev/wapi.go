@@ -7,20 +7,23 @@ import (
 	"github.com/sarthakjdev/wapi.go/utils"
 )
 
+// ReactionMessage represents a reaction to a message.
 type ReactionMessage struct {
-	MessageId string `json:"message_id" validate:"required"`
-	Emoji     string `json:"emoji" validate:"required"`
+	MessageId string `json:"message_id" validate:"required"` // The ID of the message to react to.
+	Emoji     string `json:"emoji" validate:"required"`      // The emoji representing the reaction.
 }
 
+// ReactionMessageParams is an alias for ReactionMessage.
 type ReactionMessageParams = ReactionMessage
 
+// ReactionMessageApiPayload represents the API payload for a reaction message.
 type ReactionMessageApiPayload struct {
 	BaseMessagePayload
-	Reaction ReactionMessage `json:"reaction" validate:"required"`
+	Reaction ReactionMessage `json:"reaction" validate:"required"` // The reaction message.
 }
 
+// NewReactionMessage creates a new ReactionMessage instance.
 func NewReactionMessage(params ReactionMessageParams) (*ReactionMessage, error) {
-
 	if err := utils.GetValidator().Struct(params); err != nil {
 		return nil, fmt.Errorf("error validating configs: %v", err)
 	}
@@ -31,6 +34,7 @@ func NewReactionMessage(params ReactionMessageParams) (*ReactionMessage, error) 
 	}, nil
 }
 
+// ToJson converts the ReactionMessage to JSON.
 func (reaction *ReactionMessage) ToJson(configs ApiCompatibleJsonConverterConfigs) ([]byte, error) {
 	if err := utils.GetValidator().Struct(configs); err != nil {
 		return nil, fmt.Errorf("error validating configs: %v", err)

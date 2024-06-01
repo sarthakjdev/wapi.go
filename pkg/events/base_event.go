@@ -81,7 +81,16 @@ func (baseMessageEvent *BaseMessageEvent) React(emoji string) (string, error) {
 	return "", nil
 }
 
+// BaseMediaMessageEvent represents a base media message event which contains media information.
+type BaseMediaMessageEvent struct {
+	BaseMessageEvent `json:",inline"`
+	MediaId          string `json:"media_id"`
+	MimeType         string `json:"mime_type"`
+	Sha256           string `json:"sha256"`
+}
+
 type BaseSystemEvent struct {
+	Timestamp string `json:"timestamp"`
 }
 
 func (bme BaseSystemEvent) GetEventType() string {

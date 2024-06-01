@@ -1,11 +1,22 @@
 package events
 
+import "github.com/sarthakjdev/wapi.go/pkg/components"
+
+// DocumentMessageEvent represents an event that occurs when a document message is received.
 type DocumentMessageEvent struct {
-	BaseMessageEvent
+	BaseMediaMessageEvent
+	Document components.DocumentMessage
 }
 
-func NewDocumentMessageEvent(baseMessageEvent BaseMessageEvent, text string) *DocumentMessageEvent {
+// NewDocumentMessageEvent creates a new DocumentMessageEvent instance.
+func NewDocumentMessageEvent(baseMessageEvent BaseMessageEvent, document components.DocumentMessage, mediaId, sha256, mimeType string) *DocumentMessageEvent {
 	return &DocumentMessageEvent{
-		BaseMessageEvent: baseMessageEvent,
+		BaseMediaMessageEvent: BaseMediaMessageEvent{
+			MediaId:          mediaId,
+			Sha256:           sha256,
+			MimeType:         mimeType,
+			BaseMessageEvent: baseMessageEvent,
+		},
+		Document: document,
 	}
 }

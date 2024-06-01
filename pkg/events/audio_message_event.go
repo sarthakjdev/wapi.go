@@ -4,20 +4,21 @@ import (
 	"github.com/sarthakjdev/wapi.go/pkg/components"
 )
 
+// AudioMessageEvent represents an event for an audio message.
 type AudioMessageEvent struct {
-	BaseMessageEvent
-	Audio    components.AudioMessage
-	MimeType string `json:"mimetype"`
-	SHA256   string `json:"sha256"`
-	MediaId  string `json:"media_id"`
+	BaseMediaMessageEvent `json:",inline"`
+	Audio                 components.AudioMessage `json:"audio"`
 }
 
-func NewAudioMessageEvent(baseMessageEvent BaseMessageEvent, mediaId string, audio components.AudioMessage, mime_type, sha256 string) *AudioMessageEvent {
+// NewAudioMessageEvent creates a new AudioMessageEvent instance.
+func NewAudioMessageEvent(baseMessageEvent BaseMessageEvent, mediaId string, audio components.AudioMessage, mime_type, sha256, mimeType string) *AudioMessageEvent {
 	return &AudioMessageEvent{
-		BaseMessageEvent: baseMessageEvent,
-		Audio:            audio,
-		MimeType:         mime_type,
-		SHA256:           sha256,
-		MediaId:          mediaId,
+		BaseMediaMessageEvent: BaseMediaMessageEvent{
+			BaseMessageEvent: baseMessageEvent,
+			MediaId:          mediaId,
+			Sha256:           sha256,
+			MimeType:         mimeType,
+		},
+		Audio: audio,
 	}
 }

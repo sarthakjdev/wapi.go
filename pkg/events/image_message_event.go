@@ -1,11 +1,22 @@
 package events
 
+import "github.com/sarthakjdev/wapi.go/pkg/components"
+
+// ImageMessageEvent represents an event for an image message.
 type ImageMessageEvent struct {
-	BaseMessageEvent
+	BaseMediaMessageEvent `json:",inline"`
+	Image                 components.ImageMessage `json:"image"`
 }
 
-func NewImageMessageEvent(baseMessageEvent BaseMessageEvent, text string) *ImageMessageEvent {
+// NewImageMessageEvent creates a new ImageMessageEvent instance.
+func NewImageMessageEvent(baseMessageEvent BaseMessageEvent, image components.ImageMessage, mimeType, sha256, mediaId string) *ImageMessageEvent {
 	return &ImageMessageEvent{
-		BaseMessageEvent: baseMessageEvent,
+		BaseMediaMessageEvent: BaseMediaMessageEvent{
+			MediaId:          mediaId,
+			Sha256:           sha256,
+			MimeType:         mimeType,
+			BaseMessageEvent: baseMessageEvent,
+		},
+		Image: image,
 	}
 }

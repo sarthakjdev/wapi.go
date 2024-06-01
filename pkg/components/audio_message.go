@@ -7,18 +7,22 @@ import (
 	"github.com/sarthakjdev/wapi.go/utils"
 )
 
+// AudioMessage represents an audio message.
 type AudioMessage struct {
 	Id   string `json:"id,omitempty"`
 	Link string `json:"link,omitempty"`
 }
 
+// AudioMessageApiPayload represents the payload for an audio message API request.
 type AudioMessageApiPayload struct {
 	BaseMessagePayload
 	Audio AudioMessage `json:"audio" validate:"required"`
 }
 
+// AudioMessageConfigs is an alias for AudioMessage.
 type AudioMessageConfigs = AudioMessage
 
+// NewAudioMessage creates a new AudioMessage object.
 func NewAudioMessage(params AudioMessageConfigs) (*AudioMessage, error) {
 	if err := utils.GetValidator().Struct(params); err != nil {
 		return nil, fmt.Errorf("error validating configs: %v", err)
@@ -40,6 +44,7 @@ func NewAudioMessage(params AudioMessageConfigs) (*AudioMessage, error) {
 	}, nil
 }
 
+// ToJson converts the AudioMessage object to JSON.
 func (audio *AudioMessage) ToJson(configs ApiCompatibleJsonConverterConfigs) ([]byte, error) {
 	if err := utils.GetValidator().Struct(configs); err != nil {
 		return nil, fmt.Errorf("error validating configs: %v", err)
@@ -63,5 +68,4 @@ func (audio *AudioMessage) ToJson(configs ApiCompatibleJsonConverterConfigs) ([]
 	}
 
 	return jsonToReturn, nil
-
 }

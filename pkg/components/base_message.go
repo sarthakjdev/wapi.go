@@ -1,7 +1,9 @@
 package components
 
+// MessageType represents the type of message.
 type MessageType string
 
+// Constants for different message types.
 const (
 	MessageTypeLocation    MessageType = "location"
 	MessageTypeAudio       MessageType = "audio"
@@ -16,16 +18,18 @@ const (
 	MessageTypeImage       MessageType = "image"
 )
 
+// ApiCompatibleJsonConverterConfigs represents the configuration for converting to JSON.
 type ApiCompatibleJsonConverterConfigs struct {
 	ReplyToMessageId  string
 	SendToPhoneNumber string
 }
 
+// Context represents the context of the message.
 type Context struct {
 	MessageId string `json:"message_id,omitempty"`
 }
 
-// Base API Payload to send messages
+// BaseMessagePayload represents the base payload to send messages.
 type BaseMessagePayload struct {
 	Context          *Context    `json:"context,omitempty"`
 	To               string      `json:"to"`
@@ -34,6 +38,7 @@ type BaseMessagePayload struct {
 	RecipientType    string      `json:"recipient_type"`
 }
 
+// NewBaseMessagePayload creates a new instance of BaseMessagePayload.
 func NewBaseMessagePayload(to string, messageType MessageType) BaseMessagePayload {
 	return BaseMessagePayload{
 		To:               to,
@@ -43,6 +48,7 @@ func NewBaseMessagePayload(to string, messageType MessageType) BaseMessagePayloa
 	}
 }
 
+// BaseMessage is an interface for sending messages.
 type BaseMessage interface {
 	ToJson(configs ApiCompatibleJsonConverterConfigs) ([]byte, error)
 }

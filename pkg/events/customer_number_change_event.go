@@ -1,8 +1,8 @@
 package events
 
 type CustomerNumberChangedEvent struct {
-}
-
-func NewCustomerNumberChangedEvent(baseMessageEvent BaseMessageEvent, text string) *CustomerNumberChangedEvent {
-	return &CustomerNumberChangedEvent{}
+	BaseMessageEvent  `json:",inline"`
+	ChangeDescription string `json:"changeDescription"`
+	NewWaId           string `json:"newWaId"`
+	OldWaId           string `json:"oldWaId"`
 }

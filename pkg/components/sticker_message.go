@@ -7,21 +7,25 @@ import (
 	"github.com/sarthakjdev/wapi.go/utils"
 )
 
+// StickerMessage represents a sticker message.
 type StickerMessage struct {
 	Id   string `json:"id,omitempty"`
 	Link string `json:"link,omitempty"`
 }
 
+// StickerMessageApiPayload represents the API payload for a sticker message.
 type StickerMessageApiPayload struct {
 	BaseMessagePayload
 	Sticker StickerMessage `json:"sticker" validate:"required"`
 }
 
+// StickerMessageConfigs represents the configurations for a sticker message.
 type StickerMessageConfigs struct {
 	Id   string `json:"id,omitempty"`
 	Link string `json:"link,omitempty"`
 }
 
+// NewStickerMessage creates a new sticker message based on the provided configurations.
 func NewStickerMessage(params *StickerMessageConfigs) (*StickerMessage, error) {
 	if err := utils.GetValidator().Struct(params); err != nil {
 		return nil, fmt.Errorf("error validating configs: %v", err)
@@ -42,6 +46,7 @@ func NewStickerMessage(params *StickerMessageConfigs) (*StickerMessage, error) {
 	}, nil
 }
 
+// ToJson converts the sticker message to JSON based on the provided configurations.
 func (sticker *StickerMessage) ToJson(configs ApiCompatibleJsonConverterConfigs) ([]byte, error) {
 	if err := utils.GetValidator().Struct(configs); err != nil {
 		return nil, fmt.Errorf("error validating configs: %v", err)
@@ -65,5 +70,4 @@ func (sticker *StickerMessage) ToJson(configs ApiCompatibleJsonConverterConfigs)
 	}
 
 	return jsonToReturn, nil
-
 }

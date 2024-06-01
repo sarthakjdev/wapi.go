@@ -134,6 +134,21 @@ func main() {
 
 	})
 
-	whatsappClient.InitiateClient()
+	whatsappClient.On(manager.AudioMessageEvent, func(be events.BaseEvent) {
+		fmt.Println("audio message event received")
+	})
 
+	whatsappClient.On(manager.VideoMessageEvent, func(be events.BaseEvent) {
+		fmt.Println("video message event received")
+	})
+
+	whatsappClient.On(manager.DocumentMessageEvent, func(be events.BaseEvent) {
+		fmt.Println("document message event received")
+	})
+
+	whatsappClient.On(manager.ImageMessageEvent, func(be events.BaseEvent) {
+		fmt.Println("image message event received")
+	})
+
+	whatsappClient.InitiateClient()
 }

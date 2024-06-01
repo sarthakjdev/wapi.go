@@ -1,11 +1,17 @@
 package events
 
+import "github.com/sarthakjdev/wapi.go/pkg/components"
+
+// LocationMessageEvent represents an event that contains a location message.
 type LocationMessageEvent struct {
-	BaseMessageEvent
+	BaseMessageEvent `json:",inline"`
+	Location         components.LocationMessage `json:"location"`
 }
 
-func NewLocationMessageEvent(baseMessageEvent BaseMessageEvent, text string) *LocationMessageEvent {
+// NewLocationMessageEvent creates a new LocationMessageEvent instance.
+func NewLocationMessageEvent(baseMessageEvent BaseMessageEvent, location components.LocationMessage) *LocationMessageEvent {
 	return &LocationMessageEvent{
 		BaseMessageEvent: baseMessageEvent,
+		Location:         location,
 	}
 }

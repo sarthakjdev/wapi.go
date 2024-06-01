@@ -14,7 +14,6 @@ import (
 type Client struct {
 	Media             manager.MediaManager
 	Message           manager.MessageManager
-	Phone             manager.PhoneNumbersManager
 	webhook           manager.WebhookManager
 	phoneNumberId     string
 	apiAccessToken    string
@@ -33,16 +32,22 @@ type ClientConfig struct {
 
 // NewWapiClient creates a new instance of Client.
 func New(configs ClientConfig) (*Client, error) {
+	// Validate the client configuration options
 	err := utils.GetValidator().Struct(configs)
 	if err != nil {
 		return nil, fmt.Errorf("error validating client config: %w", err)
 	}
+
+	// Create a new request client
 	requester := *requestclient.NewRequestClient(configs.PhoneNumberId, configs.ApiAccessToken)
+
+	// Create a new event manager
 	eventManager := *manager.NewEventManager()
+
+	// Create a new Client instance with the provided configurations
 	return &Client{
 		Media:             *manager.NewMediaManager(requester),
 		Message:           *manager.NewMessageManager(requester),
-		Phone:             *manager.NewPhoneNumbersManager(requester),
 		webhook:           *manager.NewWebhook(&manager.WebhookManagerConfig{Path: configs.WebhookPath, Secret: configs.WebhookSecret, Port: configs.WebhookServerPort, EventManager: eventManager, Requester: requester}),
 		phoneNumberId:     configs.PhoneNumberId,
 		apiAccessToken:    configs.ApiAccessToken,
@@ -63,15 +68,16 @@ func (client *Client) SetPhoneNumberId(phoneNumberId string) {
 // InitiateClient initializes the client and starts listening to events from the webhook.
 // It returns true if the client was successfully initiated.
 func (client *Client) InitiateClient() bool {
-
 	client.webhook.ListenToEvents()
 	return true
 }
 
+// GetWebhookGetRequestHandler returns the handler function for handling GET requests to the webhook.
 func (client *Client) GetWebhookGetRequestHandler() func(c echo.Context) error {
 	return client.webhook.GetRequestHandler
 }
 
+// GetWebhookPostRequestHandler returns the handler function for handling POST requests to the webhook.
 func (client *Client) GetWebhookPostRequestHandler() func(c echo.Context) error {
 	return client.webhook.PostRequestHandler
 }
