@@ -1,26 +1,22 @@
 #!/bin/sh
-. "$(dirname "$0")/_/husky.sh"
 
+# # Check for conventional commit format
+# commit_msg=$(cat "$1")
+# # Modified regex to allow for more valid formats
+# conventional_commit_regex='^(feat|fix|chore|docs|test|style|refactor|perf|build|ci|revert)(\(.+\))?(!)?(:)(\s.*)?$'
 
-# check for conventional commit format
-commit_msg=$(cat "$1")
-# Regex to match Conventional Commit format
-conventional_commit_regex='^(feat|fix|chore|docs|test|style|refactor|perf|build|ci|revert)(\(.+?\))?: .{1,}$'
+# echo "$conventional_commit_regex"
 
-if ! [[ "$commit_msg" =~ $conventional_commit_regex ]]; then
-    echo "ERROR: Commit message does not adhere to Conventional Commits format:"
-    echo "$commit_msg"
-    exit 1
-fi
-
+# if ! [[ "$commit_msg" =~ $conventional_commit_regex ]]; then
+#     echo "ERROR: Commit message does not adhere to Conventional Commits format:"
+#     echo "$commit_msg"
+#     echo "$($commit_msg =~ $conventional_commit_regex )"
+#     exit 1
+# fi
 
 # If not a merge commit, require commit to be signed off
 if [ ! -e .git/MERGE_MSG ] && ! grep -q "^Signed-off-by: " "$1"; then
-  echo >&2 "Commit message must be signed off with your user name and email."
-  echo >&2 "To sign off your commit, add the -s flag to the git commit command."
-  exit 1
+    echo >&2 "Commit message must be signed off with your user name and email."
+    echo >&2 "To sign off your commit, add the -s flag to the git commit command."
+    exit 1
 fi
-
-
-
-

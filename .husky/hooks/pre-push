@@ -1,7 +1,6 @@
 #!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
 
-branch=`git symbolic-ref HEAD`
+branch=$(git symbolic-ref HEAD)
 
 if [ "$branch" = "refs/heads/master" ]; then
     echo "\\033[31mDirect push to master is not allowed.\\033[0m"
