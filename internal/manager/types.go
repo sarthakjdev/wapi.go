@@ -1,37 +1,5 @@
 package manager
 
-type EventType string
-
-const (
-	TextMessageEvent             EventType = "text_message"
-	AudioMessageEvent            EventType = "audio_message"
-	VideoMessageEvent            EventType = "video_message"
-	ImageMessageEvent            EventType = "image_message"
-	ContactMessageEvent          EventType = "contact_message"
-	DocumentMessageEvent         EventType = "document_message"
-	LocationMessageEvent         EventType = "location_message"
-	ReactionMessageEvent         EventType = "reaction_message"
-	ListInteractionMessageEvent  EventType = "list_interaction_message"
-	TemplateMessageEvent         EventType = "template_message"
-	QuickReplyMessageEvent       EventType = "quick_reply_message"
-	ReplyButtonInteractionEvent  EventType = "reply_button_interaction"
-	StickerMessageEvent          EventType = "sticker_message"
-	AdInteractionEvent           EventType = "ad_interaction_message"
-	CustomerIdentityChangedEvent EventType = "customer_identity_changed"
-	CustomerNumberChangedEvent   EventType = "customer_number_changed"
-	MessageDeliveredEvent        EventType = "message_delivered"
-	MessageFailedEvent           EventType = "message_failed"
-	MessageReadEvent             EventType = "message_read"
-	MessageSentEvent             EventType = "message_sent"
-	MessageUndeliveredEvent      EventType = "message_undelivered"
-	OrderReceivedEvent           EventType = "order_received"
-	ProductInquiryEvent          EventType = "product_inquiry"
-	UnknownEvent                 EventType = "unknown"
-	ErrorEvent                   EventType = "error"
-	WarnEvent                    EventType = "warn"
-	ReadyEvent                   EventType = "ready"
-)
-
 type NotificationReasonEnum string
 
 const (

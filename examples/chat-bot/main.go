@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/sarthakjdev/wapi.go/internal/manager"
 	wapi "github.com/sarthakjdev/wapi.go/pkg/client"
 	wapiComponents "github.com/sarthakjdev/wapi.go/pkg/components"
 	"github.com/sarthakjdev/wapi.go/pkg/events"
@@ -116,7 +115,7 @@ func main() {
 
 	fmt.Println(string(jsonData))
 
-	whatsappClient.Message.Send(manager.SendMessageParams{Message: listMessage, PhoneNumber: "919643500545"})
+	whatsappClient.Message.Send(listMessage, "919643500545")
 
 	buttonMessage, err := wapiComponents.NewQuickReplyButtonMessage("Body 1")
 
@@ -128,11 +127,11 @@ func main() {
 	buttonMessage.AddButton("1", "Button 1")
 	buttonMessage.AddButton("2", "Button 2")
 
-	whatsappClient.On(manager.ReadyEvent, func(event events.BaseEvent) {
+	whatsappClient.On(events.ReadyEventType, func(event events.BaseEvent) {
 		fmt.Println("client is ready")
 	})
 
-	whatsappClient.On(manager.TextMessageEvent, func(event events.BaseEvent) {
+	whatsappClient.On(events.TextMessageEventType, func(event events.BaseEvent) {
 		fmt.Println("text message event received")
 
 		textMessageEvent := event.(*events.TextMessageEvent)
@@ -161,19 +160,19 @@ func main() {
 		}
 	})
 
-	whatsappClient.On(manager.AudioMessageEvent, func(be events.BaseEvent) {
+	whatsappClient.On(events.AudioMessageEventType, func(be events.BaseEvent) {
 		fmt.Println("audio message event received")
 	})
 
-	whatsappClient.On(manager.VideoMessageEvent, func(be events.BaseEvent) {
+	whatsappClient.On(events.VideoMessageEventType, func(be events.BaseEvent) {
 		fmt.Println("video message event received")
 	})
 
-	whatsappClient.On(manager.DocumentMessageEvent, func(be events.BaseEvent) {
+	whatsappClient.On(events.DocumentMessageEventType, func(be events.BaseEvent) {
 		fmt.Println("document message event received")
 	})
 
-	whatsappClient.On(manager.ImageMessageEvent, func(be events.BaseEvent) {
+	whatsappClient.On(events.ImageMessageEventType, func(be events.BaseEvent) {
 		fmt.Println("image message event received")
 	})
 

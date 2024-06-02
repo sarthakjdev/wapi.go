@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/labstack/echo/v4"
-	"github.com/sarthakjdev/wapi.go/internal/manager"
 	wapi "github.com/sarthakjdev/wapi.go/pkg/client"
 	"github.com/sarthakjdev/wapi.go/pkg/components"
 	"github.com/sarthakjdev/wapi.go/pkg/events"
@@ -21,7 +20,7 @@ func main() {
 		WebhookServerPort: 8080,
 	})
 
-	whatsappClient.On(manager.TextMessageEvent, func(event events.BaseEvent) {
+	whatsappClient.On(events.TextMessageEventType, func(event events.BaseEvent) {
 		textMessageEvent := event.(*events.TextMessageEvent)
 		reply, err := components.NewTextMessage(components.TextMessageConfigs{
 			Text: "Hello, from wapi.go",

@@ -91,7 +91,7 @@ func (wh *WebhookManager) PostRequestHandler(c echo.Context) error {
 				switch message.Type {
 				case NotificationMessageTypeText:
 					{
-						wh.EventManager.Publish(TextMessageEvent, events.NewTextMessageEvent(
+						wh.EventManager.Publish(events.TextMessageEventType, events.NewTextMessageEvent(
 							events.NewBaseMessageEvent(
 								message.Id,
 								"",
@@ -104,7 +104,7 @@ func (wh *WebhookManager) PostRequestHandler(c echo.Context) error {
 				case NotificationMessageTypeImage:
 					{
 
-						wh.EventManager.Publish(ImageMessageEvent, events.NewTextMessageEvent(
+						wh.EventManager.Publish(events.ImageMessageEventType, events.NewTextMessageEvent(
 							events.NewBaseMessageEvent(
 								message.Id,
 								"",
@@ -118,7 +118,7 @@ func (wh *WebhookManager) PostRequestHandler(c echo.Context) error {
 				case NotificationMessageTypeVideo:
 					{
 
-						wh.EventManager.Publish(AudioMessageEvent, events.NewTextMessageEvent(
+						wh.EventManager.Publish(events.AudioMessageEventType, events.NewTextMessageEvent(
 							events.NewBaseMessageEvent(
 								message.Id,
 								"",
@@ -132,7 +132,7 @@ func (wh *WebhookManager) PostRequestHandler(c echo.Context) error {
 				case NotificationMessageTypeDocument:
 					{
 
-						wh.EventManager.Publish(DocumentMessageEvent, events.NewTextMessageEvent(
+						wh.EventManager.Publish(events.DocumentMessageEventType, events.NewTextMessageEvent(
 							events.NewBaseMessageEvent(
 								message.Id,
 								"",
@@ -144,7 +144,7 @@ func (wh *WebhookManager) PostRequestHandler(c echo.Context) error {
 					}
 				case NotificationMessageTypeAudio:
 					{
-						wh.EventManager.Publish(AudioMessageEvent, events.NewTextMessageEvent(
+						wh.EventManager.Publish(events.AudioMessageEventType, events.NewTextMessageEvent(
 							events.NewBaseMessageEvent(
 								message.Id,
 								"",
@@ -156,7 +156,7 @@ func (wh *WebhookManager) PostRequestHandler(c echo.Context) error {
 					}
 				case NotificationMessageTypeLocation:
 					{
-						wh.EventManager.Publish(LocationMessageEvent, events.NewTextMessageEvent(
+						wh.EventManager.Publish(events.LocationMessageEventType, events.NewTextMessageEvent(
 							events.NewBaseMessageEvent(
 								message.Id,
 								"",
@@ -168,7 +168,7 @@ func (wh *WebhookManager) PostRequestHandler(c echo.Context) error {
 					}
 				case NotificationMessageTypeContacts:
 					{
-						wh.EventManager.Publish(ContactMessageEvent, events.NewTextMessageEvent(
+						wh.EventManager.Publish(events.ContactMessageEventType, events.NewTextMessageEvent(
 							events.NewBaseMessageEvent(
 								message.Id,
 								"",
@@ -180,7 +180,7 @@ func (wh *WebhookManager) PostRequestHandler(c echo.Context) error {
 					}
 				case NotificationMessageTypeSticker:
 					{
-						wh.EventManager.Publish(StickerMessageEvent, events.NewTextMessageEvent(
+						wh.EventManager.Publish(events.StickerMessageEventType, events.NewTextMessageEvent(
 							events.NewBaseMessageEvent(
 								message.Id,
 								"",
@@ -192,7 +192,7 @@ func (wh *WebhookManager) PostRequestHandler(c echo.Context) error {
 					}
 				case NotificationMessageTypeSystem:
 					{
-						wh.EventManager.Publish(TextMessageEvent, events.NewTextMessageEvent(
+						wh.EventManager.Publish(events.TextMessageEventType, events.NewTextMessageEvent(
 							events.NewBaseMessageEvent(
 								message.Id,
 								"",
@@ -204,7 +204,7 @@ func (wh *WebhookManager) PostRequestHandler(c echo.Context) error {
 					}
 				case NotificationMessageTypeButton:
 					{
-						wh.EventManager.Publish(ReplyButtonInteractionEvent, events.NewTextMessageEvent(
+						wh.EventManager.Publish(events.ReplyButtonInteractionEventType, events.NewTextMessageEvent(
 							events.NewBaseMessageEvent(
 								message.Id,
 								"",
@@ -216,7 +216,7 @@ func (wh *WebhookManager) PostRequestHandler(c echo.Context) error {
 					}
 				case NotificationMessageTypeInteractive:
 					{
-						wh.EventManager.Publish(ListInteractionMessageEvent, events.NewTextMessageEvent(
+						wh.EventManager.Publish(events.ListInteractionMessageEventType, events.NewTextMessageEvent(
 							events.NewBaseMessageEvent(
 								message.Id,
 								"",
@@ -228,7 +228,7 @@ func (wh *WebhookManager) PostRequestHandler(c echo.Context) error {
 					}
 				case NotificationMessageTypeReaction:
 					{
-						wh.EventManager.Publish(ReactionMessageEvent, events.NewTextMessageEvent(
+						wh.EventManager.Publish(events.ReactionMessageEventType, events.NewTextMessageEvent(
 							events.NewBaseMessageEvent(
 								message.Id,
 								"",
@@ -240,7 +240,7 @@ func (wh *WebhookManager) PostRequestHandler(c echo.Context) error {
 					}
 				case NotificationMessageTypeOrder:
 					{
-						wh.EventManager.Publish(OrderReceivedEvent, events.NewTextMessageEvent(
+						wh.EventManager.Publish(events.OrderReceivedEventType, events.NewTextMessageEvent(
 							events.NewBaseMessageEvent(
 								message.Id,
 								"",
@@ -252,7 +252,7 @@ func (wh *WebhookManager) PostRequestHandler(c echo.Context) error {
 					}
 				case NotificationMessageTypeUnknown:
 					{
-						wh.EventManager.Publish(UnknownEvent, events.NewTextMessageEvent(
+						wh.EventManager.Publish(events.UnknownEventType, events.NewTextMessageEvent(
 							events.NewBaseMessageEvent(
 								message.Id,
 								"",
@@ -289,7 +289,7 @@ func (wh *WebhookManager) ListenToEvents() {
 		}
 	}()
 
-	wh.EventManager.Publish(ReadyEvent, events.NewReadyEvent())
+	wh.EventManager.Publish(events.ReadyEventType, events.NewReadyEvent())
 	// Wait for an interrupt signal (e.g., Ctrl+C)
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, os.Interrupt) // Capture SIGINT (Ctrl+C)
@@ -301,9 +301,4 @@ func (wh *WebhookManager) ListenToEvents() {
 	if err := server.Shutdown(ctx); err != nil {
 		log.Fatal(err) // Handle shutdown errors gracefully
 	}
-}
-
-// determineEventType determines the event type.
-func (wh *WebhookManager) determineEventType() EventType {
-	return TextMessageEvent
 }

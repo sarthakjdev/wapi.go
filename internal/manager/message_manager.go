@@ -19,17 +19,11 @@ func NewMessageManager(requester requestclient.RequestClient) *MessageManager {
 	}
 }
 
-// SendMessageParams represents the parameters for sending a message.
-type SendMessageParams struct {
-	Message     components.BaseMessage
-	PhoneNumber string
-}
-
 // Send sends a message with the given parameters and returns the response.
 // TODO: return the structured response from here
-func (mm *MessageManager) Send(params SendMessageParams) (string, error) {
-	body, err := params.Message.ToJson(components.ApiCompatibleJsonConverterConfigs{
-		SendToPhoneNumber: params.PhoneNumber,
+func (mm *MessageManager) Send(message components.BaseMessage, phoneNumber string) (string, error) {
+	body, err := message.ToJson(components.ApiCompatibleJsonConverterConfigs{
+		SendToPhoneNumber: phoneNumber,
 		// ReplyToMessageId: "wamid.HBgMOTE5NjQzNTAwNTQ1FQIAERgSQzVGOTlFMzExQ0VCQTg0MUFCAA==",
 	})
 	if err != nil {
@@ -41,9 +35,4 @@ func (mm *MessageManager) Send(params SendMessageParams) (string, error) {
 		Path: "/" + mm.requester.PhoneNumberId + "/messages",
 	})
 	return "ok", nil
-}
-
-// Reply replies to a message.
-func (mm *MessageManager) Reply() {
-	// Reply to message
 }

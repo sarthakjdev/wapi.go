@@ -83,6 +83,6 @@ func (client *Client) GetWebhookPostRequestHandler() func(c echo.Context) error 
 }
 
 // OnMessage registers a handler for a specific event type.
-func (client *Client) On(eventType manager.EventType, handler func(events.BaseEvent)) {
+func (client *Client) On(eventType events.EventType, handler func(events.BaseEvent)) {
 	client.webhook.EventManager.On(eventType, handler)
 }
