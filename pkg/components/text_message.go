@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/sarthakjdev/wapi.go/utils"
+	"github.com/sarthakjdev/wapi.go/internal"
 )
 
 // textMessage represents a text message.
@@ -38,7 +38,7 @@ type TextMessageApiPayload struct {
 
 // NewTextMessage creates a new text message with the given configurations.
 func NewTextMessage(configs TextMessageConfigs) (*textMessage, error) {
-	err := utils.GetValidator().Struct(configs)
+	err := internal.GetValidator().Struct(configs)
 	if err != nil {
 		return nil, fmt.Errorf("error validating text message config: %v", err)
 	}
@@ -50,7 +50,7 @@ func NewTextMessage(configs TextMessageConfigs) (*textMessage, error) {
 
 // ToJson converts the text message struct to WhatsApp API compatible JSON.
 func (m *textMessage) ToJson(configs ApiCompatibleJsonConverterConfigs) ([]byte, error) {
-	if err := utils.GetValidator().Struct(configs); err != nil {
+	if err := internal.GetValidator().Struct(configs); err != nil {
 		return nil, fmt.Errorf("error validating configs: %v", err)
 	}
 

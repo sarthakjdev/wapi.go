@@ -12,9 +12,9 @@ import (
 	"time"
 
 	"github.com/labstack/echo/v4"
+	"github.com/sarthakjdev/wapi.go/internal"
 	requestclient "github.com/sarthakjdev/wapi.go/internal/request_client"
 	"github.com/sarthakjdev/wapi.go/pkg/events"
-	"github.com/sarthakjdev/wapi.go/utils"
 )
 
 // WebhookManager represents a manager for handling webhooks.
@@ -80,7 +80,7 @@ func (wh *WebhookManager) PostRequestHandler(c echo.Context) error {
 		c.String(400, "Invalid JSON data")
 	}
 
-	if err := utils.GetValidator().Struct(payload); err != nil {
+	if err := internal.GetValidator().Struct(payload); err != nil {
 		fmt.Println("Error validating JSON:", err)
 		c.String(400, "Invalid JSON data")
 	}

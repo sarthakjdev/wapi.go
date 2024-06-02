@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/sarthakjdev/wapi.go/utils"
+	"github.com/sarthakjdev/wapi.go/internal"
 )
 
 // quickReplyButtonMessageButtonReply represents the reply structure of a quick reply button.
@@ -78,7 +78,7 @@ func (m *QuickReplyButtonMessage) AddButton(id, title string) error {
 
 // ToJson converts the quick reply button message to JSON.
 func (m *QuickReplyButtonMessage) ToJson(configs ApiCompatibleJsonConverterConfigs) ([]byte, error) {
-	if err := utils.GetValidator().Struct(configs); err != nil {
+	if err := internal.GetValidator().Struct(configs); err != nil {
 		return nil, fmt.Errorf("error validating configs: %v", err)
 	}
 

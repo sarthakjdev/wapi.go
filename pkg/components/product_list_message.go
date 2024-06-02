@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/sarthakjdev/wapi.go/utils"
+	"github.com/sarthakjdev/wapi.go/internal"
 )
 
 // ProductListMessage represents a product list message.
@@ -23,7 +23,7 @@ type ProductListMessageApiPayload struct {
 
 // NewProductListMessage creates a new product list message.
 func NewProductListMessage(params ProductListMessageParams) (*ProductListMessage, error) {
-	if err := utils.GetValidator().Struct(params); err != nil {
+	if err := internal.GetValidator().Struct(params); err != nil {
 		return nil, fmt.Errorf("error validating configs: %v", err)
 	}
 
@@ -32,7 +32,7 @@ func NewProductListMessage(params ProductListMessageParams) (*ProductListMessage
 
 // ToJson converts the product list message to JSON.
 func (m *ProductListMessage) ToJson(configs ApiCompatibleJsonConverterConfigs) ([]byte, error) {
-	if err := utils.GetValidator().Struct(configs); err != nil {
+	if err := internal.GetValidator().Struct(configs); err != nil {
 		return nil, fmt.Errorf("error validating configs: %v", err)
 	}
 

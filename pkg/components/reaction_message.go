@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/sarthakjdev/wapi.go/utils"
+	"github.com/sarthakjdev/wapi.go/internal"
 )
 
 // ReactionMessage represents a reaction to a message.
@@ -24,7 +24,7 @@ type ReactionMessageApiPayload struct {
 
 // NewReactionMessage creates a new ReactionMessage instance.
 func NewReactionMessage(params ReactionMessageParams) (*ReactionMessage, error) {
-	if err := utils.GetValidator().Struct(params); err != nil {
+	if err := internal.GetValidator().Struct(params); err != nil {
 		return nil, fmt.Errorf("error validating configs: %v", err)
 	}
 
@@ -36,7 +36,7 @@ func NewReactionMessage(params ReactionMessageParams) (*ReactionMessage, error) 
 
 // ToJson converts the ReactionMessage to JSON.
 func (reaction *ReactionMessage) ToJson(configs ApiCompatibleJsonConverterConfigs) ([]byte, error) {
-	if err := utils.GetValidator().Struct(configs); err != nil {
+	if err := internal.GetValidator().Struct(configs); err != nil {
 		return nil, fmt.Errorf("error validating configs: %v", err)
 	}
 

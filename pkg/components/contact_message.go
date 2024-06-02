@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/sarthakjdev/wapi.go/utils"
+	"github.com/sarthakjdev/wapi.go/internal"
 )
 
 type AddressType string
@@ -152,7 +152,7 @@ func NewContactMessage(configs []Contact) (*ContactMessage, error) {
 }
 
 func (m *ContactMessage) ToJson(configs ApiCompatibleJsonConverterConfigs) ([]byte, error) {
-	if err := utils.GetValidator().Struct(configs); err != nil {
+	if err := internal.GetValidator().Struct(configs); err != nil {
 		return nil, fmt.Errorf("error validating configs: %v", err)
 	}
 	jsonData := ContactMessageApiPayload{

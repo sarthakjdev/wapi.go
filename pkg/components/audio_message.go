@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/sarthakjdev/wapi.go/utils"
+	"github.com/sarthakjdev/wapi.go/internal"
 )
 
 // AudioMessage represents an audio message.
@@ -24,7 +24,7 @@ type AudioMessageConfigs = AudioMessage
 
 // NewAudioMessage creates a new AudioMessage object.
 func NewAudioMessage(params AudioMessageConfigs) (*AudioMessage, error) {
-	if err := utils.GetValidator().Struct(params); err != nil {
+	if err := internal.GetValidator().Struct(params); err != nil {
 		return nil, fmt.Errorf("error validating configs: %v", err)
 	}
 
@@ -46,7 +46,7 @@ func NewAudioMessage(params AudioMessageConfigs) (*AudioMessage, error) {
 
 // ToJson converts the AudioMessage object to JSON.
 func (audio *AudioMessage) ToJson(configs ApiCompatibleJsonConverterConfigs) ([]byte, error) {
-	if err := utils.GetValidator().Struct(configs); err != nil {
+	if err := internal.GetValidator().Struct(configs); err != nil {
 		return nil, fmt.Errorf("error validating configs: %v", err)
 	}
 

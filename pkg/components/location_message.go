@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/sarthakjdev/wapi.go/utils"
+	"github.com/sarthakjdev/wapi.go/internal"
 )
 
 // LocationMessage represents a location message with latitude, longitude, address, and name.
@@ -41,7 +41,7 @@ func (location *LocationMessage) SetName(params string) {
 
 // ToJson converts the LocationMessage to JSON with the given configurations.
 func (location *LocationMessage) ToJson(configs ApiCompatibleJsonConverterConfigs) ([]byte, error) {
-	if err := utils.GetValidator().Struct(configs); err != nil {
+	if err := internal.GetValidator().Struct(configs); err != nil {
 		return nil, fmt.Errorf("error validating configs: %v", err)
 	}
 

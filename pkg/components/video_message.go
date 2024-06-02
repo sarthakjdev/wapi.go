@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/sarthakjdev/wapi.go/utils"
+	"github.com/sarthakjdev/wapi.go/internal"
 )
 
 // VideoMessage represents a video message.
@@ -25,7 +25,7 @@ type VideoMessageConfigs = VideoMessage
 
 // NewVideoMessage creates a new VideoMessage instance.
 func NewVideoMessage(params VideoMessageConfigs) (*VideoMessage, error) {
-	if err := utils.GetValidator().Struct(params); err != nil {
+	if err := internal.GetValidator().Struct(params); err != nil {
 		return nil, fmt.Errorf("error validating configs: %v", err)
 	}
 
@@ -52,7 +52,7 @@ func (video *VideoMessage) SetCaption(params string) {
 
 // ToJson converts the video message to JSON.
 func (video *VideoMessage) ToJson(configs ApiCompatibleJsonConverterConfigs) ([]byte, error) {
-	if err := utils.GetValidator().Struct(configs); err != nil {
+	if err := internal.GetValidator().Struct(configs); err != nil {
 		return nil, fmt.Errorf("error validating configs: %v", err)
 	}
 

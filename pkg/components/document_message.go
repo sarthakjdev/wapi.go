@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/sarthakjdev/wapi.go/utils"
+	"github.com/sarthakjdev/wapi.go/internal"
 )
 
 // DocumentMessage represents a document message.
@@ -23,7 +23,7 @@ type DocumentMessageConfigs struct {
 
 // NewDocumentMessage creates a new DocumentMessage instance.
 func NewDocumentMessage(params DocumentMessageConfigs) (*DocumentMessage, error) {
-	if err := utils.GetValidator().Struct(params); err != nil {
+	if err := internal.GetValidator().Struct(params); err != nil {
 		return nil, fmt.Errorf("error validating configs: %v", err)
 	}
 
@@ -32,7 +32,7 @@ func NewDocumentMessage(params DocumentMessageConfigs) (*DocumentMessage, error)
 
 // ToJson converts the DocumentMessage instance to JSON.
 func (dm *DocumentMessage) ToJson(configs ApiCompatibleJsonConverterConfigs) ([]byte, error) {
-	if err := utils.GetValidator().Struct(configs); err != nil {
+	if err := internal.GetValidator().Struct(configs); err != nil {
 		return nil, fmt.Errorf("error validating configs: %v", err)
 	}
 

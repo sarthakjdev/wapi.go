@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/sarthakjdev/wapi.go/utils"
+	"github.com/sarthakjdev/wapi.go/internal"
 )
 
 // ImageMessage represents a message with an image.
@@ -30,7 +30,7 @@ func (image *ImageMessage) SetCaption(params string) {
 
 // NewImageMessage creates a new ImageMessage instance.
 func NewImageMessage(params ImageMessageConfigs) (*ImageMessage, error) {
-	if err := utils.GetValidator().Struct(params); err != nil {
+	if err := internal.GetValidator().Struct(params); err != nil {
 		return nil, fmt.Errorf("error validating configs: %v", err)
 	}
 
@@ -53,7 +53,7 @@ func NewImageMessage(params ImageMessageConfigs) (*ImageMessage, error) {
 
 // ToJson converts the ImageMessage to JSON.
 func (image *ImageMessage) ToJson(configs ApiCompatibleJsonConverterConfigs) ([]byte, error) {
-	if err := utils.GetValidator().Struct(configs); err != nil {
+	if err := internal.GetValidator().Struct(configs); err != nil {
 		return nil, fmt.Errorf("error validating configs: %v", err)
 	}
 

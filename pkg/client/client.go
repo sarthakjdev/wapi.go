@@ -4,10 +4,10 @@ import (
 	"fmt"
 
 	"github.com/labstack/echo/v4"
+	"github.com/sarthakjdev/wapi.go/internal"
 	"github.com/sarthakjdev/wapi.go/internal/manager"
 	requestclient "github.com/sarthakjdev/wapi.go/internal/request_client"
 	"github.com/sarthakjdev/wapi.go/pkg/events"
-	"github.com/sarthakjdev/wapi.go/utils"
 )
 
 // Client represents a WhatsApp client.
@@ -33,7 +33,7 @@ type ClientConfig struct {
 // NewWapiClient creates a new instance of Client.
 func New(configs ClientConfig) (*Client, error) {
 	// Validate the client configuration options
-	err := utils.GetValidator().Struct(configs)
+	err := internal.GetValidator().Struct(configs)
 	if err != nil {
 		return nil, fmt.Errorf("error validating client config: %w", err)
 	}

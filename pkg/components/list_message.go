@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/sarthakjdev/wapi.go/utils"
+	"github.com/sarthakjdev/wapi.go/internal"
 )
 
 // listSection represents a section in the list message.
@@ -88,7 +88,7 @@ type ListMessageParams struct {
 
 // NewListMessage creates a new list message with the given parameters.
 func NewListMessage(params ListMessageParams) (*listMessage, error) {
-	if err := utils.GetValidator().Struct(params); err != nil {
+	if err := internal.GetValidator().Struct(params); err != nil {
 		return nil, fmt.Errorf("error validating configs: %v", err)
 	}
 
@@ -121,7 +121,7 @@ func (m *listMessage) SetBodyText(section *listSection) {
 
 // ToJson converts the list message to JSON.
 func (m *listMessage) ToJson(configs ApiCompatibleJsonConverterConfigs) ([]byte, error) {
-	if err := utils.GetValidator().Struct(configs); err != nil {
+	if err := internal.GetValidator().Struct(configs); err != nil {
 		return nil, fmt.Errorf("error validating configs: %v", err)
 	}
 
