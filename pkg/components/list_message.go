@@ -1,4 +1,3 @@
-// Package components provides components for creating interactive list messages.
 package components
 
 import (

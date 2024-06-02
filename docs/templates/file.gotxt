@@ -1,0 +1,14 @@
+{{if .Header -}}
+	{{- .Header -}}
+	{{- spacer -}}
+{{- end -}}
+
+{{- range .Packages -}}
+	{{- template "package" . -}}
+	{{- spacer -}}
+{{- end -}}
+
+{{- if .Footer -}}
+	{{- .Footer -}}
+	{{- spacer -}}
+{{- end -}}

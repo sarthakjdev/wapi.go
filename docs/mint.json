@@ -1,0 +1,81 @@
+{
+  "$schema": "https://mintlify.com/schema.json",
+  "name": "Wapi.go",
+  "logo": {
+    "light": "/logo/logo.svg",
+    "dark": "/logo/logo.svg"
+  },
+  "metadata": {
+    "title": "Wapi.go",
+    "description": "Wapi.js is a JavaScript module, written in TypeScript, designed to interact with the WhatsApp cloud API in a user-friendly manner.",
+    "author": "Sarthak Jain <sarthak@softlancer.co>"
+  },
+  "search": {
+    "prompt": "Search documentation..."
+  },
+  "primaryTab": {
+    "name": "Guide"
+  },
+  "favicon": "/favicon.svg",
+  "colors": {
+    "primary": "#0D9373",
+    "light": "#07C983",
+    "dark": "#0D9373",
+    "anchors": {
+      "from": "#0D9373",
+      "to": "#07C983"
+    }
+  },
+  "topbarLinks": [
+    {
+      "name": "Support",
+      "url": "sarthak@softlancer.co"
+    }
+  ],
+  "topbarCtaButton": {
+    "name": "Github",
+    "url": "https://github.com/sarthakjdev/wapi.go"
+  },
+  "tabs": [
+    {
+      "name": "Package Reference Documentation",
+      "url": "api-reference"
+    }
+  ],
+  "anchors": [
+    {
+      "name": "Support",
+      "icon": "envelope",
+      "url": "mailto:sarthak@softlancer.co"
+    },
+    {
+      "name": "Go Package",
+      "icon": "code",
+      "url": "https://pkg.go.dev/github.com/sarthakjdev/wapi.go"
+    },
+    {
+      "name": "Community",
+      "icon": "slack",
+      "url": "https://slack.com/wapikit"
+    }
+  ],
+  "navigation": [
+    {
+      "group": "Guide",
+      "pages": ["guide/introduction", "guide/quickstart"]
+    },
+    {
+      "group": "Packages Documentation",
+      "pages": [
+        "api-reference/pkg/client",
+        "api-reference/pkg/components",
+        "api-reference/pkg/events"
+      ]
+    }
+  ],
+  "footerSocials": {
+    "x": "https://x.com/wapikit",
+    "github": "https://github.com/sarthakjdev/wapikit",
+    "linkedin": "https://www.linkedin.com/company/softlancer"
+  }
+}

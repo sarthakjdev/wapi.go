@@ -1,0 +1,720 @@
+```go
+import "github.com/sarthakjdev/wapi.go/pkg/events"
+```
+
+
+
+<a name="AdInteractionEvent"></a>
+## type AdInteractionEvent
+
+AdInteractionEvent represents an ad interaction event.
+
+```go
+type AdInteractionEvent struct {
+    BaseMessageEvent `json:",inline"`
+    AdSource         AdSource `json:"adSource"`
+    Text             string   `json:"text"`
+}
+```
+
+<a name="NewAdInteractionEvent"></a>
+### func NewAdInteractionEvent
+
+```go
+func NewAdInteractionEvent(baseMessageEvent BaseMessageEvent, adSource AdSource, text string) *AdInteractionEvent
+```
+
+NewAdInteractionEvent creates a new instance of AdInteractionEvent.
+
+<a name="AdInteractionSourceMediaType"></a>
+## type AdInteractionSourceMediaType
+
+AdInteractionSourceMediaType represents the media type of an ad interaction source.
+
+```go
+type AdInteractionSourceMediaType string
+```
+
+<a name="AdInteractionSourceMediaTypeImage"></a>
+
+```go
+const (
+    // AdInteractionSourceMediaTypeImage indicates that the ad interaction source is an image.
+    AdInteractionSourceMediaTypeImage AdInteractionSourceMediaType = "image"
+    // AdInteractionSourceMediaTypeVideo indicates that the ad interaction source is a video.
+    AdInteractionSourceMediaTypeVideo AdInteractionSourceMediaType = "video"
+)
+```
+
+<a name="AdInteractionSourceType"></a>
+## type AdInteractionSourceType
+
+AdInteractionSourceType represents the source type of an ad interaction.
+
+```go
+type AdInteractionSourceType string
+```
+
+<a name="AdInteractionSourceTypePost"></a>
+
+```go
+const (
+    // AdInteractionSourceTypePost indicates that the ad interaction is from a post.
+    AdInteractionSourceTypePost AdInteractionSourceType = "post"
+    // AdInteractionSourceTypeAd indicates that the ad interaction is from an ad.
+    AdInteractionSourceTypeAd AdInteractionSourceType = "ad"
+)
+```
+
+<a name="AdSource"></a>
+## type AdSource
+
+AdSource represents the source of an ad.
+
+```go
+type AdSource struct {
+    Url          string                       `json:"url"`
+    Id           string                       `json:"id"`
+    Type         AdInteractionSourceType      `json:"type"`
+    Title        string                       `json:"title"`
+    Description  string                       `json:"description"`
+    MediaUrl     string                       `json:"mediaUrl"`
+    MediaType    AdInteractionSourceMediaType `json:"mediaType"`
+    ThumbnailUrl string                       `json:"thumbnailUrl"`
+    CtwaClid     string                       `json:"ctwaClid"`
+}
+```
+
+<a name="AudioMessageEvent"></a>
+## type AudioMessageEvent
+
+AudioMessageEvent represents an event for an audio message.
+
+```go
+type AudioMessageEvent struct {
+    BaseMediaMessageEvent `json:",inline"`
+    Audio                 components.AudioMessage `json:"audio"`
+}
+```
+
+<a name="NewAudioMessageEvent"></a>
+### func NewAudioMessageEvent
+
+```go
+func NewAudioMessageEvent(baseMessageEvent BaseMessageEvent, mediaId string, audio components.AudioMessage, mime_type, sha256, mimeType string) *AudioMessageEvent
+```
+
+NewAudioMessageEvent creates a new AudioMessageEvent instance.
+
+<a name="BaseEvent"></a>
+## type BaseEvent
+
+
+
+```go
+type BaseEvent interface {
+    GetEventType() string
+}
+```
+
+<a name="BaseMediaMessageEvent"></a>
+## type BaseMediaMessageEvent
+
+BaseMediaMessageEvent represents a base media message event which contains media information.
+
+```go
+type BaseMediaMessageEvent struct {
+    BaseMessageEvent `json:",inline"`
+    MediaId          string `json:"media_id"`
+    MimeType         string `json:"mime_type"`
+    Sha256           string `json:"sha256"`
+}
+```
+
+<a name="BaseMessageEvent"></a>
+## type BaseMessageEvent
+
+
+
+```go
+type BaseMessageEvent struct {
+    requester   requestclient.RequestClient
+    MessageId   string         `json:"message_id"`
+    Context     MessageContext `json:"context"`
+    Timestamp   string         `json:"timestamp"`
+    IsForwarded bool           `json:"is_forwarded"`
+}
+```
+
+<a name="NewBaseMessageEvent"></a>
+### func NewBaseMessageEvent
+
+```go
+func NewBaseMessageEvent(messageId string, timestamp string, from string, isForwarded bool, requester requestclient.RequestClient) BaseMessageEvent
+```
+
+
+
+<a name="BaseMessageEvent.GetEventType"></a>
+### func \(BaseMessageEvent\) GetEventType
+
+```go
+func (bme BaseMessageEvent) GetEventType() string
+```
+
+
+
+<a name="BaseMessageEvent.React"></a>
+### func \(\*BaseMessageEvent\) React
+
+```go
+func (baseMessageEvent *BaseMessageEvent) React(emoji string) (string, error)
+```
+
+React to the message
+
+<a name="BaseMessageEvent.Reply"></a>
+### func \(\*BaseMessageEvent\) Reply
+
+```go
+func (baseMessageEvent *BaseMessageEvent) Reply(Message components.BaseMessage) (string, error)
+```
+
+Reply to the message
+
+<a name="BaseMessageEventInterface"></a>
+## type BaseMessageEventInterface
+
+
+
+```go
+type BaseMessageEventInterface interface {
+    BaseEvent
+    Reply() (string, error)
+    React() (string, error)
+}
+```
+
+<a name="BaseSystemEvent"></a>
+## type BaseSystemEvent
+
+
+
+```go
+type BaseSystemEvent struct {
+    Timestamp string `json:"timestamp"`
+}
+```
+
+<a name="BaseSystemEvent.GetEventType"></a>
+### func \(BaseSystemEvent\) GetEventType
+
+```go
+func (bme BaseSystemEvent) GetEventType() string
+```
+
+
+
+<a name="BaseSystemEventInterface"></a>
+## type BaseSystemEventInterface
+
+
+
+```go
+type BaseSystemEventInterface interface {
+    BaseEvent
+}
+```
+
+<a name="ContactsMessageEvent"></a>
+## type ContactsMessageEvent
+
+ContactsMessageEvent represents an event that occurs when a message with contacts is received.
+
+```go
+type ContactsMessageEvent struct {
+    BaseMessageEvent `json:",inline"`
+    Contacts         components.ContactMessage `json:"contacts"`
+}
+```
+
+<a name="NewContactsMessageEvent"></a>
+### func NewContactsMessageEvent
+
+```go
+func NewContactsMessageEvent(baseMessageEvent BaseMessageEvent, contacts components.ContactMessage) *ContactsMessageEvent
+```
+
+NewContactsMessageEvent creates a new ContactsMessageEvent instance.
+
+<a name="CustomerIdentityChangedEvent"></a>
+## type CustomerIdentityChangedEvent
+
+
+
+```go
+type CustomerIdentityChangedEvent struct {
+    BaseSystemEvent   `json:",inline"`
+    Acknowledged      string `json:"acknowledged"`
+    CreationTimestamp string `json:"creationTime"`
+    Hash              string `json:"hash"`
+}
+```
+
+<a name="CustomerNumberChangedEvent"></a>
+## type CustomerNumberChangedEvent
+
+
+
+```go
+type CustomerNumberChangedEvent struct {
+    BaseMessageEvent  `json:",inline"`
+    ChangeDescription string `json:"changeDescription"`
+    NewWaId           string `json:"newWaId"`
+    OldWaId           string `json:"oldWaId"`
+}
+```
+
+<a name="DocumentMessageEvent"></a>
+## type DocumentMessageEvent
+
+DocumentMessageEvent represents an event that occurs when a document message is received.
+
+```go
+type DocumentMessageEvent struct {
+    BaseMediaMessageEvent
+    Document components.DocumentMessage
+}
+```
+
+<a name="NewDocumentMessageEvent"></a>
+### func NewDocumentMessageEvent
+
+```go
+func NewDocumentMessageEvent(baseMessageEvent BaseMessageEvent, document components.DocumentMessage, mediaId, sha256, mimeType string) *DocumentMessageEvent
+```
+
+NewDocumentMessageEvent creates a new DocumentMessageEvent instance.
+
+<a name="EventType"></a>
+## type EventType
+
+
+
+```go
+type EventType string
+```
+
+<a name="TextMessageEventType"></a>
+
+```go
+const (
+    TextMessageEventType             EventType = "text_message"
+    AudioMessageEventType            EventType = "audio_message"
+    VideoMessageEventType            EventType = "video_message"
+    ImageMessageEventType            EventType = "image_message"
+    ContactMessageEventType          EventType = "contact_message"
+    DocumentMessageEventType         EventType = "document_message"
+    LocationMessageEventType         EventType = "location_message"
+    ReactionMessageEventType         EventType = "reaction_message"
+    ListInteractionMessageEventType  EventType = "list_interaction_message"
+    TemplateMessageEventType         EventType = "template_message"
+    QuickReplyMessageEventType       EventType = "quick_reply_message"
+    ReplyButtonInteractionEventType  EventType = "reply_button_interaction"
+    StickerMessageEventType          EventType = "sticker_message"
+    AdInteractionEventType           EventType = "ad_interaction_message"
+    CustomerIdentityChangedEventType EventType = "customer_identity_changed"
+    CustomerNumberChangedEventType   EventType = "customer_number_changed"
+    MessageDeliveredEventType        EventType = "message_delivered"
+    MessageFailedEventType           EventType = "message_failed"
+    MessageReadEventType             EventType = "message_read"
+    MessageSentEventType             EventType = "message_sent"
+    MessageUndeliveredEventType      EventType = "message_undelivered"
+    OrderReceivedEventType           EventType = "order_received"
+    ProductInquiryEventType          EventType = "product_inquiry"
+    UnknownEventType                 EventType = "unknown"
+    ErrorEventType                   EventType = "error"
+    WarnEventType                    EventType = "warn"
+    ReadyEventType                   EventType = "ready"
+)
+```
+
+<a name="ImageMessageEvent"></a>
+## type ImageMessageEvent
+
+ImageMessageEvent represents an event for an image message.
+
+```go
+type ImageMessageEvent struct {
+    BaseMediaMessageEvent `json:",inline"`
+    Image                 components.ImageMessage `json:"image"`
+}
+```
+
+<a name="NewImageMessageEvent"></a>
+### func NewImageMessageEvent
+
+```go
+func NewImageMessageEvent(baseMessageEvent BaseMessageEvent, image components.ImageMessage, mimeType, sha256, mediaId string) *ImageMessageEvent
+```
+
+NewImageMessageEvent creates a new ImageMessageEvent instance.
+
+<a name="ListInteractionEvent"></a>
+## type ListInteractionEvent
+
+ListInteractionEvent represents an interaction event related to a list.
+
+```go
+type ListInteractionEvent struct {
+    BaseMessageEvent `json:",inline"`
+    Title            string `json:"title"`
+    ListId           string `json:"list_id"`
+    Description      string `json:"description"`
+}
+```
+
+<a name="NewListInteractionEvent"></a>
+### func NewListInteractionEvent
+
+```go
+func NewListInteractionEvent(baseMessageEvent BaseMessageEvent, title, listId, description string) *ListInteractionEvent
+```
+
+NewListInteractionEvent creates a new ListInteractionEvent instance.
+
+<a name="LocationMessageEvent"></a>
+## type LocationMessageEvent
+
+LocationMessageEvent represents an event that contains a location message.
+
+```go
+type LocationMessageEvent struct {
+    BaseMessageEvent `json:",inline"`
+    Location         components.LocationMessage `json:"location"`
+}
+```
+
+<a name="NewLocationMessageEvent"></a>
+### func NewLocationMessageEvent
+
+```go
+func NewLocationMessageEvent(baseMessageEvent BaseMessageEvent, location components.LocationMessage) *LocationMessageEvent
+```
+
+NewLocationMessageEvent creates a new LocationMessageEvent instance.
+
+<a name="MessageContext"></a>
+## type MessageContext
+
+
+
+```go
+type MessageContext struct {
+    From string `json:"from"`
+}
+```
+
+<a name="MessageDeliveredEvent"></a>
+## type MessageDeliveredEvent
+
+MessageDeliveredEvent represents an event related to an undelivered message.
+
+```go
+type MessageDeliveredEvent struct {
+    BaseSystemEvent `json:",inline"`
+    MessageId       string `json:"messageId"`
+    SentTo          string `json:"sentTo"`
+}
+```
+
+<a name="NewMessageDeliveredEvent"></a>
+### func NewMessageDeliveredEvent
+
+```go
+func NewMessageDeliveredEvent(baseSystemEvent BaseSystemEvent, messageId, sendTo string) *MessageDeliveredEvent
+```
+
+MessageDeliveredEvent creates a new instance of MessageUndeliveredEvent.
+
+<a name="MessageFailedEvent"></a>
+## type MessageFailedEvent
+
+
+
+```go
+type MessageFailedEvent struct {
+    BaseSystemEvent `json:",inline"`
+    MessageId       string `json:"messageId"`
+    SentTo          string `json:"sentTo"`
+    FailReason      string `json:"failReason"`
+}
+```
+
+<a name="NewMessageFailedEvent"></a>
+### func NewMessageFailedEvent
+
+```go
+func NewMessageFailedEvent(baseSystemEvent BaseSystemEvent, messageId, sendTo, failReason string) *MessageFailedEvent
+```
+
+
+
+<a name="MessageReadEvent"></a>
+## type MessageReadEvent
+
+MessageReadEvent represents an event indicating that a message has been read.
+
+```go
+type MessageReadEvent struct {
+    BaseSystemEvent `json:",inline"`
+    MessageId       string `json:"messageId"`
+    SentTo          string `json:"sentTo"`
+}
+```
+
+<a name="NewMessageReadEvent"></a>
+### func NewMessageReadEvent
+
+```go
+func NewMessageReadEvent(baseSystemEvent BaseSystemEvent, messageId, sendTo string) *MessageReadEvent
+```
+
+NewMessageReadEvent creates a new instance of MessageReadEvent.
+
+<a name="MessageSentEvent"></a>
+## type MessageSentEvent
+
+MessageSentEvent represents an event indicating that a message has been sent.
+
+```go
+type MessageSentEvent struct {
+    BaseSystemEvent `json:",inline"`
+    MessageId       string `json:"messageId"`
+    SentTo          string `json:"sentTo"`
+}
+```
+
+<a name="NewMessageSentEvent"></a>
+### func NewMessageSentEvent
+
+```go
+func NewMessageSentEvent(baseSystemEvent BaseSystemEvent, messageId, sendTo string) *MessageSentEvent
+```
+
+NewMessageSentEvent creates a new instance of MessageSentEvent.
+
+<a name="MessageUndeliveredEvent"></a>
+## type MessageUndeliveredEvent
+
+MessageUndeliveredEvent represents an event related to an undelivered message.
+
+```go
+type MessageUndeliveredEvent struct {
+    BaseSystemEvent `json:",inline"`
+    MessageId       string `json:"messageId"`
+    SentTo          string `json:"sentTo"`
+}
+```
+
+<a name="NewMessageUndeliveredEvent"></a>
+### func NewMessageUndeliveredEvent
+
+```go
+func NewMessageUndeliveredEvent(baseSystemEvent BaseSystemEvent, messageId, sendTo string) *MessageUndeliveredEvent
+```
+
+NewMessageUndeliveredEvent creates a new instance of MessageUndeliveredEvent.
+
+<a name="OrderEvent"></a>
+## type OrderEvent
+
+OrderEvent represents an event related to an order.
+
+```go
+type OrderEvent struct {
+    BaseMessageEvent `json:",inline"`
+    Order            components.Order `json:"order"`
+}
+```
+
+<a name="NewOrderEvent"></a>
+### func NewOrderEvent
+
+```go
+func NewOrderEvent(baseMessageEvent BaseMessageEvent, order components.Order) *OrderEvent
+```
+
+NewOrderEvent creates a new OrderEvent instance.
+
+<a name="ProductInquiryEvent"></a>
+## type ProductInquiryEvent
+
+ProductInquiryEvent represents an event related to a product inquiry.
+
+```go
+type ProductInquiryEvent struct {
+    BaseMessageEvent `json:",inline"`
+    ProductId        string `json:"productId"`
+    CatalogId        string `json:"catalogId"`
+    Text             string `json:"text"`
+}
+```
+
+<a name="NewProductInquiryEvent"></a>
+### func NewProductInquiryEvent
+
+```go
+func NewProductInquiryEvent(baseMessageEvent BaseMessageEvent, productId, catalogId, text string) *ProductInquiryEvent
+```
+
+NewProductInquiryEvent creates a new instance of ProductInquiryEvent.
+
+<a name="QuickReplyButtonInteractionEvent"></a>
+## type QuickReplyButtonInteractionEvent
+
+QuickReplyButtonInteractionEvent represents an event triggered when a user interacts with a quick reply button.
+
+```go
+type QuickReplyButtonInteractionEvent struct {
+    BaseMessageEvent `json:",inline"`
+    ButtonText       string `json:"button_text"`
+    ButtonPayload    string `json:"button_payload"`
+}
+```
+
+<a name="NewQuickReplyButtonInteractionEvent"></a>
+### func NewQuickReplyButtonInteractionEvent
+
+```go
+func NewQuickReplyButtonInteractionEvent(baseMessageEvent BaseMessageEvent, buttonText, buttonPayload string) *QuickReplyButtonInteractionEvent
+```
+
+NewQuickReplyButtonInteractionEvent creates a new instance of QuickReplyButtonInteractionEvent.
+
+<a name="ReactionMessageEvent"></a>
+## type ReactionMessageEvent
+
+ReactionMessageEvent represents an event that occurs when a reaction is added to a message.
+
+```go
+type ReactionMessageEvent struct {
+    BaseMessageEvent `json:",inline"`
+    Reaction         components.ReactionMessage
+}
+```
+
+<a name="NewReactionMessageEvent"></a>
+### func NewReactionMessageEvent
+
+```go
+func NewReactionMessageEvent(baseMessageEvent BaseMessageEvent, reaction components.ReactionMessage) *ReactionMessageEvent
+```
+
+NewReactionMessageEvent creates a new ReactionMessageEvent instance.
+
+<a name="ReadyEvent"></a>
+## type ReadyEvent
+
+ReadyEvent represents an event that is triggered when the system is ready.
+
+```go
+type ReadyEvent struct {
+    BaseSystemEvent `json:",inline"`
+}
+```
+
+<a name="NewReadyEvent"></a>
+### func NewReadyEvent
+
+```go
+func NewReadyEvent() *ReadyEvent
+```
+
+NewReadyEvent creates a new instance of ReadyEvent.
+
+<a name="ReplyButtonInteractionEvent"></a>
+## type ReplyButtonInteractionEvent
+
+ReplyButtonInteractionEvent represents an interaction event triggered by a reply button.
+
+```go
+type ReplyButtonInteractionEvent struct {
+    BaseMessageEvent `json:",inline"`
+    Title            string `json:"title"`
+    ButtonId         string `json:"button_id"`
+}
+```
+
+<a name="NewReplyButtonInteractionEvent"></a>
+### func NewReplyButtonInteractionEvent
+
+```go
+func NewReplyButtonInteractionEvent(baseMessageEvent BaseMessageEvent, title, buttonId string) *ReplyButtonInteractionEvent
+```
+
+NewReplyButtonInteractionEvent creates a new instance of ReplyButtonInteractionEvent.
+
+<a name="StickerMessageEvent"></a>
+## type StickerMessageEvent
+
+StickerMessageEvent represents an event for a sticker message.
+
+```go
+type StickerMessageEvent struct {
+    BaseMediaMessageEvent `json:",inline"`
+    Sticker               components.StickerMessage
+}
+```
+
+<a name="NewStickerMessageEvent"></a>
+### func NewStickerMessageEvent
+
+```go
+func NewStickerMessageEvent(baseMessageEvent BaseMessageEvent, sticker components.StickerMessage, mediaId, sha256, mimeType string) *StickerMessageEvent
+```
+
+NewStickerMessageEvent creates a new StickerMessageEvent instance.
+
+<a name="TextMessageEvent"></a>
+## type TextMessageEvent
+
+TextMessageEvent represents an event for a text message.
+
+```go
+type TextMessageEvent struct {
+    BaseMessageEvent `json:",inline"`
+    Text             string `json:"text"`
+}
+```
+
+<a name="NewTextMessageEvent"></a>
+### func NewTextMessageEvent
+
+```go
+func NewTextMessageEvent(baseMessageEvent BaseMessageEvent, text string) *TextMessageEvent
+```
+
+NewTextMessageEvent creates a new TextMessageEvent instance.
+
+<a name="VideoMessageEvent"></a>
+## type VideoMessageEvent
+
+VideoMessageEvent represents a WhatsApp video message event.
+
+```go
+type VideoMessageEvent struct {
+    BaseMediaMessageEvent `json:",inline"`
+    Video                 components.VideoMessage `json:"video"`
+}
+```
+
+<a name="NewVideoMessageEvent"></a>
+### func NewVideoMessageEvent
+
+```go
+func NewVideoMessageEvent(baseMessageEvent BaseMessageEvent, video components.VideoMessage, mimeType, sha256, mediaId string) *VideoMessageEvent
+```
+
+NewVideoMessageEvent creates a new VideoMessageEvent instance.
+

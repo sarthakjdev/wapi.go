@@ -1,0 +1,1342 @@
+```go
+import "github.com/sarthakjdev/wapi.go/pkg/components"
+```
+
+
+
+<a name="AddressType"></a>
+## type AddressType
+
+
+
+```go
+type AddressType string
+```
+
+<a name="HomeAddress"></a>
+
+```go
+const (
+    HomeAddress AddressType = "HOME"
+    WorkAddress AddressType = "WORK"
+)
+```
+
+<a name="HomeUrl"></a>
+
+```go
+const (
+    HomeUrl AddressType = "HOME"
+    WorkUrl AddressType = "WORK"
+)
+```
+
+<a name="ApiCompatibleJsonConverterConfigs"></a>
+## type ApiCompatibleJsonConverterConfigs
+
+ApiCompatibleJsonConverterConfigs represents the configuration for converting to JSON.
+
+```go
+type ApiCompatibleJsonConverterConfigs struct {
+    ReplyToMessageId  string
+    SendToPhoneNumber string
+}
+```
+
+<a name="AudioMessage"></a>
+## type AudioMessage
+
+AudioMessage represents an audio message.
+
+```go
+type AudioMessage struct {
+    Id   string `json:"id,omitempty"`
+    Link string `json:"link,omitempty"`
+}
+```
+
+<a name="NewAudioMessage"></a>
+### func NewAudioMessage
+
+```go
+func NewAudioMessage(params AudioMessageConfigs) (*AudioMessage, error)
+```
+
+NewAudioMessage creates a new AudioMessage object.
+
+<a name="AudioMessage.ToJson"></a>
+### func \(\*AudioMessage\) ToJson
+
+```go
+func (audio *AudioMessage) ToJson(configs ApiCompatibleJsonConverterConfigs) ([]byte, error)
+```
+
+ToJson converts the AudioMessage object to JSON.
+
+<a name="AudioMessageApiPayload"></a>
+## type AudioMessageApiPayload
+
+AudioMessageApiPayload represents the payload for an audio message API request.
+
+```go
+type AudioMessageApiPayload struct {
+    BaseMessagePayload
+    Audio AudioMessage `json:"audio" validate:"required"`
+}
+```
+
+<a name="AudioMessageConfigs"></a>
+## type AudioMessageConfigs
+
+AudioMessageConfigs is an alias for AudioMessage.
+
+```go
+type AudioMessageConfigs = AudioMessage
+```
+
+<a name="BaseMessage"></a>
+## type BaseMessage
+
+BaseMessage is an interface for sending messages.
+
+```go
+type BaseMessage interface {
+    ToJson(configs ApiCompatibleJsonConverterConfigs) ([]byte, error)
+}
+```
+
+<a name="BaseMessagePayload"></a>
+## type BaseMessagePayload
+
+BaseMessagePayload represents the base payload to send messages.
+
+```go
+type BaseMessagePayload struct {
+    Context          *Context    `json:"context,omitempty"`
+    To               string      `json:"to"`
+    Type             MessageType `json:"type"`
+    MessagingProduct string      `json:"messaging_product"`
+    RecipientType    string      `json:"recipient_type"`
+}
+```
+
+<a name="NewBaseMessagePayload"></a>
+### func NewBaseMessagePayload
+
+```go
+func NewBaseMessagePayload(to string, messageType MessageType) BaseMessagePayload
+```
+
+NewBaseMessagePayload creates a new instance of BaseMessagePayload.
+
+<a name="Contact"></a>
+## type Contact
+
+
+
+```go
+type Contact struct {
+    Name      ContactName      `json:"name" validate:"required"`
+    Org       ContactOrg       `json:"org,omitempty"`
+    Addresses []ContactAddress `json:"addresses,omitempty"`
+    Urls      []ContactUrl     `json:"urls,omitempty"`
+    Emails    []ContactEmail   `json:"emails,omitempty"`
+    Phones    []ContactPhone   `json:"phones,omitempty"`
+    Birthday  string           `json:"birthday,omitempty"`
+}
+```
+
+<a name="NewContact"></a>
+### func NewContact
+
+```go
+func NewContact(name ContactName) *Contact
+```
+
+
+
+<a name="Contact.AddEmail"></a>
+### func \(\*Contact\) AddEmail
+
+```go
+func (contact *Contact) AddEmail(params ContactEmail)
+```
+
+
+
+<a name="Contact.AddPhone"></a>
+### func \(\*Contact\) AddPhone
+
+```go
+func (contact *Contact) AddPhone(params ContactPhone)
+```
+
+
+
+<a name="Contact.AddUrl"></a>
+### func \(\*Contact\) AddUrl
+
+```go
+func (contact *Contact) AddUrl(params ContactUrl)
+```
+
+
+
+<a name="Contact.SetBirthday"></a>
+### func \(\*Contact\) SetBirthday
+
+```go
+func (contact *Contact) SetBirthday(params string)
+```
+
+\! TODO: add regex check here in the params
+
+<a name="Contact.SetFirstName"></a>
+### func \(\*Contact\) SetFirstName
+
+```go
+func (contact *Contact) SetFirstName(firstName string)
+```
+
+
+
+<a name="Contact.SetLastName"></a>
+### func \(\*Contact\) SetLastName
+
+```go
+func (contact *Contact) SetLastName(lastName string)
+```
+
+
+
+<a name="Contact.SetMiddleName"></a>
+### func \(\*Contact\) SetMiddleName
+
+```go
+func (contact *Contact) SetMiddleName(middleName string)
+```
+
+
+
+<a name="Contact.SetOrg"></a>
+### func \(\*Contact\) SetOrg
+
+```go
+func (contact *Contact) SetOrg(params ContactOrg)
+```
+
+
+
+<a name="ContactAddress"></a>
+## type ContactAddress
+
+
+
+```go
+type ContactAddress struct {
+    Street      string      `json:"street,omitempty"`
+    City        string      `json:"city,omitempty"`
+    State       string      `json:"state,omitempty"`
+    Zip         string      `json:"zip,omitempty"`
+    Country     string      `json:"country,omitempty"`
+    CountryCode string      `json:"countryCode,omitempty"`
+    Type        AddressType `json:"type" validate:"required"`
+}
+```
+
+<a name="ContactEmail"></a>
+## type ContactEmail
+
+
+
+```go
+type ContactEmail struct {
+    Email string    `json:"email,omitempty"`
+    Type  EmailType `json:"type,omitempty"`
+}
+```
+
+<a name="ContactMessage"></a>
+## type ContactMessage
+
+
+
+```go
+type ContactMessage struct {
+    Contacts []Contact `json:"contacts" validate:"required"`
+}
+```
+
+<a name="NewContactMessage"></a>
+### func NewContactMessage
+
+```go
+func NewContactMessage(configs []Contact) (*ContactMessage, error)
+```
+
+
+
+<a name="ContactMessage.AddContact"></a>
+### func \(\*ContactMessage\) AddContact
+
+```go
+func (contact *ContactMessage) AddContact(params Contact)
+```
+
+
+
+<a name="ContactMessage.ToJson"></a>
+### func \(\*ContactMessage\) ToJson
+
+```go
+func (m *ContactMessage) ToJson(configs ApiCompatibleJsonConverterConfigs) ([]byte, error)
+```
+
+
+
+<a name="ContactMessageApiPayload"></a>
+## type ContactMessageApiPayload
+
+
+
+```go
+type ContactMessageApiPayload struct {
+    BaseMessagePayload
+    Contacts []Contact `json:"contacts" validate:"required"`
+}
+```
+
+<a name="ContactMessageConfigs"></a>
+## type ContactMessageConfigs
+
+
+
+```go
+type ContactMessageConfigs struct {
+    Name string `json:"name" validate:"required"`
+}
+```
+
+<a name="ContactName"></a>
+## type ContactName
+
+
+
+```go
+type ContactName struct {
+    FormattedName string `json:"formatted_name" validate:"required"`
+    FirstName     string `json:"first_name,omitempty"`
+    LastName      string `json:"last_name,omitempty"`
+    MiddleName    string `json:"middle_name,omitempty"`
+    Suffix        string `json:"suffix,omitempty"`
+    Prefix        string `json:"prefix,omitempty"`
+}
+```
+
+<a name="ContactOrg"></a>
+## type ContactOrg
+
+
+
+```go
+type ContactOrg struct {
+    Company    string `json:"company,omitempty"`
+    Title      string `json:"title,omitempty"`
+    Department string `json:"department,omitempty"`
+}
+```
+
+<a name="ContactPhone"></a>
+## type ContactPhone
+
+
+
+```go
+type ContactPhone struct {
+    Phone string    `json:"phone,omitempty"`
+    WaId  string    `json:"wa_id,omitempty"`
+    Type  PhoneType `json:"type" validate:"required"`
+}
+```
+
+<a name="ContactUrl"></a>
+## type ContactUrl
+
+
+
+```go
+type ContactUrl struct {
+    Url  string  `json:"url" validate:"required"`
+    Type UrlType `json:"type" validate:"required"`
+}
+```
+
+<a name="Context"></a>
+## type Context
+
+Context represents the context of the message.
+
+```go
+type Context struct {
+    MessageId string `json:"message_id,omitempty"`
+}
+```
+
+<a name="DocumentMessage"></a>
+## type DocumentMessage
+
+DocumentMessage represents a document message.
+
+```go
+type DocumentMessage struct {
+}
+```
+
+<a name="NewDocumentMessage"></a>
+### func NewDocumentMessage
+
+```go
+func NewDocumentMessage(params DocumentMessageConfigs) (*DocumentMessage, error)
+```
+
+NewDocumentMessage creates a new DocumentMessage instance.
+
+<a name="DocumentMessage.ToJson"></a>
+### func \(\*DocumentMessage\) ToJson
+
+```go
+func (dm *DocumentMessage) ToJson(configs ApiCompatibleJsonConverterConfigs) ([]byte, error)
+```
+
+ToJson converts the DocumentMessage instance to JSON.
+
+<a name="DocumentMessageApiPayload"></a>
+## type DocumentMessageApiPayload
+
+DocumentMessageApiPayload represents the API payload for a document message.
+
+```go
+type DocumentMessageApiPayload struct {
+    BaseMessagePayload
+    Document DocumentMessage `json:"document" validate:"required"`
+}
+```
+
+<a name="DocumentMessageConfigs"></a>
+## type DocumentMessageConfigs
+
+DocumentMessageConfigs represents the configurations for a document message.
+
+```go
+type DocumentMessageConfigs struct {
+}
+```
+
+<a name="EmailType"></a>
+## type EmailType
+
+
+
+```go
+type EmailType string
+```
+
+<a name="HomeEmail"></a>
+
+```go
+const (
+    HomeEmail EmailType = "HOME"
+    WorkEmail EmailType = "WORK"
+)
+```
+
+<a name="ImageMessage"></a>
+## type ImageMessage
+
+ImageMessage represents a message with an image.
+
+```go
+type ImageMessage struct {
+    Id      string `json:"id,omitempty"`
+    Link    string `json:"link,omitempty"`
+    Caption string `json:"caption,omitempty"`
+}
+```
+
+<a name="NewImageMessage"></a>
+### func NewImageMessage
+
+```go
+func NewImageMessage(params ImageMessageConfigs) (*ImageMessage, error)
+```
+
+NewImageMessage creates a new ImageMessage instance.
+
+<a name="ImageMessage.SetCaption"></a>
+### func \(\*ImageMessage\) SetCaption
+
+```go
+func (image *ImageMessage) SetCaption(params string)
+```
+
+SetCaption sets the caption for the image message.
+
+<a name="ImageMessage.ToJson"></a>
+### func \(\*ImageMessage\) ToJson
+
+```go
+func (image *ImageMessage) ToJson(configs ApiCompatibleJsonConverterConfigs) ([]byte, error)
+```
+
+ToJson converts the ImageMessage to JSON.
+
+<a name="ImageMessageApiPayload"></a>
+## type ImageMessageApiPayload
+
+ImageMessageApiPayload represents the API payload for an image message.
+
+```go
+type ImageMessageApiPayload struct {
+    BaseMessagePayload
+    Image ImageMessage `json:"image" validate:"required"`
+}
+```
+
+<a name="ImageMessageConfigs"></a>
+## type ImageMessageConfigs
+
+ImageMessageConfigs is an alias for ImageMessage.
+
+```go
+type ImageMessageConfigs = ImageMessage
+```
+
+<a name="InteractiveMessageType"></a>
+## type InteractiveMessageType
+
+
+
+```go
+type InteractiveMessageType string
+```
+
+<a name="InteractiveMessageTypeButton"></a>
+
+```go
+const (
+    InteractiveMessageTypeButton      InteractiveMessageType = "button"
+    InteractiveMessageTypeProduct     InteractiveMessageType = "product"
+    InteractiveMessageTypeProductList InteractiveMessageType = "product_list"
+    InteractiveMessageTypeList        InteractiveMessageType = "list"
+)
+```
+
+<a name="ListMessageApiPayload"></a>
+## type ListMessageApiPayload
+
+ListMessageApiPayload represents the API payload for the list message.
+
+```go
+type ListMessageApiPayload struct {
+    BaseMessagePayload
+    Interactive listMessage `json:"interactive" validate:"required"` // Interactive message.
+}
+```
+
+<a name="ListMessageBody"></a>
+## type ListMessageBody
+
+ListMessageBody represents the body of the list message.
+
+```go
+type ListMessageBody struct {
+    Text string `json:"text" validate:"required"` // Text of the body.
+}
+```
+
+<a name="ListMessageParams"></a>
+## type ListMessageParams
+
+ListMessageParams represents the parameters for creating a list message.
+
+```go
+type ListMessageParams struct {
+    ButtonText string `json:"-" validate:"required"` // Text of the button.
+    BodyText   string `json:"-" validate:"required"` // Text of the body.
+}
+```
+
+<a name="LocationMessage"></a>
+## type LocationMessage
+
+LocationMessage represents a location message with latitude, longitude, address, and name.
+
+```go
+type LocationMessage struct {
+    Latitude  float64 `json:"latitude" validate:"required"`  // Latitude of the location
+    Longitude float64 `json:"longitude" validate:"required"` // Longitude of the location
+    Address   string  `json:"address,omitempty"`             // Address of the location (optional)
+    Name      string  `json:"name,omitempty"`                // Name of the location (optional)
+}
+```
+
+<a name="NewLocationMessage"></a>
+### func NewLocationMessage
+
+```go
+func NewLocationMessage(latitude float64, longitude float64) (*LocationMessage, error)
+```
+
+NewLocationMessage creates a new LocationMessage with the given latitude and longitude.
+
+<a name="LocationMessage.SetAddress"></a>
+### func \(\*LocationMessage\) SetAddress
+
+```go
+func (location *LocationMessage) SetAddress(params string)
+```
+
+SetAddress sets the address of the location.
+
+<a name="LocationMessage.SetName"></a>
+### func \(\*LocationMessage\) SetName
+
+```go
+func (location *LocationMessage) SetName(params string)
+```
+
+SetName sets the name of the location.
+
+<a name="LocationMessage.ToJson"></a>
+### func \(\*LocationMessage\) ToJson
+
+```go
+func (location *LocationMessage) ToJson(configs ApiCompatibleJsonConverterConfigs) ([]byte, error)
+```
+
+ToJson converts the LocationMessage to JSON with the given configurations.
+
+<a name="LocationMessageApiPayload"></a>
+## type LocationMessageApiPayload
+
+LocationMessageApiPayload represents the API payload for a location message.
+
+```go
+type LocationMessageApiPayload struct {
+    BaseMessagePayload
+    Location LocationMessage `json:"location" validate:"required"` // Location message
+}
+```
+
+<a name="MessageType"></a>
+## type MessageType
+
+MessageType represents the type of message.
+
+```go
+type MessageType string
+```
+
+<a name="MessageTypeLocation"></a>Constants for different message types.
+
+```go
+const (
+    MessageTypeLocation    MessageType = "location"
+    MessageTypeAudio       MessageType = "audio"
+    MessageTypeVideo       MessageType = "video"
+    MessageTypeDocument    MessageType = "document"
+    MessageTypeText        MessageType = "text"
+    MessageTypeContact     MessageType = "contacts"
+    MessageTypeInteractive MessageType = "interactive"
+    MessageTypeTemplate    MessageType = "template"
+    MessageTypeReaction    MessageType = "reaction"
+    MessageTypeSticker     MessageType = "sticker"
+    MessageTypeImage       MessageType = "image"
+)
+```
+
+<a name="Order"></a>
+## type Order
+
+Order represents an order in the system.
+
+```go
+type Order struct {
+    CatalogID    string        `json:"catalog_id"`    // CatalogID is the ID of the catalog associated with the order.
+    ProductItems []ProductItem `json:"product_items"` // ProductItems is a list of product items in the order.
+    Text         string        `json:"text"`          // Text is an additional text associated with the order.
+}
+```
+
+<a name="PhoneType"></a>
+## type PhoneType
+
+
+
+```go
+type PhoneType string
+```
+
+<a name="CellPhone"></a>
+
+```go
+const (
+    CellPhone   PhoneType = "CELL"
+    MainPhone   PhoneType = "MAIN"
+    IphonePhone PhoneType = "IPHONE"
+    HomePhone   PhoneType = "HOME"
+    WorkPhone   PhoneType = "WORK"
+)
+```
+
+<a name="ProductItem"></a>
+## type ProductItem
+
+ProductItem represents a product item in an order.
+
+```go
+type ProductItem struct {
+    Currency          string `json:"currency"`            // Currency is the currency of the product item.
+    ItemPrice         string `json:"item_price"`          // ItemPrice is the price of the product item.
+    ProductRetailerID string `json:"product_retailer_id"` // ProductRetailerID is the ID of the retailer associated with the product item.
+    Quantity          string `json:"quantity"`            // Quantity is the quantity of the product item.
+}
+```
+
+<a name="ProductListMessage"></a>
+## type ProductListMessage
+
+ProductListMessage represents a product list message.
+
+```go
+type ProductListMessage struct {
+}
+```
+
+<a name="NewProductListMessage"></a>
+### func NewProductListMessage
+
+```go
+func NewProductListMessage(params ProductListMessageParams) (*ProductListMessage, error)
+```
+
+NewProductListMessage creates a new product list message.
+
+<a name="ProductListMessage.ToJson"></a>
+### func \(\*ProductListMessage\) ToJson
+
+```go
+func (m *ProductListMessage) ToJson(configs ApiCompatibleJsonConverterConfigs) ([]byte, error)
+```
+
+ToJson converts the product list message to JSON.
+
+<a name="ProductListMessageApiPayload"></a>
+## type ProductListMessageApiPayload
+
+ProductListMessageApiPayload represents the API payload for a product list message.
+
+```go
+type ProductListMessageApiPayload struct {
+    BaseMessagePayload
+    Interactive ProductListMessage `json:"interactive" validate:"required"`
+}
+```
+
+<a name="ProductListMessageParams"></a>
+## type ProductListMessageParams
+
+ProductListMessageParams represents the parameters for creating a product list message.
+
+```go
+type ProductListMessageParams struct {
+}
+```
+
+<a name="ProductMessage"></a>
+## type ProductMessage
+
+ProductMessage represents a product message.
+
+```go
+type ProductMessage struct {
+}
+```
+
+<a name="NewProductMessage"></a>
+### func NewProductMessage
+
+```go
+func NewProductMessage(params ProductMessageParams) (*ProductMessage, error)
+```
+
+NewProductMessage creates a new product message with the given parameters.
+
+<a name="ProductMessage.ToJson"></a>
+### func \(\*ProductMessage\) ToJson
+
+```go
+func (m *ProductMessage) ToJson(configs ApiCompatibleJsonConverterConfigs) ([]byte, error)
+```
+
+ToJson converts the product message to JSON with the given configurations.
+
+<a name="ProductMessageApiPayload"></a>
+## type ProductMessageApiPayload
+
+ProductMessageApiPayload represents the API payload for a product message.
+
+```go
+type ProductMessageApiPayload struct {
+    BaseMessagePayload
+    Interactive ProductMessage `json:"interactive" validate:"required"`
+}
+```
+
+<a name="ProductMessageParams"></a>
+## type ProductMessageParams
+
+ProductMessageParams represents the parameters for creating a product message.
+
+```go
+type ProductMessageParams struct {
+}
+```
+
+<a name="QuickReplyButtonMessage"></a>
+## type QuickReplyButtonMessage
+
+QuickReplyButtonMessage represents a quick reply button message.
+
+```go
+type QuickReplyButtonMessage struct {
+    Type   InteractiveMessageType        `json:"type" validate:"required"`   // Type of the quick reply button message.
+    Body   QuickReplyButtonMessageBody   `json:"body" validate:"required"`   // Body of the quick reply button message.
+    Action QuickReplyButtonMessageAction `json:"action" validate:"required"` // Action of the quick reply button message.
+}
+```
+
+<a name="NewQuickReplyButtonMessage"></a>
+### func NewQuickReplyButtonMessage
+
+```go
+func NewQuickReplyButtonMessage(bodyText string) (*QuickReplyButtonMessage, error)
+```
+
+NewQuickReplyButtonMessage creates a new quick reply button message with the given body text.
+
+<a name="QuickReplyButtonMessage.AddButton"></a>
+### func \(\*QuickReplyButtonMessage\) AddButton
+
+```go
+func (m *QuickReplyButtonMessage) AddButton(id, title string) error
+```
+
+
+
+<a name="QuickReplyButtonMessage.ToJson"></a>
+### func \(\*QuickReplyButtonMessage\) ToJson
+
+```go
+func (m *QuickReplyButtonMessage) ToJson(configs ApiCompatibleJsonConverterConfigs) ([]byte, error)
+```
+
+ToJson converts the quick reply button message to JSON.
+
+<a name="QuickReplyButtonMessageAction"></a>
+## type QuickReplyButtonMessageAction
+
+QuickReplyButtonMessageAction represents the action of a quick reply button message.
+
+```go
+type QuickReplyButtonMessageAction struct {
+    Buttons []quickReplyButtonMessageButton `json:"buttons" validate:"required"` // List of quick reply buttons.
+}
+```
+
+<a name="QuickReplyButtonMessageApiPayload"></a>
+## type QuickReplyButtonMessageApiPayload
+
+QuickReplyButtonMessageApiPayload represents the API payload for a quick reply button message.
+
+```go
+type QuickReplyButtonMessageApiPayload struct {
+    BaseMessagePayload
+    Interactive QuickReplyButtonMessage `json:"interactive" validate:"required"` // Interactive part of the API payload.
+}
+```
+
+<a name="QuickReplyButtonMessageBody"></a>
+## type QuickReplyButtonMessageBody
+
+QuickReplyButtonMessageBody represents the body of a quick reply button message.
+
+```go
+type QuickReplyButtonMessageBody struct {
+    Text string `json:"text" validate:"required"` // Text of the quick reply button message.
+}
+```
+
+<a name="ReactionMessage"></a>
+## type ReactionMessage
+
+ReactionMessage represents a reaction to a message.
+
+```go
+type ReactionMessage struct {
+    MessageId string `json:"message_id" validate:"required"` // The ID of the message to react to.
+    Emoji     string `json:"emoji" validate:"required"`      // The emoji representing the reaction.
+}
+```
+
+<a name="NewReactionMessage"></a>
+### func NewReactionMessage
+
+```go
+func NewReactionMessage(params ReactionMessageParams) (*ReactionMessage, error)
+```
+
+NewReactionMessage creates a new ReactionMessage instance.
+
+<a name="ReactionMessage.ToJson"></a>
+### func \(\*ReactionMessage\) ToJson
+
+```go
+func (reaction *ReactionMessage) ToJson(configs ApiCompatibleJsonConverterConfigs) ([]byte, error)
+```
+
+ToJson converts the ReactionMessage to JSON.
+
+<a name="ReactionMessageApiPayload"></a>
+## type ReactionMessageApiPayload
+
+ReactionMessageApiPayload represents the API payload for a reaction message.
+
+```go
+type ReactionMessageApiPayload struct {
+    BaseMessagePayload
+    Reaction ReactionMessage `json:"reaction" validate:"required"` // The reaction message.
+}
+```
+
+<a name="ReactionMessageParams"></a>
+## type ReactionMessageParams
+
+ReactionMessageParams is an alias for ReactionMessage.
+
+```go
+type ReactionMessageParams = ReactionMessage
+```
+
+<a name="StickerMessage"></a>
+## type StickerMessage
+
+StickerMessage represents a sticker message.
+
+```go
+type StickerMessage struct {
+    Id   string `json:"id,omitempty"`
+    Link string `json:"link,omitempty"`
+}
+```
+
+<a name="NewStickerMessage"></a>
+### func NewStickerMessage
+
+```go
+func NewStickerMessage(params *StickerMessageConfigs) (*StickerMessage, error)
+```
+
+NewStickerMessage creates a new sticker message based on the provided configurations.
+
+<a name="StickerMessage.ToJson"></a>
+### func \(\*StickerMessage\) ToJson
+
+```go
+func (sticker *StickerMessage) ToJson(configs ApiCompatibleJsonConverterConfigs) ([]byte, error)
+```
+
+ToJson converts the sticker message to JSON based on the provided configurations.
+
+<a name="StickerMessageApiPayload"></a>
+## type StickerMessageApiPayload
+
+StickerMessageApiPayload represents the API payload for a sticker message.
+
+```go
+type StickerMessageApiPayload struct {
+    BaseMessagePayload
+    Sticker StickerMessage `json:"sticker" validate:"required"`
+}
+```
+
+<a name="StickerMessageConfigs"></a>
+## type StickerMessageConfigs
+
+StickerMessageConfigs represents the configurations for a sticker message.
+
+```go
+type StickerMessageConfigs struct {
+    Id   string `json:"id,omitempty"`
+    Link string `json:"link,omitempty"`
+}
+```
+
+<a name="TemplateMessage"></a>
+## type TemplateMessage
+
+TemplateMessage represents a template message.
+
+```go
+type TemplateMessage struct {
+}
+```
+
+<a name="NewTemplateMessage"></a>
+### func NewTemplateMessage
+
+```go
+func NewTemplateMessage() (*TemplateMessage, error)
+```
+
+NewTemplateMessage creates a new instance of TemplateMessage.
+
+<a name="TemplateMessageApiPayload"></a>
+## type TemplateMessageApiPayload
+
+TemplateMessageApiPayload represents the API payload for a template message.
+
+```go
+type TemplateMessageApiPayload struct {
+    BaseMessagePayload
+    Template TemplateMessage `json:"template" validate:"required"`
+}
+```
+
+<a name="TextMessageApiPayload"></a>
+## type TextMessageApiPayload
+
+TextMessageApiPayload represents the payload for the WhatsApp API.
+
+```go
+type TextMessageApiPayload struct {
+    BaseMessagePayload `json:",inline"`
+    Text               TextMessageApiPayloadText `json:"text" validate:"required"` // The text content of the message.
+}
+```
+
+<a name="TextMessageApiPayloadText"></a>
+## type TextMessageApiPayloadText
+
+TextMessageApiPayloadText represents the text payload for the WhatsApp API.
+
+```go
+type TextMessageApiPayloadText struct {
+    Body         string `json:"body" validate:"required"` // The text content of the message.
+    AllowPreview bool   `json:"preview_url,omitempty"`    // Whether to allow preview of the message.
+}
+```
+
+<a name="TextMessageConfigs"></a>
+## type TextMessageConfigs
+
+TextMessageConfigs represents the configuration options for a text message.
+
+```go
+type TextMessageConfigs struct {
+    Text         string `json:"text" validate:"required"` // The text content of the message.
+    AllowPreview bool   `json:"allowPreview,omitempty"`   // Whether to allow preview of the message.
+}
+```
+
+<a name="UrlType"></a>
+## type UrlType
+
+
+
+```go
+type UrlType string
+```
+
+<a name="VideoMessage"></a>
+## type VideoMessage
+
+VideoMessage represents a video message.
+
+```go
+type VideoMessage struct {
+    Id      string `json:"id,omitempty"`
+    Link    string `json:"link,omitempty"`
+    Caption string `json:"caption,omitempty"`
+}
+```
+
+<a name="NewVideoMessage"></a>
+### func NewVideoMessage
+
+```go
+func NewVideoMessage(params VideoMessageConfigs) (*VideoMessage, error)
+```
+
+NewVideoMessage creates a new VideoMessage instance.
+
+<a name="VideoMessage.SetCaption"></a>
+### func \(\*VideoMessage\) SetCaption
+
+```go
+func (video *VideoMessage) SetCaption(params string)
+```
+
+SetCaption sets the caption for the video message.
+
+<a name="VideoMessage.ToJson"></a>
+### func \(\*VideoMessage\) ToJson
+
+```go
+func (video *VideoMessage) ToJson(configs ApiCompatibleJsonConverterConfigs) ([]byte, error)
+```
+
+ToJson converts the video message to JSON.
+
+<a name="VideoMessageApiPayload"></a>
+## type VideoMessageApiPayload
+
+VideoMessageApiPayload represents the API payload for a video message.
+
+```go
+type VideoMessageApiPayload struct {
+    BaseMessagePayload
+    Video VideoMessage `json:"video" validate:"required"`
+}
+```
+
+<a name="VideoMessageConfigs"></a>
+## type VideoMessageConfigs
+
+VideoMessageConfigs is an alias for VideoMessage.
+
+```go
+type VideoMessageConfigs = VideoMessage
+```
+
+<a name="listMessage"></a>
+## type listMessage
+
+listMessage represents an interactive list message.
+
+```go
+type listMessage struct {
+    Type   InteractiveMessageType `json:"type" validate:"required"`   // Type of the message.
+    Action listMessageAction      `json:"action" validate:"required"` // Action of the message.
+    Body   ListMessageBody        `json:"body,omitempty"`             // Body of the message.
+}
+```
+
+<a name="NewListMessage"></a>
+### func NewListMessage
+
+```go
+func NewListMessage(params ListMessageParams) (*listMessage, error)
+```
+
+NewListMessage creates a new list message with the given parameters.
+
+<a name="listMessage.AddSection"></a>
+### func \(\*listMessage\) AddSection
+
+```go
+func (m *listMessage) AddSection(section *listSection)
+```
+
+AddSection adds a new section to the list message.
+
+<a name="listMessage.SetBodyText"></a>
+### func \(\*listMessage\) SetBodyText
+
+```go
+func (m *listMessage) SetBodyText(section *listSection)
+```
+
+SetBodyText sets the body text of the list message.
+
+<a name="listMessage.ToJson"></a>
+### func \(\*listMessage\) ToJson
+
+```go
+func (m *listMessage) ToJson(configs ApiCompatibleJsonConverterConfigs) ([]byte, error)
+```
+
+ToJson converts the list message to JSON.
+
+<a name="listMessageAction"></a>
+## type listMessageAction
+
+listMessageAction represents the action of the list message.
+
+```go
+type listMessageAction struct {
+    ButtonText string        `json:"button" validate:"required"`   // Text of the button.
+    Sections   []listSection `json:"sections" validate:"required"` // Sections in the list message.
+}
+```
+
+<a name="listSection"></a>
+## type listSection
+
+listSection represents a section in the list message.
+
+```go
+type listSection struct {
+    Title string           `json:"title" validate:"required"` // Title of the section.
+    Rows  []listSectionRow `json:"rows" validate:"required"`  // Rows in the section.
+}
+```
+
+<a name="NewListSection"></a>
+### func NewListSection
+
+```go
+func NewListSection(title string) (*listSection, error)
+```
+
+NewListSection creates a new list section with the given title.
+
+<a name="listSection.AddRow"></a>
+### func \(\*listSection\) AddRow
+
+```go
+func (section *listSection) AddRow(row *listSectionRow)
+```
+
+AddRow adds a new row to the list section.
+
+<a name="listSection.SetTitle"></a>
+### func \(\*listSection\) SetTitle
+
+```go
+func (section *listSection) SetTitle(title string)
+```
+
+SetTitle sets the title of the list section.
+
+<a name="listSectionRow"></a>
+## type listSectionRow
+
+listSectionRow represents a row in the list section.
+
+```go
+type listSectionRow struct {
+    Id          string `json:"id" validate:"required"`          // ID of the row.
+    Description string `json:"description" validate:"required"` // Description of the row.
+    Title       string `json:"title" validate:"required"`       // Title of the row.
+}
+```
+
+<a name="NewListSectionRow"></a>
+### func NewListSectionRow
+
+```go
+func NewListSectionRow(id, title, description string) (*listSectionRow, error)
+```
+
+NewListSectionRow creates a new list section row with the given ID, title, and description.
+
+<a name="listSectionRow.SetDescription"></a>
+### func \(\*listSectionRow\) SetDescription
+
+```go
+func (row *listSectionRow) SetDescription(description string)
+```
+
+SetDescription sets the description of the list section row.
+
+<a name="listSectionRow.SetId"></a>
+### func \(\*listSectionRow\) SetId
+
+```go
+func (row *listSectionRow) SetId(id string)
+```
+
+SetId sets the ID of the list section row.
+
+<a name="listSectionRow.SetTitle"></a>
+### func \(\*listSectionRow\) SetTitle
+
+```go
+func (row *listSectionRow) SetTitle(title string)
+```
+
+SetTitle sets the title of the list section row.
+
+<a name="quickReplyButtonMessageButton"></a>
+## type quickReplyButtonMessageButton
+
+quickReplyButtonMessageButton represents a quick reply button.
+
+```go
+type quickReplyButtonMessageButton struct {
+    Type  string                             `json:"type" validate:"required"`  // Type of the quick reply button.
+    Reply quickReplyButtonMessageButtonReply `json:"reply" validate:"required"` // Reply structure of the quick reply button.
+}
+```
+
+<a name="NewQuickReplyButton"></a>
+### func NewQuickReplyButton
+
+```go
+func NewQuickReplyButton(id, title string) (*quickReplyButtonMessageButton, error)
+```
+
+NewQuickReplyButton creates a new quick reply button with the given ID and title.
+
+<a name="quickReplyButtonMessageButtonReply"></a>
+## type quickReplyButtonMessageButtonReply
+
+quickReplyButtonMessageButtonReply represents the reply structure of a quick reply button.
+
+```go
+type quickReplyButtonMessageButtonReply struct {
+    Title string `json:"title" validate:"required"` // Title of the quick reply button.
+    Id    string `json:"id" validate:"required"`    // ID of the quick reply button.
+}
+```
+
+<a name="textMessage"></a>
+## type textMessage
+
+textMessage represents a text message.
+
+```go
+type textMessage struct {
+    Text         string // The text content of the message.
+    AllowPreview bool   // Whether to allow preview of the message.
+}
+```
+
+<a name="NewTextMessage"></a>
+### func NewTextMessage
+
+```go
+func NewTextMessage(configs TextMessageConfigs) (*textMessage, error)
+```
+
+NewTextMessage creates a new text message with the given configurations.
+
+<a name="textMessage.SetText"></a>
+### func \(\*textMessage\) SetText
+
+```go
+func (m *textMessage) SetText(text string)
+```
+
+SetText sets the text content of the message.
+
+<a name="textMessage.ToJson"></a>
+### func \(\*textMessage\) ToJson
+
+```go
+func (m *textMessage) ToJson(configs ApiCompatibleJsonConverterConfigs) ([]byte, error)
+```
+
+ToJson converts the text message struct to WhatsApp API compatible JSON.
+
