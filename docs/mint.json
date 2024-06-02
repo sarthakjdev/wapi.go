@@ -18,12 +18,12 @@
   },
   "favicon": "/favicon.svg",
   "colors": {
-    "primary": "#0D9373",
-    "light": "#07C983",
-    "dark": "#0D9373",
+    "primary": "#00ADD8",
+    "light": "#5DC9E2",
+    "dark": "#00ADD8",
     "anchors": {
-      "from": "#0D9373",
-      "to": "#07C983"
+      "from": "#00ADD8",
+      "to": "#5DC9E2"
     }
   },
   "topbarLinks": [
@@ -44,9 +44,9 @@
   ],
   "anchors": [
     {
-      "name": "Support",
-      "icon": "envelope",
-      "url": "mailto:sarthak@softlancer.co"
+      "name": "Star on GitHub",
+      "icon": "github",
+      "url": "https://github.com/sarthakjdev/wapi.go"
     },
     {
       "name": "Go Package",
