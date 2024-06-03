@@ -2,12 +2,12 @@
   "$schema": "https://mintlify.com/schema.json",
   "name": "Wapi.go",
   "logo": {
-    "light": "/logo/logo.svg",
-    "dark": "/logo/logo.svg"
+    "light": "/logo/light.svg",
+    "dark": "/logo/dark.svg"
   },
   "metadata": {
     "title": "Wapi.go",
-    "description": "Wapi.js is a JavaScript module, written in TypeScript, designed to interact with the WhatsApp cloud API in a user-friendly manner.",
+    "description": "Wapi.go is a Golang SDK, developed to build whatsapp business apps with ease and faster.",
     "author": "Sarthak Jain <sarthak@softlancer.co>"
   },
   "search": {
@@ -18,12 +18,12 @@
   },
   "favicon": "/favicon.svg",
   "colors": {
-    "primary": "#00ADD8",
-    "light": "#5DC9E2",
-    "dark": "#00ADD8",
+    "primary": "#0D9373",
+    "light": "#07C983",
+    "dark": "#0D9373",
     "anchors": {
-      "from": "#00ADD8",
-      "to": "#5DC9E2"
+      "from": "#0D9373",
+      "to": "#07C983"
     }
   },
   "topbarLinks": [
