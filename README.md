@@ -1,7 +1,7 @@
 <div align="center">
 <br />
 <p align="center">
-<a href="https://wapijs.co"><img src="https://media.discordapp.net/attachments/1007886641484005427/1243103800147836928/logo_light_2.png?ex=66504221&is=664ef0a1&hm=e9801618ae101bfdb39d1a13addecc2eb75c08920d9128ac670c8b4064890fb1&=&format=webp&quality=lossless&width=1210&height=723" alt="@wapijs/Wapi.go"  height="200" width="360" /></a>
+<a href="https://wapijs.co"><img src="https://media.discordapp.net/attachments/907937769014325288/1248544029705240629/image.png?ex=66640cbd&is=6662bb3d&hm=9339e051f865880d2d8bfa7d04288f0eaeab042614aca4dd127e210377aeecb9&=&format=webp&quality=lossless&width=2261&height=1034" alt="@wapijs/Wapi.go"  height="200" width="360" /></a>
 </p>
 <br />
 </div>
