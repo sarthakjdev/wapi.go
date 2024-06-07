@@ -1,18 +1,18 @@
 <div align="center">
 <br />
 <p align="center">
-<a href="https://wapijs.co"><img src="https://media.discordapp.net/attachments/1007886641484005427/1243103800147836928/logo_light_2.png?ex=66504221&is=664ef0a1&hm=e9801618ae101bfdb39d1a13addecc2eb75c08920d9128ac670c8b4064890fb1&=&format=webp&quality=lossless&width=1210&height=723" alt="@wapijs/wapi.js"  height="200" width="360" /></a>
+<a href="https://wapijs.co"><img src="https://media.discordapp.net/attachments/1007886641484005427/1243103800147836928/logo_light_2.png?ex=66504221&is=664ef0a1&hm=e9801618ae101bfdb39d1a13addecc2eb75c08920d9128ac670c8b4064890fb1&=&format=webp&quality=lossless&width=1210&height=723" alt="@wapijs/Wapi.go"  height="200" width="360" /></a>
 </p>
 <br />
 </div>
 
 ## 📌 Status
 
-Beta Version - This library is not stable right now. It is currently in beta version. Report issues [here](https://github.com/sarthakjdev/wapi.go/issues).
+Beta Version - This SDK is not stable right now. It is currently in beta version. Report issues [here](https://github.com/sarthakjdev/wapi.go/issues).
 
 ## 📖 About
 
-Wapi.js is a JavaScript module, written in TypeScript, designed to interact with the WhatsApp cloud API in a user-friendly manner.
+Wapi.go is a JavaScript module, written in TypeScript, designed to interact with the WhatsApp cloud API in a user-friendly manner.
 
 ## ✨ Features
 
@@ -33,7 +33,7 @@ This assumes you already have a working Go environment, if not please see
 go get github.com/sarthakjdev/wapi.go
 ```
 
-> Note: This library is not affiliated with the official WhatsApp Cloud API or does not act as any official solution provided the the Meta Inclusive Private Limited, this is just a open source library built for developers to support them in building whatsapp cloud api based chat bots easily.
+> Note: This SDK is not affiliated with the official WhatsApp Cloud API or does not act as any official solution provided the the Meta Inclusive Private Limited, this is just a open source SDK built for developers to support them in building whatsapp cloud api based chat bots easily.
 
 ## 🚀 Usage
 
@@ -96,4 +96,4 @@ Distributed under the Apache 2.0 License. View [LICENSE](./LICENSE).
 - Email: sarthak@softlancer.co
 - [Twitter](https://twitter.com/sarthakjdev) | [LinkedIn](https://www.linkedin.com/in/sarthakjdev)
 
-Note: This library is part of an open-source product-building initiative by [Softlancer](https://github.com/softlancerhq), and this repository will soon be moved under the same organization.
+Note: This SDK is part of an open-source product-building initiative by [Softlancer](https://github.com/softlancerhq), and this repository will soon be moved under the same organization.

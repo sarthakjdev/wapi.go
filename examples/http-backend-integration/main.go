@@ -4,9 +4,9 @@ import (
 	"fmt"
 
 	"github.com/labstack/echo/v4"
-	wapi "github.com/sarthakjdev/wapi.go/pkg/client"
 	"github.com/sarthakjdev/wapi.go/pkg/components"
 	"github.com/sarthakjdev/wapi.go/pkg/events"
+	wapi "github.com/sarthakjdev/wapi.go/pkg/messaging"
 )
 
 func main() {

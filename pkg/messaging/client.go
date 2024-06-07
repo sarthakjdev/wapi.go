@@ -1,4 +1,4 @@
-package wapi
+package messaging
 
 import (
 	"fmt"
@@ -25,8 +25,10 @@ type ClientConfig struct {
 	PhoneNumberId     string `validate:"required"`
 	ApiAccessToken    string `validate:"required"`
 	BusinessAccountId string `validate:"required"`
-	WebhookPath       string `validate:"required"`
 	WebhookSecret     string `validate:"required"`
+
+	// these two are not required, because may be user want to use their own server
+	WebhookPath       string
 	WebhookServerPort int
 }
 
@@ -61,7 +63,7 @@ func (client *Client) GetPhoneNumberId() string {
 }
 
 // SetPhoneNumberId sets the phone number ID for the client.
-func (client *Client) SetPhoneNumberId(phoneNumberId string) {
+func (client *Client) SetPhoneNucmberId(phoneNumberId string) {
 	client.phoneNumberId = phoneNumberId
 }
 

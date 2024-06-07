@@ -1,0 +1,270 @@
+---
+title: Building Message Components
+description: Build message components with ease using the Wapi.go SDK
+---
+
+Wapi.go SDK provides a simaple and easy to use classes architecture to build message components. You can build message component of following types using the Wapi.go SDK:
+
+- [Text Message](#text-message)
+- [Image Message](#image-message)
+- [Video Message](#video-message)
+- [Audio Message](#audio-message)
+- [Document Message](#document-message)
+- [Location Message](#location-message)
+- [Contact Message](#contact-message)
+- [Reply Message](#reply-message)
+- [Reaction Message](#reaction-message)
+- [List Message](#list-message)
+- [QuickReply ButtonMessage](#quickreply-buttonmessage)
+- [Button Message](#button-message)
+- [Product Message](#product-message)
+- [Product List Message](#product-list-message)
+
+<Note>In all the media messages which includes image, document, audio, video and sticker, either we will have to use the Id of media, or a publicly accessible hosted media Url.</Note>
+
+<Tip> With the rapidly changing whatsapp business platform features and offerings, we try our best to be in sync with the new features provided by the API. If you think we are missing upon any of the available type of message support. You can open a github issue [here](https://github.com/sarthakjdev/Wapi.go/issues) or direclty [contact](/guide/contact) the maintainer of the project.</Tip>
+
+### Text Message
+
+Text message is the most basic message component that you can send to a user. You can create a text message using the following code:
+
+```typescript
+
+import { TextMessage } from '@wapijs/Wapi.go'
+
+const textMessage = new TextMessage({
+    text: 'Please say "hello" to proceed.'
+})
+
+```
+
+### Image Message
+
+Image message is a message component that you can use to send images to a user. You can create a image message using the following code:
+
+```typescript
+
+import { ImageMessage } from '@wapijs/Wapi.go'
+
+const imageMessage = new ImageMessage({
+    link: 'https://example.com/image.jpg',
+    caption: 'This is a caption for the image.'
+})
+```
+
+### Video Message
+
+Video message is a message component that you can use to send videos to a user. You can create a video message using the following code:
+
+```typescript
+
+import { VideoMessage } from '@wapijs/Wapi.go'
+
+const videoMessage = new VideoMessage({
+	link: 'https://example.com/video.mp4',
+	caption: 'This is a caption for the video.'
+})
+
+```
+
+### Audio Message
+
+Audio message is a message component that you can use to send audio files to a user. You can create a audio message using the following code:
+
+```typescript
+
+import { AudioMessage } from '@wapijs/Wapi.go'
+
+const audioMessage = new AudioMessage({
+	link: 'https://example.com/audio.mp3',
+})
+```
+
+### Document Message
+
+Document message is a message component that you can use to send documents to a user. You can create a document message using the following code:
+
+```typescript
+import { DocumentMessage } from '@wapijs/Wapi.go'
+
+const documentMessage = new DocumentMessage({
+	link: 'https://example.com/image.jpg',
+	caption: 'This is a caption for the image.'
+})
+
+```
+
+### Location Message
+
+Location message is a message component that you can use to send location to a user. You can create a location message using the following code:
+
+```typescript
+import { LocationMessage } from '@wapijs/Wapi.go'
+
+const locationMessage = new LocationMessage({
+	latitude: 37.7749,
+	longitude: -122.4194,
+	name: 'San Francisco',
+	address: 'San Francisco, CA, USA'
+})
+```
+
+### Contact Message
+
+Contact message is a message component that you can use to send contact details to a user. You can create a contact message using the following code:
+
+<Info>In order to build a contact message, you need to use multiple classes provided to build, multiple components ofq the contact message. Now this has been done for ease of use and to provide a more structured way to build the contact message.</Info>
+
+```typescript
+import { Contact, ContactMessage } from '@wapijs/Wapi.go'
+
+const contact = new Contact({
+		name: {
+			last_name: 'Doe',
+			formatted_name: 'John Doe'
+		}
+	})
+
+    // optional
+	contact.addAddress({
+		city: 'San Francisco',
+		country: 'USA',
+		street: '123 Main Street',
+		type: 'HOME',
+		country_code: 'US',
+		state: 'CA'
+	})
+
+    // optional
+	contact.addEmail({
+		type: 'HOME',
+		email: 'sathak@softlancer.co'
+	})
+
+    // optional
+	contact.addPhone({
+		type: 'CELL',
+		phone: '+1234567890'
+	})
+
+    // optional
+	contact.addUrl({
+		type: 'HOME',
+		url: 'https://softlancer.co'
+	})
+
+	const contactMessage = new ContactMessage({
+		contacts: [contact]
+	})
+
+    // add contact to the existing contact message
+	contactMessage.addContact(anotherContact)
+
+```
+
+### Reaction Message
+
+Reaction message is a message component that you can use to send a reaction to a message. You can create a reaction message using the following code:
+
+```typescript
+import { ReactionMessage } from '@wapijs/Wapi.go'
+const reactionMessage = new ReactionMessage({
+		reaction: '✅',
+		messageId: 'message-id'
+	})
+```
+
+### List Message
+
+List message is a message component that you can use to send a list of items to a user. You can create a list message using the following code:
+
+```typescript
+import { ListInteractionMessage } from '@wapijs/Wapi.go'
+
+const listMessage = new ListInteractionMessage({
+		bodyText: 'Welcome to Wapi.go',
+		buttonText: 'Ask questions',
+		footerText: 'Beta version',
+		sections: [
+			{
+				rows: [
+					{
+						description: 'row description',
+						id: `row-1`,
+						title: `row title`
+					}
+				],
+				title: 'section title'
+			}
+		]
+	})
+```
+
+### Button Interactive Message
+
+Button message is a message component that you can use to send a button to a user. You can create a button message using the following code:
+
+```typescript
+import { ButtonInteractionMessage } from '@wapijs/Wapi.go'
+const buttonMessage = new ButtonInteractionMessage({
+		bodyText: 'Welcome to Wapi.go',
+		buttons: [{
+			id: 'I am a button',
+			title: 'Click me'
+		}],
+		footerText: 'Beta version'
+})
+```
+
+### Product Message
+
+Product message is a message component that you can use to send a product to a user. You can create a product message using the following code:
+
+```typescript
+import { ProductMessage } from '@wapijs/Wapi.go'
+const productMessage = new ProductMessage({
+	bodyText: 'Hii, I am a product.',
+	buttonText: 'Buy',
+	catalogId: '123',
+	productRetailerId: '123',
+	footerText: 'Beta version',
+})
+```
+
+### Product List Message
+
+Product List message is a message component that you can use to send a list of products to a user. You can create a product list message using the following code:
+
+```typescript
+import { ProductListMessage, ProductListSection, Product, HeaderTypeEnum } from '@wapijs/Wapi.go'
+const productListMessage = new ProductListMessage({
+		bodyText: 'Welcome to Wapi.go',
+		buttonText: 'Buy',
+		footerText: 'Beta version',
+		catalogId: '123',
+		productRetailerId: '123',
+		header: {
+			text: 'Products',
+			type: HeaderTypeEnum.Text
+		},
+		sections: [
+			new ProductListSection([new Product('123')], 'Section 1'),
+		]
+	})
+
+	const section = new ProductListSection([], 'Section 2')
+
+	section.addProduct(new Product('123'))
+
+	productListMessage.addSection(section)
+```
+
+### Temaplate Message
+
+Template message is a message component that you can use to send a template to a user. You can create a template message using the following code:
+
+<Note>You need to get your template approved before sending a template message to users. You can check the template message approval documentation [here](https://developers.facebook.com/docs/whatsapp/message-templates/guidelines/).</Note>
+
+```typescript
+```
+

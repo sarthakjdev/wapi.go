@@ -1,0 +1,98 @@
+--- 
+title: Setting up Node.js Environment
+---
+
+## Setting up Node.js Environment
+
+To get started with Wapi.go, you need to have Node.js installed on your machine. If you don't have Node.js installed, you can download it from the official website [here](https://nodejs.org/en/download/).
+
+### Installing Node.js
+
+<Tip>
+To check if you already have Node.js installed on your system, open your terminal and run the following command:
+```bash
+node -v
+```
+</Tip>
+
+<Tabs>
+  <Tab title="Windows">
+    On Windows, it's as simple as installing any other program. Follow the steps below to install Node.js:
+        <Steps>
+          <Step title="Download Node.js">
+            Download the Node.js installer from the official website [here](https://nodejs.org/en/download/).
+          </Step>
+          <Step title="Install"> 
+            Run the installer and follow the instructions.
+          </Step>
+          <Step title="Check Installation">
+            Once the installation is complete, open your terminal and run the following command to check if Node.js is installed:
+            ```bash
+                node -v
+            ```
+          </Step>
+        </Steps>
+  </Tab>
+  <Tab title="MacOS">
+    On MacOS, youc an install Node.js using `n`, a node version manager:
+    <Steps>
+            <Step title="Download and Intall `n">
+                Install n using the following command:
+                ```bash
+                    curl -L https://bit.ly/n-install | bash
+                ```
+            </Step>
+            <Step title="Re-source">
+                Close and reopen the terminal, or run the following command to apply the changes:
+                ```bash
+                    source ~/.bashrc # or any other shell you are using
+                ```
+            </Step>
+            <Step title="Install Node using `n` (LTS mostly)">
+                Install the desired version of Node.js using nvm
+                ```bash
+                    sudo n lts
+                ```
+            </Step>
+            <Step title="Verify Installation">
+                Verify the installation:
+                ```bash
+                    node -v
+                ```
+            </Step>
+        </Steps>
+  </Tab>
+  <Tab title="Linux">
+        On Linux, you can install Node.js using `nvm`, a node version manager:
+         <Steps>
+            <Step title="Download and Install `nvm`">
+                Install nvm using the following command:
+                ```bash
+                    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+                ```
+            </Step>
+            <Step title="Install">
+                Close and reopen the terminal, or run the following command to apply the changes:
+                ```bash
+                    source ~/.bashrc # or any other shell you are using
+                ```
+            </Step>
+            <Step title="Install Node using NVM (LTS mostly)">
+                Install the desired version of Node.js using nvm
+                ```bash
+                    nvm use --lts
+                ```
+            </Step>
+            <Step title="Verify Installation">
+                Verify the installation:
+                ```bash
+                    node -v
+                ```
+            </Step>
+        </Steps>
+  </Tab>
+</Tabs>
+
+
+
+

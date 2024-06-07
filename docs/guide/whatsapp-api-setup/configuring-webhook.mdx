@@ -1,0 +1,68 @@
+---
+title: Configuring Webhook
+description: Learn how to configure the webhook for your Whatsapp Business Account
+---
+
+
+To receive messages from your customers, you need to configure a webhook for your Whatsapp Business Account. The webhook is a URL that you provide to Whatsapp to send messages to your application.
+
+
+## Configuring Webhook for local development setup
+
+
+
+### NGROK
+
+If you are developing your application locally, you can use [ngrok](https://ngrok.com/) to expose your local server to the internet.
+
+To use ngrok, follow these steps:
+
+1. Download and install ngrok from [here](https://ngrok.com/download).
+2. Run the following command in your terminal to expose your local server to the internet:
+
+```bash
+ngrok http http://localhost:<your-application-port>
+```
+3. You will see something like this in your terminal:
+  <Frame>
+    <img src="/assets/configure-webhook/1.png" />
+  </Frame>
+
+
+
+### Submitting URL to whatsapp business platform
+
+Follow the steps below to submit your webhook URL to the Whatsapp Business Platform and enable incoming events routing to your local development setup:
+
+
+<Steps>
+    <Step>
+        <Accordion title="Visit Your App Dashboard">
+            <Note>Visit your application dashboard via [Meta Developer Portal](https://developers.facebook.com/apps)</Note>
+        </Accordion>
+    </Step>
+    <Step>
+        <Accordion title="Subscribe to the webhook object for your app">
+            <Frame>
+                <img src="/assets/configure-webhook/2.png" />
+            </Frame>
+        </Accordion>
+    </Step>
+    <Step>
+        <Accordion title="Add the NGROK public URL and webhook secret.">
+            <Note>Webhook secret is the same string which you have used in your Wapi.go Application Client.</Note>
+           
+            <Frame>
+                <img src="/assets/configure-webhook/3.png" />
+            </Frame>
+        </Accordion>
+    </Step>
+    <Step>
+        <Note>Make sure your [Wapi.go local application](/guide/building-your-application/creating-wapi-client) is up and running before proceeding with verify and save process.</Note>
+        <Accordion title="Click Verify and Save">
+            <Frame>
+                <img src="/assets/configure-webhook/4.png" />
+            </Frame>
+         </Accordion>
+    </Step>
+</Steps>

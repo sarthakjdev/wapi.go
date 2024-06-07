@@ -134,8 +134,25 @@ type NotificationPayloadReactionMessageSchemaType struct {
 
 type NotificationPayloadInteractionMessageSchemaType struct {
 	Interactive struct {
-		Type InteractiveNotificationTypeEnum `json:"type"`
+		Type                                                  InteractiveNotificationTypeEnum `json:"type"`
+		NotificationPayloadButtonInteractionMessageSchemaType `json:",inline,omitempty"`
+		NotificationPayloadListInteractionMessageSchemaType   `json:",inline,omitempty"`
 	} `json:"interactive,omitempty"`
+}
+
+type NotificationPayloadButtonInteractionMessageSchemaType struct {
+	ButtonReply struct {
+		ReplyId string `json:"reply_id"`
+		Title   string `json:"title"`
+	} `json:"button_reply,omitempty"`
+}
+
+type NotificationPayloadListInteractionMessageSchemaType struct {
+	ListReply struct {
+		Id          string `json:"id"`
+		Title       string `json:"title"`
+		Description string `json:"description"`
+	} `json:"list_reply,omitempty"`
 }
 
 type NotificationPayloadLocationMessageSchemaType struct {
@@ -195,8 +212,8 @@ const (
 type SystemNotificationTypeEnum string
 
 const (
-	SystemNotificationTypeUnknown SystemNotificationTypeEnum = "unknown"
-	// Add other system notification types
+	SystemNotificationTypeCustomerPhoneNumberChange SystemNotificationTypeEnum = "user_changed_number"
+	SystemNotificationTypeCustomerIdentityChanged   SystemNotificationTypeEnum = "customer_identity_changed"
 )
 
 type Contact struct {
@@ -262,24 +279,25 @@ type Pricing struct {
 }
 
 type Message struct {
-	Id                                           string                                      `json:"id"`
-	From                                         string                                      `json:"from"`
-	Timestamp                                    string                                      `json:"timestamp"`
-	Type                                         NotificationMessageTypeEnum                 `json:"type"`
-	Context                                      NotificationPayloadMessageContextSchemaType `json:"context"`
-	Errors                                       []Error                                     `json:",inline"`
-	NotificationPayloadTextMessageSchemaType     `json:",inline"`
-	NotificationPayloadAudioMessageSchemaType    `json:",inline"`
-	NotificationPayloadImageMessageSchemaType    `json:",inline"`
-	NotificationPayloadButtonMessageSchemaType   `json:",inline"`
-	NotificationPayloadDocumentMessageSchemaType `json:",inline"`
-	NotificationPayloadOrderMessageSchemaType    `json:",inline"`
-	NotificationPayloadStickerMessageSchemaType  `json:",inline"`
-	NotificationPayloadSystemMessageSchemaType   `json:",inline"`
-	NotificationPayloadVideoMessageSchemaType    `json:",inline"`
-	NotificationPayloadReactionMessageSchemaType `json:",inline"`
-	NotificationPayloadLocationMessageSchemaType `json:",inline"`
-	NotificationPayloadContactMessageSchemaType  `json:",inline"`
+	Id                                              string                                      `json:"id"`
+	From                                            string                                      `json:"from"`
+	Timestamp                                       string                                      `json:"timestamp"`
+	Type                                            NotificationMessageTypeEnum                 `json:"type"`
+	Context                                         NotificationPayloadMessageContextSchemaType `json:"context"`
+	Errors                                          []Error                                     `json:",inline"`
+	NotificationPayloadTextMessageSchemaType        `json:",inline"`
+	NotificationPayloadAudioMessageSchemaType       `json:",inline"`
+	NotificationPayloadImageMessageSchemaType       `json:",inline"`
+	NotificationPayloadButtonMessageSchemaType      `json:",inline"`
+	NotificationPayloadDocumentMessageSchemaType    `json:",inline"`
+	NotificationPayloadOrderMessageSchemaType       `json:",inline"`
+	NotificationPayloadStickerMessageSchemaType     `json:",inline"`
+	NotificationPayloadSystemMessageSchemaType      `json:",inline"`
+	NotificationPayloadVideoMessageSchemaType       `json:",inline"`
+	NotificationPayloadReactionMessageSchemaType    `json:",inline"`
+	NotificationPayloadLocationMessageSchemaType    `json:",inline"`
+	NotificationPayloadContactMessageSchemaType     `json:",inline"`
+	NotificationPayloadInteractionMessageSchemaType `json:",inline"`
 }
 
 type Error struct {
@@ -292,11 +310,12 @@ const (
 	MessageStatusCategorySent MessageStatusCategoryEnum = "sent"
 )
 
-// Add other message status categories
-
 type MessageStatusEnum string
 
 const (
-	MessageStatusDelivered MessageStatusEnum = "delivered"
-	// Add other message statuses
+	MessageStatusDelivered   MessageStatusEnum = "delivered"
+	MessageStatusRead        MessageStatusEnum = "read"
+	MessageStatusUnDelivered MessageStatusEnum = "undelivered"
+	MessageStatusFailed      MessageStatusEnum = "failed"
+	MessageStatusSent        MessageStatusEnum = "sent"
 )

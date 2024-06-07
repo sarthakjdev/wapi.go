@@ -16,10 +16,8 @@ func NewMediaManager(requester requestclient.RequestClient) *MediaManager {
 
 // GetMediaUrlById retrieves the media URL by its ID.
 func (mm *MediaManager) GetMediaUrlById() {
-
 }
 
 // GetMediaIdByUrl retrieves the media ID by its URL.
 func (mm *MediaManager) GetMediaIdByUrl() {
-
 }

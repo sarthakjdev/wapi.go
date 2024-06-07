@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"strings"
 
-	wapi "github.com/sarthakjdev/wapi.go/pkg/client"
 	wapiComponents "github.com/sarthakjdev/wapi.go/pkg/components"
 	"github.com/sarthakjdev/wapi.go/pkg/events"
+	wapi "github.com/sarthakjdev/wapi.go/pkg/messaging"
 )
 
 func main() {
