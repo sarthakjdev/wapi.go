@@ -12,7 +12,7 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/sarthakjdev/wapi.go/internal"
-	requestclient "github.com/sarthakjdev/wapi.go/internal/request_client"
+	"github.com/sarthakjdev/wapi.go/internal/request_client"
 	"github.com/sarthakjdev/wapi.go/pkg/components"
 	"github.com/sarthakjdev/wapi.go/pkg/events"
 )
@@ -23,14 +23,14 @@ type WebhookManager struct {
 	path         string
 	port         int
 	EventManager EventManager
-	Requester    requestclient.RequestClient
+	Requester    request_client.RequestClient
 }
 
 // WebhookManagerConfig represents the configuration options for creating a new WebhookManager.
 type WebhookManagerConfig struct {
-	Secret       string                      `validate:"required"`
-	EventManager EventManager                `validate:"required"`
-	Requester    requestclient.RequestClient `validate:"required"`
+	Secret       string                       `validate:"required"`
+	EventManager EventManager                 `validate:"required"`
+	Requester    request_client.RequestClient `validate:"required"`
 	Path         string
 	Port         int
 }
