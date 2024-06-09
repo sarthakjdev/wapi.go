@@ -1,4 +1,4 @@
-package requestclient
+package request_client
 
 import (
 	"fmt"
@@ -13,20 +13,22 @@ const (
 	REQUEST_PROTOCOL = "https"
 )
 
+type RequestClientInterface interface {
+	Request(params RequestCloudApiParams) (string, error)
+}
+
 // RequestClient represents a client for making requests to a cloud API.
 type RequestClient struct {
 	apiVersion     string
-	PhoneNumberId  string
 	baseUrl        string
 	apiAccessToken string
 }
 
 // NewRequestClient creates a new instance of RequestClient.
-func NewRequestClient(phoneNumberId string, apiAccessToken string) *RequestClient {
+func NewRequestClient(apiAccessToken string) *RequestClient {
 	return &RequestClient{
 		apiVersion:     API_VERSION,
 		baseUrl:        BASE_URL,
-		PhoneNumberId:  phoneNumberId,
 		apiAccessToken: apiAccessToken,
 	}
 }

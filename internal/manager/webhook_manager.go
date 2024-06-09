@@ -124,12 +124,16 @@ func (wh *WebhookManager) PostRequestHandler(c echo.Context) error {
 				}
 			}
 
+			// this is the id of the phone number which can ve used to respond to the events received
+			phoneNumberId := change.Value.Metadata.PhoneNumberId
+
 			for _, message := range change.Value.Messages {
 				switch message.Type {
 				case NotificationMessageTypeText:
 					{
 						wh.EventManager.Publish(events.TextMessageEventType, events.NewTextMessageEvent(
 							events.NewBaseMessageEvent(
+								phoneNumberId,
 								message.Id,
 								message.Timestamp,
 								message.From,
@@ -155,6 +159,7 @@ func (wh *WebhookManager) PostRequestHandler(c echo.Context) error {
 
 						wh.EventManager.Publish(events.ImageMessageEventType, events.NewImageMessageEvent(
 							events.NewBaseMessageEvent(
+								phoneNumberId,
 								message.Id,
 								message.Timestamp,
 								message.From,
@@ -180,6 +185,7 @@ func (wh *WebhookManager) PostRequestHandler(c echo.Context) error {
 
 						wh.EventManager.Publish(events.AudioMessageEventType, events.NewAudioMessageEvent(
 							events.NewBaseMessageEvent(
+								phoneNumberId,
 								message.Id,
 								message.Timestamp,
 								message.From,
@@ -207,6 +213,7 @@ func (wh *WebhookManager) PostRequestHandler(c echo.Context) error {
 
 						wh.EventManager.Publish(events.VideoMessageEventType, events.NewVideoMessageEvent(
 							events.NewBaseMessageEvent(
+								phoneNumberId,
 								message.Id,
 								message.Timestamp,
 								message.From,
@@ -233,6 +240,7 @@ func (wh *WebhookManager) PostRequestHandler(c echo.Context) error {
 
 						wh.EventManager.Publish(events.DocumentMessageEventType, events.NewVideoMessageEvent(
 							events.NewBaseMessageEvent(
+								phoneNumberId,
 								message.Id,
 								message.Timestamp,
 								message.From,
@@ -255,6 +263,7 @@ func (wh *WebhookManager) PostRequestHandler(c echo.Context) error {
 
 						wh.EventManager.Publish(events.LocationMessageEventType, events.NewLocationMessageEvent(
 							events.NewBaseMessageEvent(
+								phoneNumberId,
 								message.Id,
 								message.Timestamp,
 								message.From,
@@ -267,6 +276,7 @@ func (wh *WebhookManager) PostRequestHandler(c echo.Context) error {
 					{
 						wh.EventManager.Publish(events.ContactMessageEventType, events.NewTextMessageEvent(
 							events.NewBaseMessageEvent(
+								phoneNumberId,
 								message.Id,
 								message.Timestamp,
 								message.From,
@@ -291,6 +301,7 @@ func (wh *WebhookManager) PostRequestHandler(c echo.Context) error {
 
 						wh.EventManager.Publish(events.StickerMessageEventType, events.NewStickerMessageEvent(
 							events.NewBaseMessageEvent(
+								phoneNumberId,
 								message.Id,
 								message.Timestamp,
 								message.From,
@@ -305,6 +316,7 @@ func (wh *WebhookManager) PostRequestHandler(c echo.Context) error {
 					{
 						wh.EventManager.Publish(events.QuickReplyMessageEventType, events.NewQuickReplyButtonInteractionEvent(
 							events.NewBaseMessageEvent(
+								phoneNumberId,
 								message.Id,
 								message.Timestamp,
 								message.From,
@@ -319,6 +331,7 @@ func (wh *WebhookManager) PostRequestHandler(c echo.Context) error {
 						if message.Interactive.Type == "list" {
 							wh.EventManager.Publish(events.ListInteractionMessageEventType, events.NewListInteractionEvent(
 								events.NewBaseMessageEvent(
+									phoneNumberId,
 									message.Id,
 									message.Timestamp,
 									message.From,
@@ -331,6 +344,7 @@ func (wh *WebhookManager) PostRequestHandler(c echo.Context) error {
 						} else {
 							wh.EventManager.Publish(events.ReplyButtonInteractionEventType, events.NewReplyButtonInteractionEvent(
 								events.NewBaseMessageEvent(
+									phoneNumberId,
 									message.Id,
 									message.Timestamp,
 									message.From,
@@ -357,6 +371,7 @@ func (wh *WebhookManager) PostRequestHandler(c echo.Context) error {
 
 						wh.EventManager.Publish(events.ReactionMessageEventType, events.NewReactionMessageEvent(
 							events.NewBaseMessageEvent(
+								phoneNumberId,
 								message.Id,
 								message.Timestamp,
 								message.From,
@@ -369,6 +384,7 @@ func (wh *WebhookManager) PostRequestHandler(c echo.Context) error {
 					{
 						wh.EventManager.Publish(events.OrderReceivedEventType, events.NewTextMessageEvent(
 							events.NewBaseMessageEvent(
+								phoneNumberId,
 								message.Id,
 								message.Timestamp,
 								message.From,

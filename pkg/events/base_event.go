@@ -1,7 +1,7 @@
 package events
 
 import (
-	requestclient "github.com/sarthakjdev/wapi.go/internal/request_client"
+	"github.com/sarthakjdev/wapi.go/internal/request_client"
 	"github.com/sarthakjdev/wapi.go/pkg/components"
 )
 
@@ -24,14 +24,15 @@ type BaseSystemEventInterface interface {
 }
 
 type BaseMessageEvent struct {
-	requester   requestclient.RequestClient
+	requester   request_client.RequestClient
 	MessageId   string         `json:"message_id"`
 	Context     MessageContext `json:"context"`
 	Timestamp   string         `json:"timestamp"`
 	IsForwarded bool           `json:"is_forwarded"`
+	PhoneNumber string         `json:"phone_number"`
 }
 
-func NewBaseMessageEvent(messageId string, timestamp string, from string, isForwarded bool, requester requestclient.RequestClient) BaseMessageEvent {
+func NewBaseMessageEvent(phoneNumber string, messageId string, timestamp string, from string, isForwarded bool, requester request_client.RequestClient) BaseMessageEvent {
 	return BaseMessageEvent{
 		MessageId: messageId,
 		Context: MessageContext{
@@ -40,6 +41,7 @@ func NewBaseMessageEvent(messageId string, timestamp string, from string, isForw
 		requester:   requester,
 		Timestamp:   timestamp,
 		IsForwarded: isForwarded,
+		PhoneNumber: phoneNumber,
 	}
 }
 
@@ -49,7 +51,6 @@ func (bme BaseMessageEvent) GetEventType() string {
 
 // Reply to the message
 func (baseMessageEvent *BaseMessageEvent) Reply(Message components.BaseMessage) (string, error) {
-
 	body, err := Message.ToJson(components.ApiCompatibleJsonConverterConfigs{
 		SendToPhoneNumber: baseMessageEvent.Context.From,
 		ReplyToMessageId:  baseMessageEvent.MessageId,
@@ -59,9 +60,9 @@ func (baseMessageEvent *BaseMessageEvent) Reply(Message components.BaseMessage) 
 		return "", err
 	}
 
-	baseMessageEvent.requester.RequestCloudApi(requestclient.RequestCloudApiParams{
+	baseMessageEvent.requester.RequestCloudApi(request_client.RequestCloudApiParams{
 		Body: string(body),
-		Path: "/" + baseMessageEvent.requester.PhoneNumberId + "/messages",
+		Path: "/" + baseMessageEvent.PhoneNumber + "/messages",
 	})
 
 	return "", nil

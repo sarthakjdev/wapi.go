@@ -4,15 +4,14 @@ import (
 	"fmt"
 	"strings"
 
+	wapi "github.com/sarthakjdev/wapi.go/pkg/client"
 	wapiComponents "github.com/sarthakjdev/wapi.go/pkg/components"
 	"github.com/sarthakjdev/wapi.go/pkg/events"
-	wapi "github.com/sarthakjdev/wapi.go/pkg/messaging"
 )
 
 func main() {
 	// creating a client
-	whatsappClient, err := wapi.New(wapi.ClientConfig{
-		PhoneNumberId:     "",
+	client := wapi.New(&wapi.ClientConfig{
 		ApiAccessToken:    "",
 		BusinessAccountId: "",
 		WebhookPath:       "/webhook",
@@ -20,10 +19,7 @@ func main() {
 		WebhookServerPort: 8080,
 	})
 
-	if err != nil {
-		fmt.Println("error creating client", err)
-		return
-	}
+	messagingClient := client.NewMessagingClient("919643500545")
 
 	// create a message
 	textMessage, err := wapiComponents.NewTextMessage(wapiComponents.TextMessageConfigs{
@@ -115,7 +111,7 @@ func main() {
 
 	fmt.Println(string(jsonData))
 
-	whatsappClient.Message.Send(listMessage, "919643500545")
+	messagingClient.Message.Send(listMessage, "919643500545")
 
 	buttonMessage, err := wapiComponents.NewQuickReplyButtonMessage("Body 1")
 
@@ -127,11 +123,11 @@ func main() {
 	buttonMessage.AddButton("1", "Button 1")
 	buttonMessage.AddButton("2", "Button 2")
 
-	whatsappClient.On(events.ReadyEventType, func(event events.BaseEvent) {
+	client.On(events.ReadyEventType, func(event events.BaseEvent) {
 		fmt.Println("client is ready")
 	})
 
-	whatsappClient.On(events.TextMessageEventType, func(event events.BaseEvent) {
+	client.On(events.TextMessageEventType, func(event events.BaseEvent) {
 		fmt.Println("text message event received")
 
 		textMessageEvent := event.(*events.TextMessageEvent)
@@ -160,21 +156,21 @@ func main() {
 		}
 	})
 
-	whatsappClient.On(events.AudioMessageEventType, func(be events.BaseEvent) {
+	client.On(events.AudioMessageEventType, func(be events.BaseEvent) {
 		fmt.Println("audio message event received")
 	})
 
-	whatsappClient.On(events.VideoMessageEventType, func(be events.BaseEvent) {
+	client.On(events.VideoMessageEventType, func(be events.BaseEvent) {
 		fmt.Println("video message event received")
 	})
 
-	whatsappClient.On(events.DocumentMessageEventType, func(be events.BaseEvent) {
+	client.On(events.DocumentMessageEventType, func(be events.BaseEvent) {
 		fmt.Println("document message event received")
 	})
 
-	whatsappClient.On(events.ImageMessageEventType, func(be events.BaseEvent) {
+	client.On(events.ImageMessageEventType, func(be events.BaseEvent) {
 		fmt.Println("image message event received")
 	})
 
-	whatsappClient.InitiateClient()
+	client.Initiate()
 }
