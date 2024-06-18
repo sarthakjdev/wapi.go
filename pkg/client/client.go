@@ -38,9 +38,13 @@ func New(config *ClientConfig) *Client {
 		apiAccessToken:    config.BusinessAccountId,
 		Messaging:         []messaging.MessagingClient{},
 		eventManager:      &eventManager,
-		Business:          *business.NewBusinessClient(&business.BusinessClientConfig{}),
-		webhook:           manager.NewWebhook(&manager.WebhookManagerConfig{Path: config.WebhookPath, Secret: config.WebhookSecret, Port: config.WebhookServerPort, EventManager: eventManager, Requester: requester}),
-		requester:         &requester,
+		Business: *business.NewBusinessClient(&business.BusinessClientConfig{
+			BusinessAccountId: config.BusinessAccountId,
+			AccessToken:       config.ApiAccessToken,
+			Requester:         &requester,
+		}),
+		webhook:   manager.NewWebhook(&manager.WebhookManagerConfig{Path: config.WebhookPath, Secret: config.WebhookSecret, Port: config.WebhookServerPort, EventManager: eventManager, Requester: requester}),
+		requester: &requester,
 	}
 }
 

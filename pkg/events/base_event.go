@@ -60,7 +60,7 @@ func (baseMessageEvent *BaseMessageEvent) Reply(Message components.BaseMessage) 
 		return "", err
 	}
 
-	baseMessageEvent.requester.RequestCloudApi(request_client.RequestCloudApiParams{
+	baseMessageEvent.requester.Request(request_client.RequestCloudApiParams{
 		Body: string(body),
 		Path: "/" + baseMessageEvent.PhoneNumber + "/messages",
 	})

@@ -3,7 +3,9 @@ package main
 import (
 	"fmt"
 	"strings"
+	"time"
 
+	"github.com/sarthakjdev/wapi.go/pkg/business"
 	wapi "github.com/sarthakjdev/wapi.go/pkg/client"
 	wapiComponents "github.com/sarthakjdev/wapi.go/pkg/components"
 	"github.com/sarthakjdev/wapi.go/pkg/events"
@@ -12,11 +14,17 @@ import (
 func main() {
 	// creating a client
 	client := wapi.New(&wapi.ClientConfig{
-		ApiAccessToken:    "",
-		BusinessAccountId: "",
+		ApiAccessToken:    "EABhCftGVaeIBOZCDMPCG5ShotkTeEr4wrSl9LumpASHTFOGlR5MjrAwvSjRU3QXWNapmkc9EVLZB7vgSCE3vSUG6GgMgUXyBaCrbvlpXzHkVIdPFUgAGzF7p5P5edMaBMbCyKC5ejZBkgeI0T5kRZBWvHmdlAHdnzTOgIXGxOGp7LwsfnVJvYqity68jFNxCFmiVRga8XnpbusA3Q7egpD0XsfIPhgEJuVvg3p1pDOI5",
+		BusinessAccountId: "103043282674158",
 		WebhookPath:       "/webhook",
 		WebhookSecret:     "1234567890",
 		WebhookServerPort: 8080,
+	})
+
+	client.Business.ConversationAnalytics(business.ConversationAnalyticsOptions{
+		Start:       time.Now().Add(-time.Hour * 24 * 7 * 30),
+		End:         time.Now(),
+		Granularity: business.ConversationAnalyticsGranularityTypeDay,
 	})
 
 	messagingClient := client.NewMessagingClient("919643500545")

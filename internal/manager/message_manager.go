@@ -32,7 +32,7 @@ func (mm *MessageManager) Send(message components.BaseMessage, phoneNumber strin
 		// TODO: emit an error event here
 		return "", fmt.Errorf("error converting message to json: %v", err)
 	}
-	mm.requester.RequestCloudApi(request_client.RequestCloudApiParams{
+	mm.requester.Request(request_client.RequestCloudApiParams{
 		Body: string(body),
 		Path: "/" + mm.PhoneNumberId + "/messages",
 	})

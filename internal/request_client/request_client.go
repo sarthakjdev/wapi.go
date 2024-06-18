@@ -8,14 +8,17 @@ import (
 )
 
 const (
-	API_VERSION      = "v19.0"
+	API_VERSION      = "v20.0"
 	BASE_URL         = "graph.facebook.com"
 	REQUEST_PROTOCOL = "https"
 )
 
-type RequestClientInterface interface {
-	Request(params RequestCloudApiParams) (string, error)
-}
+type WhatsappApiType string
+
+const (
+	WhatsappApiTypeMessaging WhatsappApiType = "messaging"
+	WhatsappApiTypeBusiness  WhatsappApiType = "business"
+)
 
 // RequestClient represents a client for making requests to a cloud API.
 type RequestClient struct {
@@ -35,21 +38,46 @@ func NewRequestClient(apiAccessToken string) *RequestClient {
 
 // RequestCloudApiParams represents the parameters for making a request to the cloud API.
 type RequestCloudApiParams struct {
-	Body string
-	Path string
+	Body       string
+	Path       string
+	Method     string
+	QueryParam map[string]string
 }
 
-// RequestCloudApi makes a request to the cloud API with the given parameters.
+// Request makes a request to the cloud API with the given parameters.
 // It returns the response body as a string and any error encountered.
-func (requestClientInstance *RequestClient) RequestCloudApi(params RequestCloudApiParams) (string, error) {
-	httpRequest, err := http.NewRequest("POST", fmt.Sprintf("%s://%s/%s", REQUEST_PROTOCOL, requestClientInstance.baseUrl, params.Path), strings.NewReader(params.Body))
+func (requestClientInstance *RequestClient) Request(params RequestCloudApiParams) (string, error) {
+	queryParamString := ""
+	if len(params.QueryParam) > 0 {
+		queryParamString = "?"
+		for key, value := range params.QueryParam {
+			fmt.Println("Key is", key, "Value is", value)
+			fmt.Println("queryParamString is", queryParamString)
+			// if first query param, don't add "&"
+			if queryParamString != "?" {
+				queryParamString += "&"
+				queryParamString += strings.Join([]string{queryParamString, key, "=", value}, "")
+			} else {
+				queryParamString += strings.Join([]string{key, "=", value}, "")
+			}
+		}
+	}
+
+	requestPath := strings.Join(
+		[]string{REQUEST_PROTOCOL, "://", requestClientInstance.baseUrl, "/", requestClientInstance.apiVersion, "/", params.Path, queryParamString}, "")
+
+	fmt.Println("Requesting cloud api with path", requestPath)
+
+	httpRequest, err := http.NewRequest(params.Method,
+		requestPath,
+		strings.NewReader(params.Body))
 	if err != nil {
 		return "", err
 	}
 	httpRequest.Header.Set("Content-Type", "application/json")
 	httpRequest.Header.Set("Authorization", fmt.Sprintf("Bearer %s", requestClientInstance.apiAccessToken))
-	client := &http.Client{}
-	response, err := client.Do(httpRequest)
+	httpClient := &http.Client{}
+	response, err := httpClient.Do(httpRequest)
 	if err != nil {
 		fmt.Println("Error while requesting cloud api", err)
 		return "", err

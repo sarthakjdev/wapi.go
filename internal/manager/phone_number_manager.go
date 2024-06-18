@@ -1,5 +1,10 @@
 package manager
 
+import "github.com/sarthakjdev/wapi.go/internal"
+
+type PhoneNumber struct {
+}
+
 type PhoneNumberManager struct {
 }
 
@@ -10,10 +15,17 @@ func NewPhoneNumberManager(config *PhoneNumberManagerConfig) *PhoneNumberManager
 	return &PhoneNumberManager{}
 }
 
+type WhatsappBusinessAccountPhoneNumber struct {
+}
+
+type WhatsappBusinessAccountPhoneNumberEdge struct {
+	Data    []WhatsappBusinessAccountPhoneNumber       `json:"data,omitempty"`
+	Paging  internal.WhatsAppBusinessApiPaginationMeta `json:"paging,omitempty"`
+	Summary string                                     `json:"summary,omitempty"`
+}
+
 func (pm *PhoneNumberManager) FetchAll() {
-
 	// ! TODO: call this API endpoint
-
 	// https://developers.facebook.com/docs/graph-api/reference/whats-app-business-account/phone_numbers/
 }
 
@@ -26,7 +38,7 @@ func (pm *PhoneNumberManager) Fetch(Id string) {
 
 }
 
-func (pm *PhoneNumberManager) New() {
+func (pm *PhoneNumberManager) Add() {
 	// ! TODO: call this API endpoint to create a new phone number for the whats app business accounts
 
 	// https://developers.facebook.com/docs/graph-api/reference/whats-app-business-account-to-number-current-status/#:~:text=Graph%20API%20Version,the%20following%20paths%3A
