@@ -178,14 +178,14 @@ const (
 )
 
 // thus is component structure for the message template creation request
-type WhatsappMessageTemplateComponentCreateRequestBody struct {
+type WhatsappMessageTemplateComponentCreateOrUpdateRequestBody struct {
 	Type    MessageTemplateComponentType                     `json:"type,omitempty"`
 	Format  MessageTemplateComponentFormat                   `json:"format,omitempty"`
 	Text    string                                           `json:"text,omitempty"`
 	Buttons []WhatsappMessageTemplateButtonCreateRequestBody `json:"buttons,omitempty"`
 }
 
-func (component *WhatsappMessageTemplateComponentCreateRequestBody) AddButton(button WhatsappMessageTemplateButtonCreateRequestBody) {
+func (component *WhatsappMessageTemplateComponentCreateOrUpdateRequestBody) AddButton(button WhatsappMessageTemplateButtonCreateRequestBody) {
 	component.Buttons = append(component.Buttons, button)
 }
 
@@ -196,14 +196,14 @@ type WhatsappMessageTemplateCreateRequestBody struct {
 	// enum {UTILITY, MARKETING, AUTHENTICATION}
 	Category string `json:"category,omitempty" validate:"required"`
 
-	Components                  []WhatsappMessageTemplateComponentCreateRequestBody `json:"components" validate:"required"`
-	Name                        string                                              `json:"name,omitempty" validate:"required"`
-	Language                    string                                              `json:"language" validate:"required"`
-	LibraryTemplateName         string                                              `json:"library_template_name,omitempty"`
-	LibraryTemplateButtonInputs []WhatsappMessageTemplateButtonCreateRequestBody    `json:"library_template_button_inputs,omitempty"`
+	Components                  []WhatsappMessageTemplateComponentCreateOrUpdateRequestBody `json:"components" validate:"required"`
+	Name                        string                                                      `json:"name,omitempty" validate:"required"`
+	Language                    string                                                      `json:"language" validate:"required"`
+	LibraryTemplateName         string                                                      `json:"library_template_name,omitempty"`
+	LibraryTemplateButtonInputs []WhatsappMessageTemplateButtonCreateRequestBody            `json:"library_template_button_inputs,omitempty"`
 }
 
-func (body *WhatsappMessageTemplateCreateRequestBody) AddComponent(component WhatsappMessageTemplateComponentCreateRequestBody) {
+func (body *WhatsappMessageTemplateCreateRequestBody) AddComponent(component WhatsappMessageTemplateComponentCreateOrUpdateRequestBody) {
 	body.Components = append(body.Components, component)
 }
 
@@ -233,12 +233,27 @@ func (manager *TemplateManager) Create(body WhatsappMessageTemplateCreateRequest
 
 // this is the request body for the message template update request
 type WhatsAppBusinessAccountMessageTemplateUpdateRequestBody struct {
-	Components            []WhatsappMessageTemplateComponentCreateRequestBody `json:"components,omitempty"`
-	Category              string                                              `json:"category,omitempty"`
-	MessageSendTtlSeconds int                                                 `json:"message_send_ttl_seconds,omitempty"`
+	Components            []WhatsappMessageTemplateComponentCreateOrUpdateRequestBody `json:"components,omitempty"`
+	Category              string                                                      `json:"category,omitempty"`
+	MessageSendTtlSeconds int                                                         `json:"message_send_ttl_seconds,omitempty"`
 }
 
-func (tm *TemplateManager) Update() {
+func (manager *TemplateManager) Update(templateId string, updates WhatsAppBusinessAccountMessageTemplateUpdateRequestBody) (*MessageTemplateCreationResponse, error) {
+	apiRequest := manager.requester.NewBusinessApiRequest(strings.Join([]string{templateId}, ""), http.MethodPost)
+	jsonBody, err := json.Marshal(updates)
+	if err != nil {
+		return nil, err
+	}
+	apiRequest.SetBody(string(jsonBody))
+	response, err := apiRequest.Execute()
+	if err != nil {
+		return nil, err
+	}
+
+	var response_to_return MessageTemplateCreationResponse
+	json.Unmarshal([]byte(response), &response_to_return)
+	return &response_to_return, nil
+
 	// https://developers.facebook.com/docs/graph-api/reference/whats-app-business-hsm/#:~:text=2.0%20Access%20Token-,Updating,-You%20can%20update
 }
 

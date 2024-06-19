@@ -82,3 +82,95 @@ func (manager *PhoneNumberManager) Fetch(phoneNumberId string) (*WhatsappBusines
 	return &response_to_return, nil
 
 }
+
+type GenerateQrCodeResponse struct {
+	Code             string `json:"code,omitempty"`
+	PrefilledMessage string `json:"prefilled_message,omitempty"`
+	DeepLinkUrl      string `json:"deep_link_url,omitempty"`
+	QrImageUrl       string `json:"qr_image_url,omitempty"`
+}
+
+func (manager *TemplateManager) GenerateQrCode(phoneNumber string, prefilledMessage string) (*GenerateQrCodeResponse, error) {
+
+	apiRequest := manager.requester.NewBusinessApiRequest(strings.Join([]string{phoneNumber, "/message_qrdls"}, ""), http.MethodPost)
+	jsonBody, err := json.Marshal(map[string]string{
+		"prefilled_message": prefilledMessage,
+		"generate_qr_image": "SVG",
+	})
+	if err != nil {
+		return nil, err
+	}
+	apiRequest.SetBody(string(jsonBody))
+	response, err := apiRequest.Execute()
+	if err != nil {
+		return nil, err
+	}
+
+	var response_to_return GenerateQrCodeResponse
+	json.Unmarshal([]byte(response), &response_to_return)
+	return &response_to_return, nil
+}
+
+type GetAllQrCodesResponse struct {
+	Data []GenerateQrCodeResponse `json:"data,omitempty"`
+}
+
+func (manager *PhoneNumberManager) GetAllQrCodes(phoneNumber string) (*GetAllQrCodesResponse, error) {
+	apiRequest := manager.requester.NewBusinessApiRequest(strings.Join([]string{phoneNumber, "/message_qrdls"}, ""), http.MethodGet)
+	response, err := apiRequest.Execute()
+	if err != nil {
+		return nil, err
+	}
+
+	var response_to_return GetAllQrCodesResponse
+	json.Unmarshal([]byte(response), &response_to_return)
+	return &response_to_return, nil
+}
+
+func (manager *TemplateManager) GetQrCodeById(phoneNumber, id string) (*GetAllQrCodesResponse, error) {
+	apiRequest := manager.requester.NewBusinessApiRequest(strings.Join([]string{phoneNumber, "/message_qrdls", "/", id}, ""), http.MethodDelete)
+	response, err := apiRequest.Execute()
+
+	if err != nil {
+		return nil, err
+	}
+	var response_to_return GetAllQrCodesResponse
+	json.Unmarshal([]byte(response), &response_to_return)
+	return &response_to_return, nil
+}
+
+type DeleteQrCodeResponse struct {
+	Success bool `json:"success,omitempty"`
+}
+
+func (manager *PhoneNumberManager) DeleteQrCode(phoneNumber, id string) (*DeleteQrCodeResponse, error) {
+	apiRequest := manager.requester.NewBusinessApiRequest(strings.Join([]string{phoneNumber, "/message_qrdls", "/", id}, ""), http.MethodDelete)
+	response, err := apiRequest.Execute()
+
+	if err != nil {
+		return nil, err
+	}
+	var response_to_return DeleteQrCodeResponse
+	json.Unmarshal([]byte(response), &response_to_return)
+	return &response_to_return, nil
+}
+
+func (manager *PhoneNumberManager) UpdateQrCode(phoneNumber, id, prefilledMessage string) (*GenerateQrCodeResponse, error) {
+	apiRequest := manager.requester.NewBusinessApiRequest(strings.Join([]string{phoneNumber, "/message_qrdls"}, ""), http.MethodPost)
+	jsonBody, err := json.Marshal(map[string]string{
+		"prefilled_message": prefilledMessage,
+		"code":              id,
+	})
+	if err != nil {
+		return nil, err
+	}
+	apiRequest.SetBody(string(jsonBody))
+	response, err := apiRequest.Execute()
+	if err != nil {
+		return nil, err
+	}
+
+	var response_to_return GenerateQrCodeResponse
+	json.Unmarshal([]byte(response), &response_to_return)
+	return &response_to_return, nil
+}
