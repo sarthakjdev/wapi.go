@@ -11,13 +11,19 @@ import (
 
 func main() {
 	// creating a client
+
+	businessAccountId := "103043282674158"
+	phoneNumber := "113269274970227"
+
 	client := wapi.New(&wapi.ClientConfig{
-		ApiAccessToken:    "EABhCftGVaeIBOZCDMPCG5ShotkTeEr4wrSl9LumpASHTFOGlR5MjrAwvSjRU3QXWNapmkc9EVLZB7vgSCE3vSUG6GgMgUXyBaCrbvlpXzHkVIdPFUgAGzF7p5P5edMaBMbCyKC5ejZBkgeI0T5kRZBWvHmdlAHdnzTOgIXGxOGp7LwsfnVJvYqity68jFNxCFmiVRga8XnpbusA3Q7egpD0XsfIPhgEJuVvg3p1pDOI5",
-		BusinessAccountId: "103043282674158",
+		ApiAccessToken:    "EABhCftGVaeIBOZCZANWI9Tkuy3etYh4lWP1nk1bqcuSyboHi5B1DDj1H3Q4dGYxK9iJ5f6U9Pb1BvoeTTR3aDCVtJIud10aUAtdl7YNbEqH2qeOLBZCEIZAFyt0mSDzog5dVcQHWDDPz1JQmNuebpFIJaBqqcxDdKNdCgx7AQGptJYhPclGc8E9T68Em5dThClm2ZAOST4kVIcvH2dA8zx9kZCqlAevUZBTxaB5hLuS18sZD",
+		BusinessAccountId: businessAccountId,
 		WebhookPath:       "/webhook",
 		WebhookSecret:     "1234567890",
 		WebhookServerPort: 8080,
 	})
+
+	// messagingClient := client.NewMessagingClient("113269274970227")
 
 	// client.Business.ConversationAnalytics(business.ConversationAnalyticsOptions{
 	// 	Start:       time.Now().Add(-time.Hour * 24 * 7 * 30),
@@ -32,19 +38,14 @@ func main() {
 	// client.Business.PhoneNumber.Fetch("113269274970227")
 	// response, err := client.Business.Template.FetchAll()
 
-	response, err := client.Business.Template.Fetch("1298507137662644")
+	// response, err := client.Business.Template.Fetch(phoneNumber)
 
-	fmt.Println(response, err)
-
-	messagingClient := client.NewMessagingClient("113269274970227")
-
-	// create a message
 	textMessage, err := wapiComponents.NewTextMessage(wapiComponents.TextMessageConfigs{
-		Text: "Hello, from wapi.go",
+		Text: "Hello, how can I help you?",
 	})
 
 	if err != nil {
-		fmt.Println("error creating text message", err)
+		fmt.Println("error creating text message message", err)
 		return
 	}
 
@@ -127,9 +128,6 @@ func main() {
 	}
 
 	fmt.Println(string(jsonData))
-
-	messagingClient.Message.Send(listMessage, "919643500545")
-
 	buttonMessage, err := wapiComponents.NewQuickReplyButtonMessage("Body 1")
 
 	if err != nil {
@@ -168,6 +166,29 @@ func main() {
 			textMessageEvent.Reply(listMessage)
 		case "button":
 			textMessageEvent.Reply(buttonMessage)
+		case "qr":
+			{
+				response, err := client.Business.PhoneNumber.GenerateQrCode(phoneNumber, "This is Wapi.go this side.")
+
+				if err != nil {
+					fmt.Println("error generating qr code", err)
+					return
+				}
+
+				fmt.Println("qr code response", response.QrImageUrl)
+
+				qrCodeMessage, err := wapiComponents.NewImageMessage(wapiComponents.ImageMessageConfigs{
+					Link: response.QrImageUrl,
+					// Caption: "Scan the QR code to start a conversation.",
+				})
+
+				if err != nil {
+					fmt.Println("error creating image message", err)
+					return
+				}
+
+				textMessageEvent.Reply(qrCodeMessage)
+			}
 		default:
 			textMessageEvent.Reply(textMessage)
 		}

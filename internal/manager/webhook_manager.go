@@ -61,8 +61,9 @@ func (wh *WebhookManager) createEchoHttpServer() *echo.Echo {
 func (wh *WebhookManager) GetRequestHandler(c echo.Context) error {
 	hubVerificationToken := c.QueryParam("hub.verify_token")
 	hubChallenge := c.QueryParam("hub.challenge")
+	hubMode := c.QueryParam("hub.mode")
 	fmt.Println(hubVerificationToken, hubChallenge)
-	if hubVerificationToken == wh.secret {
+	if hubMode == "subscribe" && hubVerificationToken == wh.secret {
 		return c.String(200, hubChallenge)
 	} else {
 		return c.String(400, "invalid token")
@@ -426,7 +427,6 @@ func (wh *WebhookManager) PostRequestHandler(c echo.Context) error {
 	}
 
 	c.String(200, "Message received")
-	fmt.Println("Received valid payload:", payload.Entry[0].Changes[0].Value.Messages[0].Type)
 	return nil
 }
 
@@ -439,7 +439,7 @@ func (wh *WebhookManager) ListenToEvents() {
 
 	// Start server in a goroutine
 	go func() {
-		if err := server.Start(":8080"); err != nil {
+		if err := server.Start("127.0.0.1:8080"); err != nil {
 			return
 		}
 	}()

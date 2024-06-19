@@ -90,12 +90,12 @@ type GenerateQrCodeResponse struct {
 	QrImageUrl       string `json:"qr_image_url,omitempty"`
 }
 
-func (manager *TemplateManager) GenerateQrCode(phoneNumber string, prefilledMessage string) (*GenerateQrCodeResponse, error) {
+func (manager *PhoneNumberManager) GenerateQrCode(phoneNumber string, prefilledMessage string) (*GenerateQrCodeResponse, error) {
 
 	apiRequest := manager.requester.NewBusinessApiRequest(strings.Join([]string{phoneNumber, "/message_qrdls"}, ""), http.MethodPost)
 	jsonBody, err := json.Marshal(map[string]string{
 		"prefilled_message": prefilledMessage,
-		"generate_qr_image": "SVG",
+		"generate_qr_image": "PNG",
 	})
 	if err != nil {
 		return nil, err

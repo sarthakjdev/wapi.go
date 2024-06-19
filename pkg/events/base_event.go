@@ -1,6 +1,9 @@
 package events
 
 import (
+	"net/http"
+	"strings"
+
 	"github.com/sarthakjdev/wapi.go/internal/request_client"
 	"github.com/sarthakjdev/wapi.go/pkg/components"
 )
@@ -61,8 +64,9 @@ func (baseMessageEvent *BaseMessageEvent) Reply(Message components.BaseMessage) 
 	}
 
 	baseMessageEvent.requester.Request(request_client.RequestCloudApiParams{
-		Body: string(body),
-		Path: "/" + baseMessageEvent.PhoneNumber + "/messages",
+		Body:   string(body),
+		Path:   strings.Join([]string{baseMessageEvent.PhoneNumber, "/messages"}, ""),
+		Method: http.MethodPost,
 	})
 
 	return "", nil
