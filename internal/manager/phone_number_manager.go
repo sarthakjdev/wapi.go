@@ -1,21 +1,43 @@
 package manager
 
-import "github.com/sarthakjdev/wapi.go/internal"
+import (
+	"encoding/json"
+	"net/http"
+	"strings"
 
-type PhoneNumber struct {
-}
+	"github.com/sarthakjdev/wapi.go/internal"
+	"github.com/sarthakjdev/wapi.go/internal/request_client"
+)
 
 type PhoneNumberManager struct {
+	businessAccountId string
+	aApiAccessToken   string
+	requester         *request_client.RequestClient
 }
 
 type PhoneNumberManagerConfig struct {
+	BusinessAccountId string
+	ApiAccessToken    string
+	Requester         *request_client.RequestClient
 }
 
 func NewPhoneNumberManager(config *PhoneNumberManagerConfig) *PhoneNumberManager {
-	return &PhoneNumberManager{}
+	return &PhoneNumberManager{
+		aApiAccessToken:   config.ApiAccessToken,
+		businessAccountId: config.BusinessAccountId,
+		requester:         config.Requester,
+	}
 }
 
 type WhatsappBusinessAccountPhoneNumber struct {
+	VerifiedName       string `json:"verified_name,omitempty"`
+	DisplayPhoneNumber string `json:"display_phone_number,omitempty"`
+	Id                 string `json:"id,omitempty"`
+	QualityRating      string `json:"quality_rating,omitempty"`
+	CodeVerification   struct {
+		Status string `json:"code_verification_status,omitempty"`
+	} `json:"code_verification_status,omitempty"`
+	PlatformType string `json:"platform_type,omitempty"`
 }
 
 type WhatsappBusinessAccountPhoneNumberEdge struct {
@@ -24,43 +46,39 @@ type WhatsappBusinessAccountPhoneNumberEdge struct {
 	Summary string                                     `json:"summary,omitempty"`
 }
 
-func (pm *PhoneNumberManager) FetchAll() {
-	// ! TODO: call this API endpoint
-	// https://developers.facebook.com/docs/graph-api/reference/whats-app-business-account/phone_numbers/
+type FetchPhoneNumberFilters struct {
+	GetSandboxNumbers bool
+}
+
+func (manager *PhoneNumberManager) FetchAll(options FetchPhoneNumberFilters) (*WhatsappBusinessAccountPhoneNumberEdge, error) {
+	apiRequest := manager.requester.NewBusinessApiRequest(strings.Join([]string{manager.businessAccountId, "/", "phone_numbers"}, ""), http.MethodGet)
+
+	apiRequest.AddQueryParam("filtering", `[{"field":"account_mode","operator":"EQUAL","value":"LIVE"}]`)
+	response, err := apiRequest.Execute()
+
+	if err != nil {
+		return nil, err
+	}
+
+	var response_to_return WhatsappBusinessAccountPhoneNumberEdge
+	json.Unmarshal([]byte(response), &response_to_return)
+
+	return &response_to_return, nil
 }
 
 // Fetch fetches a phone number by its ID.
-func (pm *PhoneNumberManager) Fetch(Id string) {
+func (manager *PhoneNumberManager) Fetch(phoneNumberId string) (*WhatsappBusinessAccountPhoneNumber, error) {
+	apiRequest := manager.requester.NewBusinessApiRequest(phoneNumberId, http.MethodGet)
 
-	// ! TODO: call this API endpoint
+	response, err := apiRequest.Execute()
 
-	// https: //developers.facebook.com/docs/graph-api/reference/whats-app-business-account-to-number-current-status/
+	if err != nil {
+		return nil, err
+	}
 
-}
+	var response_to_return WhatsappBusinessAccountPhoneNumber
+	json.Unmarshal([]byte(response), &response_to_return)
 
-func (pm *PhoneNumberManager) Add() {
-	// ! TODO: call this API endpoint to create a new phone number for the whats app business accounts
+	return &response_to_return, nil
 
-	// https://developers.facebook.com/docs/graph-api/reference/whats-app-business-account-to-number-current-status/#:~:text=Graph%20API%20Version,the%20following%20paths%3A
-}
-
-func (pm *PhoneNumberManager) Update() {
-	// ! TODO: call this APO endpoint to update the phone number for the whats app business accounts
-
-	// https://developers.facebook.com/docs/graph-api/reference/whats-app-business-account-to-number-current-status/#:~:text=Edit%20failure-,Updating,-You%20can%20update
-}
-
-func (pm *PhoneNumberManager) UpdateCartAndCatalogSettings() {
-
-	// ! TODO: call this API endpoint to update the cart and catalog settings for the whats app business accounts phone number
-
-	// https://developers.facebook.com/docs/graph-api/reference/whats-app-business-account-to-number-current-status/whatsapp_commerce_settings
-}
-
-func (pm *PhoneNumberManager) RequestCodeForVerification() {
-	// https: //developers.facebook.com/docs/graph-api/reference/whats-app-business-account-to-number-current-status/request_code/
-}
-
-func (pm *PhoneNumberManager) VerifyCode() {
-	// https: //developers.facebook.com/docs/graph-api/reference/whats-app-business-account-to-number-current-status/verify_code
 }

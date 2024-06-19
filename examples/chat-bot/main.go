@@ -3,9 +3,7 @@ package main
 import (
 	"fmt"
 	"strings"
-	"time"
 
-	"github.com/sarthakjdev/wapi.go/pkg/business"
 	wapi "github.com/sarthakjdev/wapi.go/pkg/client"
 	wapiComponents "github.com/sarthakjdev/wapi.go/pkg/components"
 	"github.com/sarthakjdev/wapi.go/pkg/events"
@@ -21,13 +19,19 @@ func main() {
 		WebhookServerPort: 8080,
 	})
 
-	client.Business.ConversationAnalytics(business.ConversationAnalyticsOptions{
-		Start:       time.Now().Add(-time.Hour * 24 * 7 * 30),
-		End:         time.Now(),
-		Granularity: business.ConversationAnalyticsGranularityTypeDay,
-	})
+	// client.Business.ConversationAnalytics(business.ConversationAnalyticsOptions{
+	// 	Start:       time.Now().Add(-time.Hour * 24 * 7 * 30),
+	// 	End:         time.Now(),
+	// 	Granularity: business.ConversationAnalyticsGranularityTypeDay,
+	// })
 
-	messagingClient := client.NewMessagingClient("919643500545")
+	// client.Business.PhoneNumber.FetchAll(manager.FetchPhoneNumberFilters{
+	// 	GetSandboxNumbers: false,
+	// })
+
+	client.Business.PhoneNumber.Fetch("113269274970227")
+
+	messagingClient := client.NewMessagingClient("113269274970227")
 
 	// create a message
 	textMessage, err := wapiComponents.NewTextMessage(wapiComponents.TextMessageConfigs{

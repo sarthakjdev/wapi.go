@@ -92,3 +92,97 @@ func (requestClientInstance *RequestClient) Request(params RequestCloudApiParams
 
 	return string(body), nil
 }
+
+func (client *RequestClient) NewBusinessApiRequest(path, method string) *WhatsappBusinessManagementApiRequest {
+	return &WhatsappBusinessManagementApiRequest{
+		Path:        path,
+		Fields:      []BusinessApiRequestQueryParamField{},
+		Requester:   client,
+		Method:      method,
+		QueryParams: map[string]string{},
+	}
+}
+
+type BusinessApiRequestQueryParamField struct {
+	Name    string
+	Filters map[string]string
+}
+
+func (field *BusinessApiRequestQueryParamField) AddFilter(key, value string) {
+	field.Filters[key] = value
+}
+
+type WhatsappBusinessManagementApiRequest struct {
+	Path        string
+	Method      string
+	Body        string
+	Fields      []BusinessApiRequestQueryParamField
+	QueryParams map[string]string
+	Requester   *RequestClient
+}
+
+func (request *WhatsappBusinessManagementApiRequest) AddField(field BusinessApiRequestQueryParamField) *BusinessApiRequestQueryParamField {
+	// * NOTE:  when we say we need to add a field to the request, it means we need to add a query param to the request
+	// * note that if there need to be multiple fields in a single request then the list of fields should be command separated
+	// * for example: fields=field1,field2,field3
+	// * also note that if there filters in a field then they should be called like a function in the param string, for ex: fields=field1.filter1(value1).filter2(value2),field2.filter1(value1)
+	request.Fields = append(request.Fields, field)
+	return &field
+}
+
+func (request *WhatsappBusinessManagementApiRequest) AddQueryParam(key, value string) {
+	request.QueryParams[key] = value
+}
+
+func (request *WhatsappBusinessManagementApiRequest) SetMethod(method string) {
+	request.Method = method
+}
+
+func (request *WhatsappBusinessManagementApiRequest) SetBody(body string) {
+	request.Body = body
+}
+
+func (businessRequest *WhatsappBusinessManagementApiRequest) Execute() (string, error) {
+	// check if there are any fields in the request
+	var queryParam = map[string]string{}
+	if len(businessRequest.Fields) > 0 {
+		fieldsString := ""
+		for _, field := range businessRequest.Fields {
+			newFieldString := ""
+			if fieldsString != "" {
+				newFieldString = ","
+			}
+			filterString := ""
+			for key, value := range field.Filters {
+				filterString += strings.Join([]string{".", key, "(", value, ")"}, "")
+			}
+			newFieldString = strings.Join([]string{field.Name, filterString}, "")
+			fieldsString += newFieldString
+		}
+
+		queryParam["fields"] = fieldsString
+	}
+
+	if len(businessRequest.QueryParams) > 0 {
+		for key, value := range businessRequest.QueryParams {
+			queryParam[key] = value
+		}
+	}
+
+	fmt.Println("Query params are", queryParam)
+
+	response, err := businessRequest.Requester.Request(RequestCloudApiParams{
+		Path:       businessRequest.Path,
+		Body:       businessRequest.Body,
+		Method:     businessRequest.Method,
+		QueryParam: queryParam,
+	})
+
+	if err != nil {
+		fmt.Println("Error while executing business api request", err)
+		return "", nil
+	}
+
+	fmt.Println("Response from business api is", response)
+	return response, err
+}
