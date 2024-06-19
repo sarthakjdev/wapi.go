@@ -29,7 +29,12 @@ func main() {
 	// 	GetSandboxNumbers: false,
 	// })
 
-	client.Business.PhoneNumber.Fetch("113269274970227")
+	// client.Business.PhoneNumber.Fetch("113269274970227")
+	// response, err := client.Business.Template.FetchAll()
+
+	response, err := client.Business.Template.Fetch("1298507137662644")
+
+	fmt.Println(response, err)
 
 	messagingClient := client.NewMessagingClient("113269274970227")
 

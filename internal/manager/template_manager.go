@@ -1,30 +1,81 @@
 package manager
 
-import "github.com/sarthakjdev/wapi.go/internal"
+import (
+	"encoding/json"
+	"net/http"
+	"strings"
 
-type MessageTemplate struct {
+	"github.com/sarthakjdev/wapi.go/internal"
+	"github.com/sarthakjdev/wapi.go/internal/request_client"
+)
+
+type MessageTemplateStatus string
+
+const (
+	MessageTemplateStatusApproved MessageTemplateStatus = "APPROVED"
+	MessageTemplateStatusRejected MessageTemplateStatus = "REJECTED"
+	MessageTemplateStatusPending  MessageTemplateStatus = "Pending"
+)
+
+type MessageTemplateCategory string
+
+const (
+	MessageTemplateCategoryUtility        MessageTemplateCategory = "UTILITY"
+	MessageTemplateCategoryMarketing      MessageTemplateCategory = "MARKETING"
+	MessageTemplateCategoryAuthentication MessageTemplateCategory = "AUTHENTICATION"
+)
+
+type WhatsAppBusinessMessageTemplateNode struct {
+	Id                         string                                                  `json:"id,omitempty"`
+	Category                   MessageTemplateCategory                                 `json:"category,omitempty"`
+	Components                 []WhatsAppBusinessHSMWhatsAppHSMComponent               `json:"components,omitempty"`
+	CorrectCategory            string                                                  `json:"correct_category,omitempty"`
+	CtaUrlLinkTrackingOptedOut bool                                                    `json:"cta_url_link_tracking_opted_out,omitempty"`
+	Language                   string                                                  `json:"language,omitempty"`
+	LibraryTemplateName        string                                                  `json:"library_template_name,omitempty"`
+	MessageSendTtlSeconds      int                                                     `json:"message_send_ttl_seconds,omitempty"`
+	Name                       string                                                  `json:"name,omitempty"`
+	PreviousCategory           string                                                  `json:"previous_category,omitempty"`
+	QualityScore               WhatsAppBusinessHSMWhatsAppBusinessHSMQualityScoreShape `json:"quality_score,omitempty"`
+	RejectedReason             string                                                  `json:"rejected_reason,omitempty"`
+	Status                     MessageTemplateStatus                                   `json:"status,omitempty"`
 }
 
-type MessageTemplateParam struct {
+type TemplateManager struct {
+	businessAccountId string
+	apiAccessToken    string
+	requester         *request_client.RequestClient
 }
 
-type TemplateManager struct{}
-
-type TemplateManagerConfig struct{}
+type TemplateManagerConfig struct {
+	BusinessAccountId string
+	ApiAccessToken    string
+	Requester         *request_client.RequestClient
+}
 
 func NewTemplateManager(config *TemplateManagerConfig) *TemplateManager {
-	return &TemplateManager{}
+	return &TemplateManager{
+		apiAccessToken:    config.ApiAccessToken,
+		businessAccountId: config.BusinessAccountId,
+		requester:         config.Requester,
+	}
 }
 
-func (tm *TemplateManager) FetchAll() {
-	// ! TODO: call this API endpoint
-	// https://developers.facebook.com/docs/graph-api/reference/whats-app-business-account/message_templates/
+type WhatsAppBusinessTemplacesFetchResponseEdge struct {
+	Data   []WhatsAppBusinessMessageTemplateNode      `json:"data,omitempty"`
+	Paging internal.WhatsAppBusinessApiPaginationMeta `json:"paging,omitempty"`
 }
 
-type WhatsAppBusinessHSMWhatsAppHSMComponentCardGet struct {
+type WhatsappMessageTemplateEdge struct {
+	Data    []WhatsAppBusinessMessageTemplateNode      `json:"data,omitempty"`
+	Paging  internal.WhatsAppBusinessApiPaginationMeta `json:"paging,omitempty"`
+	Summary string                                     `json:"summary,omitempty"`
 }
 
-type WhatsAppBusinessHSMWhatsAppHSMComponentButtonGet struct {
+type WhatsAppBusinessHSMWhatsAppHSMComponentCard struct {
+}
+
+type WhatsAppBusinessHSMWhatsAppHSMComponentButton struct {
 }
 
 type WhatsAppBusinessHSMWhatsAppHSMComponentExample struct {
@@ -33,10 +84,10 @@ type WhatsAppBusinessHSMWhatsAppHSMComponentExample struct {
 type WhatsAppBusinessHSMWhatsAppLimitedTimeOfferParameterShape struct {
 }
 
-type WhatsAppBusinessHSMWhatsAppHSMComponentGet struct {
+type WhatsAppBusinessHSMWhatsAppHSMComponent struct {
 	AddSecurityRecommendation bool                                                      `json:"add_security_recommendation,omitempty"`
-	Buttons                   []WhatsAppBusinessHSMWhatsAppHSMComponentButtonGet        `json:"buttons,omitempty"`
-	Cards                     []WhatsAppBusinessHSMWhatsAppHSMComponentCardGet          `json:"cards,omitempty"`
+	Buttons                   []WhatsAppBusinessHSMWhatsAppHSMComponentButton           `json:"buttons,omitempty"`
+	Cards                     []WhatsAppBusinessHSMWhatsAppHSMComponentCard             `json:"cards,omitempty"`
 	CodeExpirationMinutes     int                                                       `json:"code_expiration_minutes,omitempty"`
 	Example                   WhatsAppBusinessHSMWhatsAppHSMComponentExample            `json:"example,omitempty"`
 	Format                    string                                                    `json:"format,omitempty"`
@@ -51,31 +102,45 @@ type WhatsAppBusinessHSMWhatsAppBusinessHSMQualityScoreShape struct {
 	Score   int      `json:"score,omitempty"`
 }
 
-type WhatsappMessageTemplate struct {
-	Id                         string                                                  `json:"id,omitempty"`
-	Category                   string                                                  `json:"category,omitempty"`
-	Components                 []WhatsAppBusinessHSMWhatsAppHSMComponentGet            `json:"components,omitempty"`
-	CorrectCategory            string                                                  `json:"correct_category,omitempty"`
-	CtaUrlLinkTrackingOptedOut bool                                                    `json:"cta_url_link_tracking_opted_out,omitempty"`
-	Language                   string                                                  `json:"language,omitempty"`
-	LibraryTemplateName        string                                                  `json:"library_template_name,omitempty"`
-	MessageSendTtlSeconds      int                                                     `json:"message_send_ttl_seconds,omitempty"`
-	Name                       string                                                  `json:"name,omitempty"`
-	PreviousCategory           string                                                  `json:"previous_category,omitempty"`
-	QualityScore               WhatsAppBusinessHSMWhatsAppBusinessHSMQualityScoreShape `json:"quality_score,omitempty"`
-	RejectedReason             string                                                  `json:"rejected_reason,omitempty"`
-	Status                     string                                                  `json:"status,omitempty"`
-	SubCategory                string                                                  `json:"sub_category,omitempty"`
+func (manager *TemplateManager) FetchAll() (*WhatsAppBusinessTemplacesFetchResponseEdge, error) {
+	apiRequest := manager.requester.NewBusinessApiRequest(strings.Join([]string{manager.businessAccountId, "/", "message_templates"}, ""), http.MethodGet)
+
+	fields := []string{"id", "category", "components", "correct_category", "cta_url_link_tracking_opted_out", "language", "library_template_name", "message_send_ttl_seconds", "name", "previous_category", "quality_score", "rejected_reason", "status", "sub_category"}
+
+	for _, field := range fields {
+		apiRequest.AddField(request_client.BusinessApiRequestQueryParamField{
+			Name:    field,
+			Filters: map[string]string{},
+		})
+	}
+
+	response, err := apiRequest.Execute()
+
+	if err != nil {
+		return nil, err
+	}
+
+	var response_to_return WhatsAppBusinessTemplacesFetchResponseEdge
+	json.Unmarshal([]byte(response), &response_to_return)
+	return &response_to_return, nil
 }
 
-type WhatsappMessageTemplateEdge struct {
-	Data    []WhatsappMessageTemplate                  `json:"data,omitempty"`
-	Paging  internal.WhatsAppBusinessApiPaginationMeta `json:"paging,omitempty"`
-	Summary string                                     `json:"summary,omitempty"`
-}
-
-func (tm *TemplateManager) Fetch(Id string) {
-	// https://developers.facebook.com/docs/graph-api/reference/whats-app-business-hsm/
+func (manager *TemplateManager) Fetch(Id string) (*WhatsAppBusinessMessageTemplateNode, error) {
+	apiRequest := manager.requester.NewBusinessApiRequest(strings.Join([]string{Id}, ""), http.MethodGet)
+	fields := []string{"id", "category", "components", "correct_category", "cta_url_link_tracking_opted_out", "language", "library_template_name", "message_send_ttl_seconds", "name", "previous_category", "quality_score", "rejected_reason", "status", "sub_category"}
+	for _, field := range fields {
+		apiRequest.AddField(request_client.BusinessApiRequestQueryParamField{
+			Name:    field,
+			Filters: map[string]string{},
+		})
+	}
+	response, err := apiRequest.Execute()
+	if err != nil {
+		return nil, err
+	}
+	var response_to_return WhatsAppBusinessMessageTemplateNode
+	json.Unmarshal([]byte(response), &response_to_return)
+	return &response_to_return, nil
 }
 
 // this is button structure for the message template creation request
@@ -90,16 +155,38 @@ type WhatsappMessageTemplateButtonCreateRequestBody struct {
 	ZeroTapTermsAccepted bool   `json:"zero_tap_terms_accepted,omitempty"`
 }
 
+type MessageTemplateComponentType string
+
+const (
+	MessageTemplateComponentTypeGreeting         MessageTemplateComponentType = "GREETING"
+	MessageTemplateComponentTypeHeader           MessageTemplateComponentType = "HEADER"
+	MessageTemplateComponentTypeBody             MessageTemplateComponentType = "BODY"
+	MessageTemplateComponentTypeFooter           MessageTemplateComponentType = "FOOTER"
+	MessageTemplateComponentTypeButtons          MessageTemplateComponentType = "BUTTONS"
+	MessageTemplateComponentTypeCarousel         MessageTemplateComponentType = "CAROUSEL"
+	MessageTemplateComponentTypeLimitedTimeOffer MessageTemplateComponentType = "LIMITED_TIME_OFFER"
+)
+
+type MessageTemplateComponentFormat string
+
+const (
+	MessageTemplateComponentFormatText     MessageTemplateComponentFormat = "TEXT"
+	MessageTemplateComponentFormatImage    MessageTemplateComponentFormat = "IMAGE"
+	MessageTemplateComponentFormatDocument MessageTemplateComponentFormat = "DOCUMENT"
+	MessageTemplateComponentFormatVideo    MessageTemplateComponentFormat = "VIDEO"
+	MessageTemplateComponentFormatLocation MessageTemplateComponentFormat = "LOCATION"
+)
+
 // thus is component structure for the message template creation request
 type WhatsappMessageTemplateComponentCreateRequestBody struct {
-
-	// enum {GREETING, HEADER, BODY, FOOTER, BUTTONS, CAROUSEL, LIMITED_TIME_OFFER}
-	Type string `json:"type,omitempty"`
-
-	// enum {TEXT, IMAGE, DOCUMENT, VIDEO, LOCATION}
-	Format  string                                           `json:"format,omitempty"`
+	Type    MessageTemplateComponentType                     `json:"type,omitempty"`
+	Format  MessageTemplateComponentFormat                   `json:"format,omitempty"`
 	Text    string                                           `json:"text,omitempty"`
 	Buttons []WhatsappMessageTemplateButtonCreateRequestBody `json:"buttons,omitempty"`
+}
+
+func (component *WhatsappMessageTemplateComponentCreateRequestBody) AddButton(button WhatsappMessageTemplateButtonCreateRequestBody) {
+	component.Buttons = append(component.Buttons, button)
 }
 
 // this is the request body for the message template creation request
@@ -116,9 +203,32 @@ type WhatsappMessageTemplateCreateRequestBody struct {
 	LibraryTemplateButtonInputs []WhatsappMessageTemplateButtonCreateRequestBody    `json:"library_template_button_inputs,omitempty"`
 }
 
-func (tm *TemplateManager) Create() {
+func (body *WhatsappMessageTemplateCreateRequestBody) AddComponent(component WhatsappMessageTemplateComponentCreateRequestBody) {
+	body.Components = append(body.Components, component)
+}
 
-	// https://developers.facebook.com/docs/graph-api/reference/whats-app-business-account/message_templates/#:~:text=You%20can%20make%20a%20POST%20request%20to%20message_templates%20edge%20from%20the%20following%20paths%3A
+type MessageTemplateCreationResponse struct {
+	Id       string                  `json:"id,omitempty"`
+	Status   MessageTemplateStatus   `json:"status,omitempty"`
+	Category MessageTemplateCategory `json:"category,omitempty"`
+}
+
+func (manager *TemplateManager) Create(body WhatsappMessageTemplateCreateRequestBody) (*MessageTemplateCreationResponse, error) {
+	apiRequest := manager.requester.NewBusinessApiRequest(strings.Join([]string{manager.businessAccountId, "/", "message_templates"}, ""), http.MethodPost)
+	jsonBody, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	apiRequest.SetBody(string(jsonBody))
+	response, err := apiRequest.Execute()
+	if err != nil {
+		return nil, err
+	}
+
+	var response_to_return MessageTemplateCreationResponse
+	json.Unmarshal([]byte(response), &response_to_return)
+	return &response_to_return, nil
+
 }
 
 // this is the request body for the message template update request

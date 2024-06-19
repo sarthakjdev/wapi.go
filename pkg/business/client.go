@@ -35,7 +35,11 @@ func NewBusinessClient(config *BusinessClientConfig) *BusinessClient {
 			ApiAccessToken:    config.AccessToken,
 			Requester:         config.Requester,
 		}),
-		Template:  manager.NewTemplateManager(&manager.TemplateManagerConfig{}),
+		Template: manager.NewTemplateManager(&manager.TemplateManagerConfig{
+			BusinessAccountId: config.BusinessAccountId,
+			ApiAccessToken:    config.AccessToken,
+			Requester:         config.Requester,
+		}),
 		requester: config.Requester,
 	}
 }

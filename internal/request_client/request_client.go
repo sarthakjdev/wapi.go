@@ -156,7 +156,7 @@ func (businessRequest *WhatsappBusinessManagementApiRequest) Execute() (string, 
 			for key, value := range field.Filters {
 				filterString += strings.Join([]string{".", key, "(", value, ")"}, "")
 			}
-			newFieldString = strings.Join([]string{field.Name, filterString}, "")
+			newFieldString += strings.Join([]string{field.Name, filterString}, "")
 			fieldsString += newFieldString
 		}
 
@@ -183,6 +183,5 @@ func (businessRequest *WhatsappBusinessManagementApiRequest) Execute() (string, 
 		return "", nil
 	}
 
-	fmt.Println("Response from business api is", response)
 	return response, err
 }
