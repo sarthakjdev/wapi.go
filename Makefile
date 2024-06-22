@@ -7,7 +7,7 @@ $(GOMARKDOS):
 
 .PHONY: docs 
 docs: $(GOMARKDOS)
-	mkdir -p docs/api-reference docs/guide && gomarkdoc -u --exclude-dirs ./examples/... --exclude-dirs ./internal/... --exclude-dirs ./cmd -o './docs/api-reference/{{.Dir}}.mdx' --template-file file=./docs/templates/file.gotxt  --template-file package=./docs/templates/package.gotxt ./...
+	mkdir -p docs/api-reference docs/guide && gomarkdoc -u --exclude-dirs ./examples/... --exclude-dirs ./internal/request_client/... --exclude-dirs ./cmd -o './docs/api-reference/{{.Dir}}.mdx' --template-file file=./docs/templates/file.gotxt  --template-file package=./docs/templates/package.gotxt ./...
 
 .PHONY: format
 format: 

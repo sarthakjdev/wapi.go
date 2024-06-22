@@ -3,7 +3,9 @@ package main
 import (
 	"fmt"
 	"strings"
+	"time"
 
+	"github.com/sarthakjdev/wapi.go/pkg/business"
 	wapi "github.com/sarthakjdev/wapi.go/pkg/client"
 	wapiComponents "github.com/sarthakjdev/wapi.go/pkg/components"
 	"github.com/sarthakjdev/wapi.go/pkg/events"
@@ -30,6 +32,12 @@ func main() {
 	// 	End:         time.Now(),
 	// 	Granularity: business.ConversationAnalyticsGranularityTypeDay,
 	// })
+
+	client.Business.FetchAnalytics(business.AccountAnalyticsOptions{
+		Start:       time.Now().Add(-time.Hour * 24 * 7 * 30),
+		End:         time.Now(),
+		Granularity: business.AnalyticsRequestGranularityTypeDay,
+	})
 
 	// client.Business.PhoneNumber.FetchAll(manager.FetchPhoneNumberFilters{
 	// 	GetSandboxNumbers: false,

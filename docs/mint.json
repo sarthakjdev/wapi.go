@@ -110,7 +110,8 @@
         "api-reference/pkg/messaging",
         "api-reference/pkg/components",
         "api-reference/pkg/events",
-        "api-reference/pkg/business"
+        "api-reference/pkg/business",
+        "api-reference/internal/manager"
       ]
     }
   ],

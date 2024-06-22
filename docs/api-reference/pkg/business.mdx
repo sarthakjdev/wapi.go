@@ -4,6 +4,24 @@ import "github.com/sarthakjdev/wapi.go/pkg/business"
 
 
 
+<a name="AccountAnalyticsOptions"></a>
+## type AccountAnalyticsOptions
+
+
+
+```go
+type AccountAnalyticsOptions struct {
+    Start        time.Time                       `json:"start" validate:"required"`
+    End          time.Time                       `json:"end" validate:"required"`
+    Granularity  AnalyticsRequestGranularityType `json:"granularity" validate:"required"`
+    PhoneNumbers []string                        `json:"phone_numbers,omitempty"`
+
+    // * NOT SUPPORTED AS OF NOW
+    // ProductTypes []WhatsAppBusinessAccountAnalyticsProductType `json:"product_types,omitempty"`
+    CountryCodes []string `json:"country_codes,omitempty"`
+}
+```
+
 <a name="AnalyticsDataPoint"></a>
 ## type AnalyticsDataPoint
 
@@ -83,7 +101,7 @@ func (client *BusinessClient) Fetch() FetchBusinessAccountResponse
 ### func \(\*BusinessClient\) FetchAnalytics
 
 ```go
-func (client *BusinessClient) FetchAnalytics(options WhatsappBusinessAccountAnalyticsOptions)
+func (client *BusinessClient) FetchAnalytics(options AccountAnalyticsOptions)
 ```
 
 
@@ -348,24 +366,6 @@ type WhatsappBusinessAccount struct {
     PrimaryFundingId           string `json:"primary_funding_id,omitempty"`
     PurchaseOrderNumber        string `json:"purchase_order_number,omitempty"`
     TimezoneId                 string `json:"timezone_id,omitempty"`
-}
-```
-
-<a name="WhatsappBusinessAccountAnalyticsOptions"></a>
-## type WhatsappBusinessAccountAnalyticsOptions
-
-
-
-```go
-type WhatsappBusinessAccountAnalyticsOptions struct {
-    Start        time.Time                       `json:"start" validate:"required"`
-    End          time.Time                       `json:"end" validate:"required"`
-    Granularity  AnalyticsRequestGranularityType `json:"granularity" validate:"required"`
-    PhoneNumbers []string                        `json:"phone_numbers,omitempty"`
-
-    // * NOT SUPPORTED AS OF NOW
-    // ProductTypes []WhatsAppBusinessAccountAnalyticsProductType `json:"product_types,omitempty"`
-    CountryCodes []string `json:"country_codes,omitempty"`
 }
 ```
 

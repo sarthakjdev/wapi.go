@@ -12,8 +12,6 @@ Wapi.go has a distributed architecture that is designed to incorporate both the 
 
 
 
-
-
 ## Main Top level client with webhook server
 
 The main top level client is the entry point for the SDK. It is responsible for handling incoming messages from the WhatsApp Business Platform and any other event notification to which you have made your application at the developer platform to subscribed to. In order, to start using the SDK you must have to create a instance of this client with the following code:
@@ -26,7 +24,6 @@ client := wapi.New(&wapi.ClientConfig{
 		WebhookSecret:     "",
 		WebhookServerPort: 8080,
 })
-
 ```
 
 ## Buiness Management API client

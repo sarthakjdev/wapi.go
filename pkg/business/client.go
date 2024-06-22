@@ -105,7 +105,7 @@ const (
 	WhatsAppBusinessAccountAnalyticsProductTypeCustomerSupportMessages WhatsAppBusinessAccountAnalyticsProductType = 2
 )
 
-type WhatsappBusinessAccountAnalyticsOptions struct {
+type AccountAnalyticsOptions struct {
 	Start        time.Time                       `json:"start" validate:"required"`
 	End          time.Time                       `json:"end" validate:"required"`
 	Granularity  AnalyticsRequestGranularityType `json:"granularity" validate:"required"`
@@ -129,7 +129,7 @@ type WhatsappBusinessAccountAnalyticsResponse struct {
 	DataPoints   []AnalyticsDataPoint `json:"data_points,omitempty"`
 }
 
-func (client *BusinessClient) FetchAnalytics(options WhatsappBusinessAccountAnalyticsOptions) {
+func (client *BusinessClient) FetchAnalytics(options AccountAnalyticsOptions) {
 	apiRequest := client.requester.NewBusinessApiRequest(client.BusinessAccountId, http.MethodGet)
 	analyticsField := apiRequest.AddField(request_client.BusinessApiRequestQueryParamField{
 		Name:    "analytics",
@@ -239,8 +239,6 @@ type WhatsAppConversationAnalyticsEdge struct {
 type WhatsAppConversationAnalyticsResponse struct {
 	ConversationAnalytics []WhatsAppConversationAnalyticsEdge `json:"conversation_analytics" validate:"required"`
 }
-
-// {"conversation_analytics":{"data":[{"data_points":[{"start":1701504000,"end":1701590400,"conversation":1,"cost":0},{"start":1701763200,"end":1701849600,"conversation":1,"cost":0},{"start":1715670000,"end":1715756400,"conversation":1,"cost":0},{"start":1716879600,"end":1716966000,"conversation":1,"cost":0},{"start":1716793200,"end":1716879600,"conversation":1,"cost":0},{"start":1713769200,"end":1713855600,"conversation":1,"cost":0},{"start":1713682800,"end":1713769200,"conversation":1,"cost":0},{"start":1716361200,"end":1716447600,"conversation":1,"cost":0},{"start":1715583600,"end":1715670000,"conversation":1,"cost":0},{"start":1717138800,"end":1717225200,"conversation":1,"cost":0},{"start":1716966000,"end":1717052400,"conversation":1,"cost":0},{"start":1717311600,"end":1717398000,"conversation":1,"cost":0},{"start":1713855600,"end":1713942000,"conversation":1,"cost":0},{"start":1716447600,"end":1716534000,"conversation":1,"cost":0}]}]},"id":"103043282674158"}
 
 func (client *BusinessClient) ConversationAnalytics(options ConversationAnalyticsOptions) (*WhatsAppConversationAnalyticsResponse, error) {
 	apiRequest := client.requester.NewBusinessApiRequest(client.BusinessAccountId, http.MethodGet)

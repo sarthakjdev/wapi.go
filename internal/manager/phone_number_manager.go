@@ -127,7 +127,7 @@ func (manager *PhoneNumberManager) GetAllQrCodes(phoneNumber string) (*GetAllQrC
 	return &response_to_return, nil
 }
 
-func (manager *TemplateManager) GetQrCodeById(phoneNumber, id string) (*GetAllQrCodesResponse, error) {
+func (manager *PhoneNumberManager) GetQrCodeById(phoneNumber, id string) (*GetAllQrCodesResponse, error) {
 	apiRequest := manager.requester.NewBusinessApiRequest(strings.Join([]string{phoneNumber, "/message_qrdls", "/", id}, ""), http.MethodDelete)
 	response, err := apiRequest.Execute()
 
