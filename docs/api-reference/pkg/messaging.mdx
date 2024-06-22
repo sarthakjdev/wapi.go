@@ -4,100 +4,63 @@ import "github.com/sarthakjdev/wapi.go/pkg/messaging"
 
 
 
-<a name="Client"></a>
-## type Client
+<a name="MessagingClient"></a>
+## type MessagingClient
 
-Client represents a WhatsApp client.
+MessagingClient represents a WhatsApp client.
 
 ```go
-type Client struct {
+type MessagingClient struct {
     Media             manager.MediaManager
     Message           manager.MessageManager
-    webhook           manager.WebhookManager
-    phoneNumberId     string
-    apiAccessToken    string
-    businessAccountId string
+    PhoneNumberId     string
+    ApiAccessToken    string
+    BusinessAccountId string
 }
 ```
 
-<a name="New"></a>
-### func New
+<a name="MessagingClient.GetApiAccessToken"></a>
+### func \(\*MessagingClient\) GetApiAccessToken
 
 ```go
-func New(configs ClientConfig) (*Client, error)
+func (client *MessagingClient) GetApiAccessToken() string
 ```
 
-NewWapiClient creates a new instance of Client.
 
-<a name="Client.GetPhoneNumberId"></a>
-### func \(\*Client\) GetPhoneNumberId
+
+<a name="MessagingClient.GetBusinessAccountId"></a>
+### func \(\*MessagingClient\) GetBusinessAccountId
 
 ```go
-func (client *Client) GetPhoneNumberId() string
+func (client *MessagingClient) GetBusinessAccountId() string
+```
+
+
+
+<a name="MessagingClient.GetPhoneNumberId"></a>
+### func \(\*MessagingClient\) GetPhoneNumberId
+
+```go
+func (client *MessagingClient) GetPhoneNumberId() string
 ```
 
 GetPhoneNumberId returns the phone number ID associated with the client.
 
-<a name="Client.GetWebhookGetRequestHandler"></a>
-### func \(\*Client\) GetWebhookGetRequestHandler
+<a name="MessagingClient.SetApiAccessToken"></a>
+### func \(\*MessagingClient\) SetApiAccessToken
 
 ```go
-func (client *Client) GetWebhookGetRequestHandler() func(c echo.Context) error
+func (client *MessagingClient) SetApiAccessToken(apiAccessToken string)
 ```
 
-GetWebhookGetRequestHandler returns the handler function for handling GET requests to the webhook.
 
-<a name="Client.GetWebhookPostRequestHandler"></a>
-### func \(\*Client\) GetWebhookPostRequestHandler
 
-```go
-func (client *Client) GetWebhookPostRequestHandler() func(c echo.Context) error
-```
-
-GetWebhookPostRequestHandler returns the handler function for handling POST requests to the webhook.
-
-<a name="Client.InitiateClient"></a>
-### func \(\*Client\) InitiateClient
+<a name="MessagingClient.SetPhoneNumberId"></a>
+### func \(\*MessagingClient\) SetPhoneNumberId
 
 ```go
-func (client *Client) InitiateClient() bool
-```
-
-InitiateClient initializes the client and starts listening to events from the webhook. It returns true if the client was successfully initiated.
-
-<a name="Client.On"></a>
-### func \(\*Client\) On
-
-```go
-func (client *Client) On(eventType events.EventType, handler func(events.BaseEvent))
-```
-
-OnMessage registers a handler for a specific event type.
-
-<a name="Client.SetPhoneNucmberId"></a>
-### func \(\*Client\) SetPhoneNucmberId
-
-```go
-func (client *Client) SetPhoneNucmberId(phoneNumberId string)
+func (client *MessagingClient) SetPhoneNumberId(phoneNumberId string)
 ```
 
 SetPhoneNumberId sets the phone number ID for the client.
-
-<a name="ClientConfig"></a>
-## type ClientConfig
-
-ClientConfig represents the configuration options for the WhatsApp client.
-
-```go
-type ClientConfig struct {
-    PhoneNumberId     string `validate:"required"`
-    ApiAccessToken    string `validate:"required"`
-    BusinessAccountId string `validate:"required"`
-    WebhookSecret     string `validate:"required"`
-
-    // these two are not required, because may be user want to use their own server
-    WebhookPath       string
-    WebhookServerPort int
-}
-```
 

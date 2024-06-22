@@ -63,36 +63,41 @@
     {
       "group": "Guide",
       "iconType": "regular",
+      "pages": ["guide/introduction", "guide/quickstart"]
+    },
+    {
+      "group": "Installation and Preparations",
       "pages": [
-        "guide/introduction",
-        "guide/quickstart",
-        {
-          "group": "Installation and Preparations",
-          "pages": [
-            "guide/installation-and-preparations/setup-node",
-            "guide/installation-and-preparations/creating-application"
-          ]
-        },
-        {
-          "group": "Whatsapp API setup",
-          "pages": [
-            "guide/whatsapp-api-setup/understanding-whatsapp-business-platform",
-            "guide/whatsapp-api-setup/creating-business-app",
-            "guide/whatsapp-api-setup/getting-api-key",
-            "guide/whatsapp-api-setup/configuring-webhook"
-          ]
-        },
-        {
-          "group": "Building your application",
-          "pages": [
-            "guide/building-your-application/creating-wapi-client",
-            "guide/building-your-application/building-message-components",
-            "guide/building-your-application/sending-messages",
-            "guide/building-your-application/event-handling",
-            "guide/building-your-application/replying-and-reacting",
-            "guide/building-your-application/handling-media"
-          ]
-        },
+        "guide/installation-and-preparations/setup-golang",
+        "guide/installation-and-preparations/creating-application"
+      ]
+    },
+    {
+      "group": "Whatsapp API setup",
+      "pages": [
+        "guide/whatsapp-api-setup/understanding-whatsapp-business-platform",
+        "guide/whatsapp-api-setup/creating-business-app",
+        "guide/whatsapp-api-setup/getting-api-key",
+        "guide/whatsapp-api-setup/configuring-webhook"
+      ]
+    },
+    {
+      "group": "Building your application",
+      "pages": [
+        "guide/building-your-application/sdk-architecture",
+        "guide/building-your-application/managing-business-account",
+        "guide/building-your-application/managing-message-templates",
+        "guide/building-your-application/managing-phone-numbers",
+        "guide/building-your-application/building-message-components",
+        "guide/building-your-application/sending-messages",
+        "guide/building-your-application/event-handling",
+        "guide/building-your-application/replying-and-reacting",
+        "guide/building-your-application/handling-media"
+      ]
+    },
+    {
+      "group": "Others",
+      "pages": [
         "guide/wapijs-sdk-scope",
         "guide/references",
         "guide/contributing",
@@ -105,7 +110,7 @@
         "api-reference/pkg/messaging",
         "api-reference/pkg/components",
         "api-reference/pkg/events",
-        "api-reference/pkg/business.mdx"
+        "api-reference/pkg/business"
       ]
     }
   ],

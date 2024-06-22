@@ -2,3 +2,72 @@
 title: Wapi.go SDK Architecture
 ---
 
+
+Wapi.go has a distributed architecture that is designed to incorporate both the Business Management API as wel as the Cloud API porvided by the WhatsApp Business Platform. The architecture is designed to be modular and extensible, allowing developers to easily add new features and functionalities to the SDK. The architecture is divided into the following components:
+
+
+- Main Top level client with webhook server
+- Business Management API client
+- Messaging Client (Cloud API client)
+
+
+
+
+
+## Main Top level client with webhook server
+
+The main top level client is the entry point for the SDK. It is responsible for handling incoming messages from the WhatsApp Business Platform and any other event notification to which you have made your application at the developer platform to subscribed to. In order, to start using the SDK you must have to create a instance of this client with the following code:
+
+```go
+client := wapi.New(&wapi.ClientConfig{
+		ApiAccessToken:    "",
+		BusinessAccountId: "",
+		WebhookPath:       "/webhook",
+		WebhookSecret:     "",
+		WebhookServerPort: 8080,
+})
+
+```
+
+## Buiness Management API client
+
+Now, in order to access the business account specific features such as managing phone numbers, template messages, accessing analytics and updating other entities, you need to access the instance of business client already initiated in the main client. The business client is responsible for handling all the business management API requests. You can access the business client instance by calling the following code:
+
+```go
+
+businessClient := client.Business
+
+// suppose you want to fetch the conversation analytics data points, then the request would look like:
+
+response, err := client.Business.ConversationAnalytics(business.ConversationAnalyticsOptions{
+		Start:       time.Now().Add(-time.Hour * 24 * 7 * 30),
+		End:         time.Now(),
+		Granularity: business.ConversationAnalyticsGranularityTypeDay,
+})
+
+if err != nil {
+    log.Fatal(err)
+}
+```
+
+## Messaging Client (Cloud API client)
+
+To access the messaging client you need to create a instance of the messaging client by calling the following code:
+
+```go
+messagingClient := client.NewMessagingClient("<phone_number_here>")
+
+// you can further access the message manager and send messages to the user by calling the send method availabel in the message manager instance.
+
+messagingClient.Message.send("message component here")
+
+
+// you can also manage the media of your phone number using
+
+messageClient.Media.GetMediaUrl("<media_id_here>")
+
+```
+
+
+
+<Note>The decision behind  initiating the business client in advance on the top client instance and not the messaging client because a main client can have multiple messaging clients each for a distinct phone number but not multiple business client.</Note>

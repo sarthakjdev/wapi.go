@@ -3,16 +3,18 @@ title: Sending Messages
 description: Learn how to send messages using the Wapi.go SDK
 ---
 
+<Tip>Check the architecture [guide](/guide/building-your-application/sdk-architecture) once before moving ahead with this send message guide.</Tip>
+
 Wapi.go SDK provides a simple and easy to use classes architecture to send messages. You can send message of following types using the Wapi.go SDK:
 
 ## Send a message
 
-You can send a message to a user using the `send` method available on the [client](api-reference/classes/Client) class message manager. Here is an example of how you can send a message:
+You can send a message to a user using the `send` method available on the messaging client on main client cloud api manager. Here is an example of how you can send a message:
 
 
 
-```typescript
-// assuming you already have initiated the client,
+```go
+// assuming you already have initiated the client 
 const textMessage = new TextMessage({
     text: 'Hello, how are you?'
 })

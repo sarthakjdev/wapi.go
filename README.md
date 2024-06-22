@@ -12,7 +12,7 @@ Beta Version - This SDK is not stable right now. It is currently in beta version
 
 ## 📖 About
 
-Wapi.go is a JavaScript module, written in TypeScript, designed to interact with the WhatsApp cloud API in a user-friendly manner.
+Wapi.go is a Golang module, written in TypeScript, designed to interact with the WhatsApp cloud API in a user-friendly manner.
 
 ## ✨ Features
 

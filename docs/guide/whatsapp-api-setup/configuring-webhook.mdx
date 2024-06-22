@@ -10,8 +10,15 @@ To receive messages from your customers, you need to configure a webhook for you
 ## Configuring Webhook for local development setup
 
 
+### Getting a public URL for your local development setup
 
-### NGROK
+<Note>You may sometimes face an error on the whatsapp webhook management dashboard saying that the URL is malicious in case when you are using NGROK, in that case you must go ahead with using cloudflare tunnel.</Note>
+
+- [Using NGROK](#ngrok)
+- [Using Cloudflare Tunnel](#cloudflare-tunnel)
+
+
+#### NGROK
 
 If you are developing your application locally, you can use [ngrok](https://ngrok.com/) to expose your local server to the internet.
 
@@ -28,6 +35,26 @@ ngrok http http://localhost:<your-application-port>
     <img src="/assets/configure-webhook/1.png" />
   </Frame>
 
+<Note>Make sure to replace `<your-application-port>` with the port number on which your application is running.</Note>
+
+
+####  Cloudflare Tunnel
+
+To use cloudflare tunnel, follow these steps:
+
+1. Download and install cloudflare tunnel from [here](https://developers.cloudflare.com/cloudflare-one/connections/connect-apps/install-and-setup/installation).
+2. Run the following command in your terminal to expose your local server to the internet:
+
+```bash
+cloudflared tunnel --url http://localhost:<your-application-port>
+```
+
+3. You will see something like this in your terminal:
+  <Frame>
+    <img src="/assets/configure-webhook/cloudlfare.png" />
+  </Frame>
+
+<Note>Make sure to replace `<your-application-port>` with the port number on which your application is running.</Note>
 
 
 ### Submitting URL to whatsapp business platform
@@ -49,7 +76,7 @@ Follow the steps below to submit your webhook URL to the Whatsapp Business Platf
         </Accordion>
     </Step>
     <Step>
-        <Accordion title="Add the NGROK public URL and webhook secret.">
+        <Accordion title="Add the public URL and webhook secret.">
             <Note>Webhook secret is the same string which you have used in your Wapi.go Application Client.</Note>
            
             <Frame>
@@ -66,3 +93,4 @@ Follow the steps below to submit your webhook URL to the Whatsapp Business Platf
          </Accordion>
     </Step>
 </Steps>
+

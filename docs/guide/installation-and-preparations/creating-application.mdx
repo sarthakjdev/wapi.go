@@ -7,48 +7,17 @@ title: 'Setting up Wapi.go Application Development Environment'
 
 ### Chat bot
 
-The first step to build a Wapi.go based chat bot is to create a new node.js project. You can quickly setup a new project using the utility NPM package provided with the Wapi.go SDK only, run the following command in your terminal to setup the project: 
+The first step to build a Wapi.go based chat bot is to create a new project. You can do this by running the following command:
 
-```bash
-pnpm create-wapi-app my-whatsapp-bot
+```go
+go mod init <project-name>
+go get github.com/wapichat/wapi.go
 ```
-
-<Check>Once you run this command, you would be asked a couple of questions like the name of the project and whether you want to use typescript or javascript for this project. Once you answer them, you project will start to setup and once done. You can navigate to the project directory and start building your chat bot.</Check>
 
 ### Other use cases
 
-
 - You are a developer and want to integrate the whatsapp business API with your existing backend.
 - You are a solution partner or a tech partner with WhatsApp and want to access the WhatsApp business API to build a solution for your clients.
-
-To do so, you can install the Wapi.go SDK using the following command:
-
-<Tabs>
-  <Tab title="pnpm">
-    ```bash
-    pnpm add @wapijs/Wapi.go
-    ```
-  </Tab>
-  <Tab title="yarn">
-  ```bash
-    yarn add @wapijs/Wapi.go
-    ```
-  </Tab>
-  <Tab title="npm">
-  ```bash
-    npm install @wapi/Wapi.go
-    ```
-  </Tab>
-</Tabs>
-
-### You may also consider the following best pratices of developing a Node.js Application: 
-
-- Setting up a Linter.
-- Setting up a formatter.
-- Setting up proper scripts in package.json.
-- Using a version control system like Git and setting up workflows for Github Actions for sanity build and lint checks.
-- Using consistent naming conventions.
-- Using environment variables for sensitive information.
 
 <Note> Process to building the application [docs](/guide/building-your-application), for further assistance.</Note>
 
