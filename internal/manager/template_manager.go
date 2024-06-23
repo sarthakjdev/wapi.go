@@ -14,7 +14,7 @@ type MessageTemplateStatus string
 const (
 	MessageTemplateStatusApproved MessageTemplateStatus = "APPROVED"
 	MessageTemplateStatusRejected MessageTemplateStatus = "REJECTED"
-	MessageTemplateStatusPending  MessageTemplateStatus = "Pending"
+	MessageTemplateStatusPending  MessageTemplateStatus = "PENDING"
 )
 
 type MessageTemplateCategory string
@@ -294,7 +294,54 @@ type TemplateAnalyticsType struct {
 type TemplatePerformanceAnalytics struct {
 }
 
-func (bm *TemplateManager) FetchAnalytics() {
+func (manager *TemplateManager) FetchAnalytics() (string, error) {
 	// https://graph.facebook.com/LATEST-VERSION/WHATSAPP-BUSINESS-ACCOUNT-ID?fields=analytics&access_token=ACCESS-TOKEN
 
+	apiRequest := manager.requester.NewBusinessApiRequest(strings.Join([]string{}, "/"), http.MethodGet)
+
+	response, err := apiRequest.Execute()
+
+	return response, err
+
+}
+
+func (manager *TemplateManager) FetchPerformanceAnalytics(templateName, templateId string) (string, error) {
+	// /v20.0/{whats-app-business-account-id}/template_performance_metrics
+	// https://developers.facebook.com/docs/graph-api/reference/whats-app-business-account/template_performance_metrics/
+	apiRequest := manager.requester.NewBusinessApiRequest(strings.Join([]string{manager.businessAccountId, "template_performance_metrics"}, "/"), http.MethodGet)
+	apiRequest.AddQueryParam("name", templateName)
+	apiRequest.AddQueryParam("template_id", templateId)
+	response, err := apiRequest.Execute()
+
+	if err != nil {
+		return "", err
+	}
+
+	return response, nil
+}
+
+func (manager *TemplateManager) MigrateFromOtherBusinessAccount(sourcePageNumber int, sourceWabaId int) (string, error) {
+	// /{whats_app_business_account_id}/migrate_message_templates
+
+	apiRequest := manager.requester.NewBusinessApiRequest(strings.Join([]string{manager.businessAccountId, "migrate_message_templates"}, "/"), http.MethodGet)
+	apiRequest.AddQueryParam("page_number", string(sourcePageNumber))
+	apiRequest.AddQueryParam("source_waba_id", string(sourceWabaId))
+	response, err := apiRequest.Execute()
+
+	if err != nil {
+		return "", err
+	}
+
+	return response, nil
+
+	// Struct {
+	// 	migrated_templates: List [
+	// 	string
+	// 	],
+	// 	failed_templates: Map {
+	// 	string: string
+	// 	},
+	// 	}
+
+	// return type
 }

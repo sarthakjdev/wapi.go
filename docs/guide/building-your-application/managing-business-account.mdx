@@ -57,3 +57,38 @@ Use the following method on Business client to fetch the conversation statistics
  to know more about the account messaging templates operations.</Info>
 
 
+### Updating a user
+
+Use the following method on Business client to fetch the conversation statistics.
+
+```go
+	client.Business.ConversationAnalytics(business.ConversationAnalyticsOptions{
+		Start:       time.Now().Add(-time.Hour * 24 * 7 * 30),
+		End:         time.Now(),
+		Granularity: business.ConversationAnalyticsGranularityTypeDay,
+	})
+```
+
+<Note>Check the api reference docs [here](/api-reference/pkg/business#type-conversationanalyticsoptions) to know about all available options to tweak the response type and scope for business account conversation analytics.</Note>
+
+
+### Deleting a user access form Whatsapp Business Account 
+
+Use the following method on Business client to fetch the conversation statistics.
+
+```go
+	client.Business.ConversationAnalytics(business.ConversationAnalyticsOptions{
+		Start:       time.Now().Add(-time.Hour * 24 * 7 * 30),
+		End:         time.Now(),
+		Granularity: business.ConversationAnalyticsGranularityTypeDay,
+	})
+```
+
+<Note>Check the api reference docs [here](/api-reference/pkg/business#type-conversationanalyticsoptions) to know about all available options to tweak the response type and scope for business account conversation analytics.</Note>
+
+
+### Fetch a Product Catalog
+
+
+### Delete a Product Catalog
+

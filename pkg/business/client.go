@@ -305,3 +305,67 @@ func (client *BusinessClient) ConversationAnalytics(options ConversationAnalytic
 
 	return &response_to_return, nil
 }
+
+func (client *BusinessClient) FetchAllProductCatalogs() (string, error) {
+	// https://developers.facebook.com/docs/graph-api/reference/whats-app-business-account/product_catalogs/#Reading
+	apiRequest := client.requester.NewBusinessApiRequest(strings.Join([]string{client.BusinessAccountId, "product_catalogs"}, "/"), http.MethodGet)
+	response, err := apiRequest.Execute()
+	return response, err
+
+}
+
+func (client *BusinessClient) CreateNewProductCatalog() (string, error) {
+	// https://developers.facebook.com/docs/graph-api/reference/whats-app-business-account/product_catalogs/#Creating
+	apiRequest := client.requester.NewBusinessApiRequest(strings.Join([]string{client.BusinessAccountId, "product_catalogs"}, "/"), http.MethodPost)
+	response, err := apiRequest.Execute()
+	return response, err
+}
+
+type BusinessRole string
+
+const (
+	BusinessRoleManage               BusinessRole = "MANAGE"
+	BusinessRoleDevelop              BusinessRole = "DEVELOP"
+	BusinessRoleManageTemplates      BusinessRole = "MANAGE_TEMPLATES"
+	BusinessRoleManagePhone          BusinessRole = "MANAGE_PHONE"
+	BusinessRoleViewCost             BusinessRole = "VIEW_COST"
+	BusinessRoleManageExtensions     BusinessRole = "MANAGE_EXTENSIONS"
+	BusinessRoleViewPhoneAssets      BusinessRole = "VIEW_PHONE_ASSETS"
+	BusinessRoleManagePhoneAssets    BusinessRole = "MANAGE_PHONE_ASSETS"
+	BusinessRoleViewTemplates        BusinessRole = "VIEW_TEMPLATES"
+	BusinessRoleMessaging            BusinessRole = "MESSAGING"
+	BusinessRoleManageBusinessPhones BusinessRole = "MANAGE_BUSINESS_PHONES"
+)
+
+func (role *BusinessRole) String() string {
+	return string(*role)
+}
+
+func (client *BusinessClient) UpdateUser(userId string, tasks []BusinessRole) (string, error) {
+
+	// https://developers.facebook.com/docs/graph-api/reference/whats-app-business-account/#Updating
+
+	apiRequest := client.requester.NewBusinessApiRequest(strings.Join([]string{client.BusinessAccountId, "assigned_users."}, "/"), http.MethodPost)
+	apiRequest.AddQueryParam("user", userId)
+	roles := make([]string, len(tasks))
+	for i, task := range tasks {
+		roles[i] = task.String()
+	}
+	apiRequest.AddQueryParam("tasks", strings.Join(roles, ","))
+
+	response, err := apiRequest.Execute()
+
+	return response, err
+
+}
+
+func (client *BusinessClient) DeleteUser(userId string) (string, error) {
+
+	// https://developers.facebook.com/docs/graph-api/reference/whats-app-business-account/#Deleting
+
+	apiRequest := client.requester.NewBusinessApiRequest(strings.Join([]string{client.BusinessAccountId, "assigned_users."}, "/"), http.MethodDelete)
+	apiRequest.AddQueryParam("user", userId)
+	response, err := apiRequest.Execute()
+	return response, err
+
+}
