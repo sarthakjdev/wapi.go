@@ -88,7 +88,7 @@ For detailed guidelines, check [Contributing.md](./CONTRIBUTING.md).
 
 ## 📜 License
 
-Distributed under the Apache 2.0 License. View [LICENSE](./LICENSE).
+Distributed under the AGPL 3.0 License. View [LICENSE](./LICENSE).
 
 ## 📞 Contact
 
