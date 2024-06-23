@@ -65,12 +65,6 @@ type WhatsappBusinessAccount struct {
 	TimezoneId                 string `json:"timezone_id,omitempty"`
 }
 
-type MessageTemplatePreview struct {
-}
-
-type ProductCatalog struct {
-}
-
 type FetchBusinessAccountResponse struct {
 	Id                       string `json:"id" validate:"required"`
 	Name                     string `json:"name" validate:"required"`
