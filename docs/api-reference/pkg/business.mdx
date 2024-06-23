@@ -88,11 +88,38 @@ func (client *BusinessClient) ConversationAnalytics(options ConversationAnalytic
 
 
 
+<a name="BusinessClient.CreateNewProductCatalog"></a>
+### func \(\*BusinessClient\) CreateNewProductCatalog
+
+```go
+func (client *BusinessClient) CreateNewProductCatalog() (string, error)
+```
+
+
+
+<a name="BusinessClient.DeleteUser"></a>
+### func \(\*BusinessClient\) DeleteUser
+
+```go
+func (client *BusinessClient) DeleteUser(userId string) (string, error)
+```
+
+
+
 <a name="BusinessClient.Fetch"></a>
 ### func \(\*BusinessClient\) Fetch
 
 ```go
 func (client *BusinessClient) Fetch() FetchBusinessAccountResponse
+```
+
+
+
+<a name="BusinessClient.FetchAllProductCatalogs"></a>
+### func \(\*BusinessClient\) FetchAllProductCatalogs
+
+```go
+func (client *BusinessClient) FetchAllProductCatalogs() (string, error)
 ```
 
 
@@ -124,6 +151,15 @@ func (bc *BusinessClient) SetBusinessId(id string)
 
 
 
+<a name="BusinessClient.UpdateUser"></a>
+### func \(\*BusinessClient\) UpdateUser
+
+```go
+func (client *BusinessClient) UpdateUser(userId string, tasks []BusinessRole) (string, error)
+```
+
+
+
 <a name="BusinessClientConfig"></a>
 ## type BusinessClientConfig
 
@@ -136,6 +172,42 @@ type BusinessClientConfig struct {
     Requester         *request_client.RequestClient
 }
 ```
+
+<a name="BusinessRole"></a>
+## type BusinessRole
+
+
+
+```go
+type BusinessRole string
+```
+
+<a name="BusinessRoleManage"></a>
+
+```go
+const (
+    BusinessRoleManage               BusinessRole = "MANAGE"
+    BusinessRoleDevelop              BusinessRole = "DEVELOP"
+    BusinessRoleManageTemplates      BusinessRole = "MANAGE_TEMPLATES"
+    BusinessRoleManagePhone          BusinessRole = "MANAGE_PHONE"
+    BusinessRoleViewCost             BusinessRole = "VIEW_COST"
+    BusinessRoleManageExtensions     BusinessRole = "MANAGE_EXTENSIONS"
+    BusinessRoleViewPhoneAssets      BusinessRole = "VIEW_PHONE_ASSETS"
+    BusinessRoleManagePhoneAssets    BusinessRole = "MANAGE_PHONE_ASSETS"
+    BusinessRoleViewTemplates        BusinessRole = "VIEW_TEMPLATES"
+    BusinessRoleMessaging            BusinessRole = "MESSAGING"
+    BusinessRoleManageBusinessPhones BusinessRole = "MANAGE_BUSINESS_PHONES"
+)
+```
+
+<a name="BusinessRole.String"></a>
+### func \(\*BusinessRole\) String
+
+```go
+func (role *BusinessRole) String() string
+```
+
+
 
 <a name="ConversationAnalyticsGranularityType"></a>
 ## type ConversationAnalyticsGranularityType
@@ -264,26 +336,6 @@ type FetchBusinessAccountResponse struct {
     Name                     string `json:"name" validate:"required"`
     TimezoneId               string `json:"timezone_id" validate:"required"`
     MessageTemplateNamespace string `json:"message_template_namespace" validate:"required"`
-}
-```
-
-<a name="MessageTemplatePreview"></a>
-## type MessageTemplatePreview
-
-
-
-```go
-type MessageTemplatePreview struct {
-}
-```
-
-<a name="ProductCatalog"></a>
-## type ProductCatalog
-
-
-
-```go
-type ProductCatalog struct {
 }
 ```
 

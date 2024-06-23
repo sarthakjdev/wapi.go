@@ -2,6 +2,8 @@
 import "github.com/sarthakjdev/wapi.go/internal/manager"
 ```
 
+Package manager provides functionality to manage phone numbers for WhatsApp Business API.
+
 
 
 <a name="AdInteractionSourceMediaTypeEnum"></a>
@@ -90,7 +92,7 @@ type Conversation struct {
 <a name="DeleteQrCodeResponse"></a>
 ## type DeleteQrCodeResponse
 
-
+DeleteQrCodeResponse represents the response of deleting a QR code.
 
 ```go
 type DeleteQrCodeResponse struct {
@@ -180,7 +182,7 @@ Unsubscribe removes a subscriber from the specified event type.
 <a name="FetchPhoneNumberFilters"></a>
 ## type FetchPhoneNumberFilters
 
-
+FetchPhoneNumberFilters holds the filters for fetching phone numbers.
 
 ```go
 type FetchPhoneNumberFilters struct {
@@ -191,7 +193,7 @@ type FetchPhoneNumberFilters struct {
 <a name="GenerateQrCodeResponse"></a>
 ## type GenerateQrCodeResponse
 
-
+GenerateQrCodeResponse represents the response of generating a QR code.
 
 ```go
 type GenerateQrCodeResponse struct {
@@ -205,7 +207,7 @@ type GenerateQrCodeResponse struct {
 <a name="GetAllQrCodesResponse"></a>
 ## type GetAllQrCodesResponse
 
-
+GetAllQrCodesResponse represents the response of getting all QR codes for a phone number.
 
 ```go
 type GetAllQrCodesResponse struct {
@@ -369,13 +371,13 @@ const (
 <a name="MessageTemplateCategory"></a>
 ## type MessageTemplateCategory
 
-
+MessageTemplateCategory represents the category of a WhatsApp Business message template.
 
 ```go
 type MessageTemplateCategory string
 ```
 
-<a name="MessageTemplateCategoryUtility"></a>
+<a name="MessageTemplateCategoryUtility"></a>Constants representing different message template categories.
 
 ```go
 const (
@@ -388,13 +390,13 @@ const (
 <a name="MessageTemplateComponentFormat"></a>
 ## type MessageTemplateComponentFormat
 
-
+MessageTemplateComponentFormat represents the format of a message template component.
 
 ```go
 type MessageTemplateComponentFormat string
 ```
 
-<a name="MessageTemplateComponentFormatText"></a>
+<a name="MessageTemplateComponentFormatText"></a>Constants representing different message template component formats.
 
 ```go
 const (
@@ -409,13 +411,13 @@ const (
 <a name="MessageTemplateComponentType"></a>
 ## type MessageTemplateComponentType
 
-
+MessageTemplateComponentType represents the type of a message template component.
 
 ```go
 type MessageTemplateComponentType string
 ```
 
-<a name="MessageTemplateComponentTypeGreeting"></a>
+<a name="MessageTemplateComponentTypeGreeting"></a>Constants representing different message template component types.
 
 ```go
 const (
@@ -445,19 +447,19 @@ type MessageTemplateCreationResponse struct {
 <a name="MessageTemplateStatus"></a>
 ## type MessageTemplateStatus
 
-
+MessageTemplateStatus represents the status of a WhatsApp Business message template.
 
 ```go
 type MessageTemplateStatus string
 ```
 
-<a name="MessageTemplateStatusApproved"></a>
+<a name="MessageTemplateStatusApproved"></a>Constants representing different message template statuses.
 
 ```go
 const (
     MessageTemplateStatusApproved MessageTemplateStatus = "APPROVED"
     MessageTemplateStatusRejected MessageTemplateStatus = "REJECTED"
-    MessageTemplateStatusPending  MessageTemplateStatus = "Pending"
+    MessageTemplateStatusPending  MessageTemplateStatus = "PENDING"
 )
 ```
 
@@ -816,7 +818,7 @@ type Origin struct {
 <a name="PhoneNumberManager"></a>
 ## type PhoneNumberManager
 
-
+PhoneNumberManager is responsible for managing phone numbers for WhatsApp Business API and phone number specific operations.
 
 ```go
 type PhoneNumberManager struct {
@@ -833,7 +835,7 @@ type PhoneNumberManager struct {
 func NewPhoneNumberManager(config *PhoneNumberManagerConfig) *PhoneNumberManager
 ```
 
-
+NewPhoneNumberManager creates a new instance of PhoneNumberManager.
 
 <a name="PhoneNumberManager.DeleteQrCode"></a>
 ### func \(\*PhoneNumberManager\) DeleteQrCode
@@ -842,7 +844,7 @@ func NewPhoneNumberManager(config *PhoneNumberManagerConfig) *PhoneNumberManager
 func (manager *PhoneNumberManager) DeleteQrCode(phoneNumber, id string) (*DeleteQrCodeResponse, error)
 ```
 
-
+DeleteQrCode deletes a QR code by its ID for the specified phone number.
 
 <a name="PhoneNumberManager.Fetch"></a>
 ### func \(\*PhoneNumberManager\) Fetch
@@ -860,7 +862,7 @@ Fetch fetches a phone number by its ID.
 func (manager *PhoneNumberManager) FetchAll(options FetchPhoneNumberFilters) (*WhatsappBusinessAccountPhoneNumberEdge, error)
 ```
 
-
+FetchAll fetches all phone numbers based on the provided filters.
 
 <a name="PhoneNumberManager.GenerateQrCode"></a>
 ### func \(\*PhoneNumberManager\) GenerateQrCode
@@ -869,7 +871,7 @@ func (manager *PhoneNumberManager) FetchAll(options FetchPhoneNumberFilters) (*W
 func (manager *PhoneNumberManager) GenerateQrCode(phoneNumber string, prefilledMessage string) (*GenerateQrCodeResponse, error)
 ```
 
-
+GenerateQrCode generates a QR code for the specified phone number with the given prefilled message.
 
 <a name="PhoneNumberManager.GetAllQrCodes"></a>
 ### func \(\*PhoneNumberManager\) GetAllQrCodes
@@ -878,7 +880,7 @@ func (manager *PhoneNumberManager) GenerateQrCode(phoneNumber string, prefilledM
 func (manager *PhoneNumberManager) GetAllQrCodes(phoneNumber string) (*GetAllQrCodesResponse, error)
 ```
 
-
+GetAllQrCodes gets all QR codes for the specified phone number.
 
 <a name="PhoneNumberManager.GetQrCodeById"></a>
 ### func \(\*PhoneNumberManager\) GetQrCodeById
@@ -887,7 +889,7 @@ func (manager *PhoneNumberManager) GetAllQrCodes(phoneNumber string) (*GetAllQrC
 func (manager *PhoneNumberManager) GetQrCodeById(phoneNumber, id string) (*GetAllQrCodesResponse, error)
 ```
 
-
+GetQrCodeById gets a QR code by its ID for the specified phone number.
 
 <a name="PhoneNumberManager.UpdateQrCode"></a>
 ### func \(\*PhoneNumberManager\) UpdateQrCode
@@ -896,12 +898,12 @@ func (manager *PhoneNumberManager) GetQrCodeById(phoneNumber, id string) (*GetAl
 func (manager *PhoneNumberManager) UpdateQrCode(phoneNumber, id, prefilledMessage string) (*GenerateQrCodeResponse, error)
 ```
 
-
+UpdateQrCode updates a QR code by its ID for the specified phone number with the given prefilled message.
 
 <a name="PhoneNumberManagerConfig"></a>
 ## type PhoneNumberManagerConfig
 
-
+PhoneNumberManagerConfig holds the configuration for PhoneNumberManager.
 
 ```go
 type PhoneNumberManagerConfig struct {
@@ -981,7 +983,7 @@ type TemplateAnalyticsType struct {
 <a name="TemplateManager"></a>
 ## type TemplateManager
 
-
+TemplateManager is responsible for managing WhatsApp Business message templates.
 
 ```go
 type TemplateManager struct {
@@ -998,7 +1000,7 @@ type TemplateManager struct {
 func NewTemplateManager(config *TemplateManagerConfig) *TemplateManager
 ```
 
-
+NewTemplateManager creates a new TemplateManager with the given configuration.
 
 <a name="TemplateManager.Create"></a>
 ### func \(\*TemplateManager\) Create
@@ -1025,22 +1027,22 @@ func (tm *TemplateManager) Delete(id string)
 func (manager *TemplateManager) Fetch(Id string) (*WhatsAppBusinessMessageTemplateNode, error)
 ```
 
-
+Fetch fetches a single WhatsApp Business message template by its ID.
 
 <a name="TemplateManager.FetchAll"></a>
 ### func \(\*TemplateManager\) FetchAll
 
 ```go
-func (manager *TemplateManager) FetchAll() (*WhatsAppBusinessTemplacesFetchResponseEdge, error)
+func (manager *TemplateManager) FetchAll() (*WhatsAppBusinessTemplatesFetchResponseEdge, error)
 ```
 
-
+FetchAll fetches all WhatsApp Business message templates.
 
 <a name="TemplateManager.FetchAnalytics"></a>
 ### func \(\*TemplateManager\) FetchAnalytics
 
 ```go
-func (bm *TemplateManager) FetchAnalytics()
+func (manager *TemplateManager) FetchAnalytics() (string, error)
 ```
 
 
@@ -1050,6 +1052,24 @@ func (bm *TemplateManager) FetchAnalytics()
 
 ```go
 func (tm *TemplateManager) FetchMessageTemplatePreviews()
+```
+
+
+
+<a name="TemplateManager.FetchPerformanceAnalytics"></a>
+### func \(\*TemplateManager\) FetchPerformanceAnalytics
+
+```go
+func (manager *TemplateManager) FetchPerformanceAnalytics(templateName, templateId string) (string, error)
+```
+
+
+
+<a name="TemplateManager.MigrateFromOtherBusinessAccount"></a>
+### func \(\*TemplateManager\) MigrateFromOtherBusinessAccount
+
+```go
+func (manager *TemplateManager) MigrateFromOtherBusinessAccount(sourcePageNumber int, sourceWabaId int) (string, error)
 ```
 
 
@@ -1066,7 +1086,7 @@ func (manager *TemplateManager) Update(templateId string, updates WhatsAppBusine
 <a name="TemplateManagerConfig"></a>
 ## type TemplateManagerConfig
 
-
+TemplateManagerConfig represents the configuration for creating a new TemplateManager.
 
 ```go
 type TemplateManagerConfig struct {
@@ -1244,7 +1264,7 @@ type WhatsAppBusinessAccountMessageTemplateUpdateRequestBody struct {
 <a name="WhatsAppBusinessHSMWhatsAppBusinessHSMQualityScoreShape"></a>
 ## type WhatsAppBusinessHSMWhatsAppBusinessHSMQualityScoreShape
 
-
+WhatsAppBusinessHSMWhatsAppBusinessHSMQualityScoreShape represents the quality score of a WhatsApp Business message template.
 
 ```go
 type WhatsAppBusinessHSMWhatsAppBusinessHSMQualityScoreShape struct {
@@ -1257,7 +1277,7 @@ type WhatsAppBusinessHSMWhatsAppBusinessHSMQualityScoreShape struct {
 <a name="WhatsAppBusinessHSMWhatsAppHSMComponent"></a>
 ## type WhatsAppBusinessHSMWhatsAppHSMComponent
 
-
+WhatsAppBusinessHSMWhatsAppHSMComponent represents a component in a WhatsApp Business message template.
 
 ```go
 type WhatsAppBusinessHSMWhatsAppHSMComponent struct {
@@ -1276,7 +1296,7 @@ type WhatsAppBusinessHSMWhatsAppHSMComponent struct {
 <a name="WhatsAppBusinessHSMWhatsAppHSMComponentButton"></a>
 ## type WhatsAppBusinessHSMWhatsAppHSMComponentButton
 
-
+WhatsAppBusinessHSMWhatsAppHSMComponentButton represents a button component in a WhatsApp Business message template.
 
 ```go
 type WhatsAppBusinessHSMWhatsAppHSMComponentButton struct {
@@ -1286,7 +1306,7 @@ type WhatsAppBusinessHSMWhatsAppHSMComponentButton struct {
 <a name="WhatsAppBusinessHSMWhatsAppHSMComponentCard"></a>
 ## type WhatsAppBusinessHSMWhatsAppHSMComponentCard
 
-
+WhatsAppBusinessHSMWhatsAppHSMComponentCard represents a card component in a WhatsApp Business message template.
 
 ```go
 type WhatsAppBusinessHSMWhatsAppHSMComponentCard struct {
@@ -1296,7 +1316,7 @@ type WhatsAppBusinessHSMWhatsAppHSMComponentCard struct {
 <a name="WhatsAppBusinessHSMWhatsAppHSMComponentExample"></a>
 ## type WhatsAppBusinessHSMWhatsAppHSMComponentExample
 
-
+WhatsAppBusinessHSMWhatsAppHSMComponentExample represents an example component in a WhatsApp Business message template.
 
 ```go
 type WhatsAppBusinessHSMWhatsAppHSMComponentExample struct {
@@ -1306,7 +1326,7 @@ type WhatsAppBusinessHSMWhatsAppHSMComponentExample struct {
 <a name="WhatsAppBusinessHSMWhatsAppLimitedTimeOfferParameterShape"></a>
 ## type WhatsAppBusinessHSMWhatsAppLimitedTimeOfferParameterShape
 
-
+WhatsAppBusinessHSMWhatsAppLimitedTimeOfferParameterShape represents a limited time offer parameter in a WhatsApp Business message template.
 
 ```go
 type WhatsAppBusinessHSMWhatsAppLimitedTimeOfferParameterShape struct {
@@ -1316,7 +1336,7 @@ type WhatsAppBusinessHSMWhatsAppLimitedTimeOfferParameterShape struct {
 <a name="WhatsAppBusinessMessageTemplateNode"></a>
 ## type WhatsAppBusinessMessageTemplateNode
 
-
+WhatsAppBusinessMessageTemplateNode represents a WhatsApp Business message template.
 
 ```go
 type WhatsAppBusinessMessageTemplateNode struct {
@@ -1336,13 +1356,13 @@ type WhatsAppBusinessMessageTemplateNode struct {
 }
 ```
 
-<a name="WhatsAppBusinessTemplacesFetchResponseEdge"></a>
-## type WhatsAppBusinessTemplacesFetchResponseEdge
+<a name="WhatsAppBusinessTemplatesFetchResponseEdge"></a>
+## type WhatsAppBusinessTemplatesFetchResponseEdge
 
-
+WhatsAppBusinessTemplatesFetchResponseEdge represents the response structure for fetching WhatsApp Business message templates.
 
 ```go
-type WhatsAppBusinessTemplacesFetchResponseEdge struct {
+type WhatsAppBusinessTemplatesFetchResponseEdge struct {
     Data   []WhatsAppBusinessMessageTemplateNode      `json:"data,omitempty"`
     Paging internal.WhatsAppBusinessApiPaginationMeta `json:"paging,omitempty"`
 }
@@ -1363,7 +1383,7 @@ type WhatsappApiNotificationPayloadSchemaType struct {
 <a name="WhatsappBusinessAccountPhoneNumber"></a>
 ## type WhatsappBusinessAccountPhoneNumber
 
-
+WhatsappBusinessAccountPhoneNumber represents a WhatsApp Business Account phone number.
 
 ```go
 type WhatsappBusinessAccountPhoneNumber struct {
@@ -1381,7 +1401,7 @@ type WhatsappBusinessAccountPhoneNumber struct {
 <a name="WhatsappBusinessAccountPhoneNumberEdge"></a>
 ## type WhatsappBusinessAccountPhoneNumberEdge
 
-
+WhatsappBusinessAccountPhoneNumberEdge represents a list of WhatsApp Business Account phone numbers.
 
 ```go
 type WhatsappBusinessAccountPhoneNumberEdge struct {
@@ -1394,7 +1414,7 @@ type WhatsappBusinessAccountPhoneNumberEdge struct {
 <a name="WhatsappMessageTemplateButtonCreateRequestBody"></a>
 ## type WhatsappMessageTemplateButtonCreateRequestBody
 
-this is button structure for the message template creation request
+WhatsappMessageTemplateButtonCreateRequestBody represents the request body for creating a button in a message template.
 
 ```go
 type WhatsappMessageTemplateButtonCreateRequestBody struct {
@@ -1412,7 +1432,7 @@ type WhatsappMessageTemplateButtonCreateRequestBody struct {
 <a name="WhatsappMessageTemplateComponentCreateOrUpdateRequestBody"></a>
 ## type WhatsappMessageTemplateComponentCreateOrUpdateRequestBody
 
-thus is component structure for the message template creation request
+WhatsappMessageTemplateComponentCreateOrUpdateRequestBody represents the request body for creating or updating a component in a message template.
 
 ```go
 type WhatsappMessageTemplateComponentCreateOrUpdateRequestBody struct {
@@ -1430,12 +1450,12 @@ type WhatsappMessageTemplateComponentCreateOrUpdateRequestBody struct {
 func (component *WhatsappMessageTemplateComponentCreateOrUpdateRequestBody) AddButton(button WhatsappMessageTemplateButtonCreateRequestBody)
 ```
 
-
+AddButton adds a button to the component.
 
 <a name="WhatsappMessageTemplateCreateRequestBody"></a>
 ## type WhatsappMessageTemplateCreateRequestBody
 
-this is the request body for the message template creation request
+WhatsappMessageTemplateCreateRequestBody represents the request body for creating a message template.
 
 ```go
 type WhatsappMessageTemplateCreateRequestBody struct {
@@ -1460,17 +1480,4 @@ func (body *WhatsappMessageTemplateCreateRequestBody) AddComponent(component Wha
 ```
 
 
-
-<a name="WhatsappMessageTemplateEdge"></a>
-## type WhatsappMessageTemplateEdge
-
-
-
-```go
-type WhatsappMessageTemplateEdge struct {
-    Data    []WhatsAppBusinessMessageTemplateNode      `json:"data,omitempty"`
-    Paging  internal.WhatsAppBusinessApiPaginationMeta `json:"paging,omitempty"`
-    Summary string                                     `json:"summary,omitempty"`
-}
-```
 
