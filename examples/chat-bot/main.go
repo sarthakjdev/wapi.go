@@ -13,20 +13,21 @@ import (
 
 func main() {
 	// creating a client
-
-	businessAccountId := "103043282674158"
-	phoneNumber := "113269274970227"
+	businessAccountId := ""
+	phoneNumber := ""
 
 	client := wapi.New(&wapi.ClientConfig{
-		ApiAccessToken:    "EABhCftGVaeIBOZCZANWI9Tkuy3etYh4lWP1nk1bqcuSyboHi5B1DDj1H3Q4dGYxK9iJ5f6U9Pb1BvoeTTR3aDCVtJIud10aUAtdl7YNbEqH2qeOLBZCEIZAFyt0mSDzog5dVcQHWDDPz1JQmNuebpFIJaBqqcxDdKNdCgx7AQGptJYhPclGc8E9T68Em5dThClm2ZAOST4kVIcvH2dA8zx9kZCqlAevUZBTxaB5hLuS18sZD",
+		ApiAccessToken:    "",
 		BusinessAccountId: businessAccountId,
 		WebhookPath:       "/webhook",
 		WebhookSecret:     "1234567890",
 		WebhookServerPort: 8080,
 	})
 
+	// messaging client is specific to a phone number, if in case you are looking to change the mobile the number you need to create a new messaging client
 	// messagingClient := client.NewMessagingClient("113269274970227")
 
+	// uncomment to try this business api endpoint to get the conversation analytics
 	// client.Business.ConversationAnalytics(business.ConversationAnalyticsOptions{
 	// 	Start:       time.Now().Add(-time.Hour * 24 * 7 * 30),
 	// 	End:         time.Now(),

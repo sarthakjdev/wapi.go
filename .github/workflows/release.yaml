@@ -9,6 +9,9 @@ on:
       commitHash:
         description: "Commit Hash"
         default: "HEAD"
+  push:
+    branches:
+      - master
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
