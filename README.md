@@ -73,11 +73,6 @@ whatsappClient, err := wapi.New(wapi.ClientConfig{
 
 - **Notification Payloads**: Details can be found [here](https://developers.facebook.com/docs/whatsapp/cloud-api/webhooks/components).
 
-<!-- ## 🔗 Other Links
-
-- [Website](https://wapijs.co)
-- [Documentation](https://wapijs.co/docs) -->
-
 ## 🤝 Contribution Guidelines
 
 1. Fork the Project
@@ -87,6 +82,13 @@ whatsappClient, err := wapi.New(wapi.ClientConfig{
 5. Open a Pull Request
 
 For detailed guidelines, check [Contributing.md](./CONTRIBUTING.md).
+
+# TODOs'
+
+- Handle errors gracefully
+- Handle template and interactive messages gracefully
+- Add support for more interactive messaged types like address input.
+- 
 
 ## 📜 License
 
