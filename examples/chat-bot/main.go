@@ -3,7 +3,9 @@ package main
 import (
 	"fmt"
 	"strings"
+	"time"
 
+	"github.com/sarthakjdev/wapi.go/pkg/business"
 	wapi "github.com/sarthakjdev/wapi.go/pkg/client"
 	wapiComponents "github.com/sarthakjdev/wapi.go/pkg/components"
 	"github.com/sarthakjdev/wapi.go/pkg/events"
@@ -11,27 +13,47 @@ import (
 
 func main() {
 	// creating a client
-	whatsappClient, err := wapi.New(wapi.ClientConfig{
-		PhoneNumberId:     "",
-		ApiAccessToken:    "",
-		BusinessAccountId: "",
+
+	businessAccountId := "103043282674158"
+	phoneNumber := "113269274970227"
+
+	client := wapi.New(&wapi.ClientConfig{
+		ApiAccessToken:    "EABhCftGVaeIBOZCZANWI9Tkuy3etYh4lWP1nk1bqcuSyboHi5B1DDj1H3Q4dGYxK9iJ5f6U9Pb1BvoeTTR3aDCVtJIud10aUAtdl7YNbEqH2qeOLBZCEIZAFyt0mSDzog5dVcQHWDDPz1JQmNuebpFIJaBqqcxDdKNdCgx7AQGptJYhPclGc8E9T68Em5dThClm2ZAOST4kVIcvH2dA8zx9kZCqlAevUZBTxaB5hLuS18sZD",
+		BusinessAccountId: businessAccountId,
 		WebhookPath:       "/webhook",
 		WebhookSecret:     "1234567890",
 		WebhookServerPort: 8080,
 	})
 
-	if err != nil {
-		fmt.Println("error creating client", err)
-		return
-	}
+	// messagingClient := client.NewMessagingClient("113269274970227")
 
-	// create a message
+	// client.Business.ConversationAnalytics(business.ConversationAnalyticsOptions{
+	// 	Start:       time.Now().Add(-time.Hour * 24 * 7 * 30),
+	// 	End:         time.Now(),
+	// 	Granularity: business.ConversationAnalyticsGranularityTypeDay,
+	// })
+
+	client.Business.FetchAnalytics(business.AccountAnalyticsOptions{
+		Start:       time.Now().Add(-time.Hour * 24 * 7 * 30),
+		End:         time.Now(),
+		Granularity: business.AnalyticsRequestGranularityTypeDay,
+	})
+
+	// client.Business.PhoneNumber.FetchAll(manager.FetchPhoneNumberFilters{
+	// 	GetSandboxNumbers: false,
+	// })
+
+	// client.Business.PhoneNumber.Fetch("113269274970227")
+	// response, err := client.Business.Template.FetchAll()
+
+	// response, err := client.Business.Template.Fetch(phoneNumber)
+
 	textMessage, err := wapiComponents.NewTextMessage(wapiComponents.TextMessageConfigs{
-		Text: "Hello, from wapi.go",
+		Text: "Hello, how can I help you?",
 	})
 
 	if err != nil {
-		fmt.Println("error creating text message", err)
+		fmt.Println("error creating text message message", err)
 		return
 	}
 
@@ -114,9 +136,6 @@ func main() {
 	}
 
 	fmt.Println(string(jsonData))
-
-	whatsappClient.Message.Send(listMessage, "919643500545")
-
 	buttonMessage, err := wapiComponents.NewQuickReplyButtonMessage("Body 1")
 
 	if err != nil {
@@ -127,11 +146,11 @@ func main() {
 	buttonMessage.AddButton("1", "Button 1")
 	buttonMessage.AddButton("2", "Button 2")
 
-	whatsappClient.On(events.ReadyEventType, func(event events.BaseEvent) {
+	client.On(events.ReadyEventType, func(event events.BaseEvent) {
 		fmt.Println("client is ready")
 	})
 
-	whatsappClient.On(events.TextMessageEventType, func(event events.BaseEvent) {
+	client.On(events.TextMessageEventType, func(event events.BaseEvent) {
 		fmt.Println("text message event received")
 
 		textMessageEvent := event.(*events.TextMessageEvent)
@@ -155,26 +174,49 @@ func main() {
 			textMessageEvent.Reply(listMessage)
 		case "button":
 			textMessageEvent.Reply(buttonMessage)
+		case "qr":
+			{
+				response, err := client.Business.PhoneNumber.GenerateQrCode(phoneNumber, "This is Wapi.go this side.")
+
+				if err != nil {
+					fmt.Println("error generating qr code", err)
+					return
+				}
+
+				fmt.Println("qr code response", response.QrImageUrl)
+
+				qrCodeMessage, err := wapiComponents.NewImageMessage(wapiComponents.ImageMessageConfigs{
+					Link: response.QrImageUrl,
+					// Caption: "Scan the QR code to start a conversation.",
+				})
+
+				if err != nil {
+					fmt.Println("error creating image message", err)
+					return
+				}
+
+				textMessageEvent.Reply(qrCodeMessage)
+			}
 		default:
 			textMessageEvent.Reply(textMessage)
 		}
 	})
 
-	whatsappClient.On(events.AudioMessageEventType, func(be events.BaseEvent) {
+	client.On(events.AudioMessageEventType, func(be events.BaseEvent) {
 		fmt.Println("audio message event received")
 	})
 
-	whatsappClient.On(events.VideoMessageEventType, func(be events.BaseEvent) {
+	client.On(events.VideoMessageEventType, func(be events.BaseEvent) {
 		fmt.Println("video message event received")
 	})
 
-	whatsappClient.On(events.DocumentMessageEventType, func(be events.BaseEvent) {
+	client.On(events.DocumentMessageEventType, func(be events.BaseEvent) {
 		fmt.Println("document message event received")
 	})
 
-	whatsappClient.On(events.ImageMessageEventType, func(be events.BaseEvent) {
+	client.On(events.ImageMessageEventType, func(be events.BaseEvent) {
 		fmt.Println("image message event received")
 	})
 
-	whatsappClient.InitiateClient()
+	client.Initiate()
 }

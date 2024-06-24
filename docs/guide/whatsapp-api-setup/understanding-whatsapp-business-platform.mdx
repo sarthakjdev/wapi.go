@@ -1,0 +1,38 @@
+---
+title: WhatsApp Business Platform
+description: Understand how the whatsapp business platform works and what can you use to build your own application via the API products whatsapp offers
+---
+
+Whatsapp Business Platform offers majorly three API products to enable developers to build their own applications. These API products are:
+
+- WhatsApp Business Account Management API
+- WhatsApp On-Premises API 
+- WhatApp Cloud API 
+
+## WhatsApp Business Account Management API
+
+<Card icon="link" href="https://developers.facebook.com/docs/whatsapp/business-management-api/get-started">
+You can read the official WhatsApp Business Management API documentation here.
+</Card>
+
+This API offers a suite of API endpoints which help you manage the business account, manage the business account settings, manage phone numbers and message templates. 
+As of now, the Wapi.go SDK do not supports this API, but we are working on it and will soon release the support for this API.
+
+## WhatsApp On-Premises API
+
+<Card icon="link" href="https://developers.facebook.com/docs/whatsapp/on-premises-api/get-started">
+You can read the official WhatsApp On-Premises documentation here.
+</Card>
+
+On-Premises API was a legacy API offered by WhatsApp which requires self-hosting by the users, but it will soon be deprecated and hence users are advised to moved to new WhatsApp Cloud API. 
+You can read the official sunsetting docs of On-Premises API [here](https://developers.facebook.com/docs/whatsapp/on-premises/sunset). Also, read the offifical on-prem API to Cloud API migration guide [here](https://developers.facebook.com/docs/whatsapp/cloud-api/guides/migrating-from-onprem-to-cloud/).
+
+## WhatsApp Cloud API
+
+<Card icon="link" href="https://developers.facebook.com/docs/whatsapp/cloud-api/get-started">
+You can read the official WhatsApp Cloud API documentation here.
+</Card>
+
+This is a newly introduced API by WhatsApp which is cloud hosted and managed by WhatsApp itself. This API offers a suite of API endpoints which help you send messages, webhooks for incoming messages notification, send media messages, send interactive messages and much more.
+
+And this is what Wapi.go SDK majorly focusses on right now, to help developers build their own applications using this API. Wapi.go provides a smart layer of abstraction around this API, which helps developer to build application easily. Developers can easily build chat bots or integrate the SDK in their exisiting appplication using the robust infrastructure for sending and event listening for messages.

@@ -1,0 +1,69 @@
+---
+title: Managing Phone Numbers
+description: 'Manage your business account phone numbers. Migrate and Get Phone Statuses with in-depth analytics like quality signals.'
+---
+
+<Note>Check the api reference docs [here](/api-reference/internal/manager#type-phonenumbermanager) to know about all available methods</Note>
+
+
+Wapi.go SDK allows you to manage your business account phone numbers with ease. You can manage your business account phone numbers by using the methods and sub-business client available in the SDK. Here are some of the features that you can do with the SDK:
+
+### Fetch All Phone Numbers
+
+```go
+client.Business.PhoneNumber.FetchAll(manager.FetchPhoneNumberFilters{
+    GetSandboxNumbers: false,
+})
+```
+
+<Note>Check the api reference docs [here](/api-reference/internal/manager#func-phonenumbermanager-fetchall) to know about this method</Note>
+
+### Fetch Phone Number by ID
+
+```go
+client.Business.PhoneNumber.Fetch("<phone_number>")
+```
+
+<Note>Check the api reference docs [here](/api-reference/internal/manager#func-phonenumbermanager-fetch) to know about this method</Note>
+
+### Generate QR code for Phone Number
+
+```go
+client.Business.PhoneNumber.GenerateQrCode("<phone_number>", "This is Wapi.go this side.")
+```
+
+<Note>Check the api reference docs [here](/api-reference/internal/manager#func-phonenumbermanager-generateqrcode) to know about this method</Note>
+
+### Fetch all QR code for Phone Number
+
+```go
+client.Business.PhoneNumber.GetAllQrCodes("<phone_number")
+```
+
+
+<Note>Check the api reference docs [here](/api-reference/internal/manager#func-phonenumbermanager-getallqrcodes) to know about this method</Note>
+
+### Delete a QR code 
+
+```go
+client.Business.PhoneNumber.DeleteQrCode("<phone_number", "<qr_code_id>")
+```
+
+<Note>Check the api reference docs [here](/api-reference/internal/manager#func-phonenumbermanager-deleteqrcode) to know about this method</Note>
+
+### Get QR code by Id
+
+```go
+client.Business.PhoneNumber.GetQrCodeById("<phone_number", "<qr_code_id>")
+```
+
+
+<Note>Check the api reference docs [here](/api-reference/internal/manager#func-phonenumbermanager-getqrcodebyid) to know about this method</Note>
+
+### Update QR Code 
+
+```go
+client.Business.PhoneNumber.UpdateQrCode("<phone_number", "<qr_code_id>", "This is Wapi.go this side.")
+```
+
+<Note>Check the api reference docs [here](/api-reference/internal/manager#func-phonenumbermanager-updateqrcode) to know about this method</Note>

@@ -1,0 +1,94 @@
+---
+title: Managing Business Account
+---
+
+Wapi.go SDK allows you to manage your business account with ease. You can manage your business account by using the methods and sub-business client available in the SDK. Here are some of the features that you can do with the SDK:
+
+### Fetch Business Account
+
+<Note>Check the api reference docs [here](/api-reference/pkg/business) to know about all available methods</Note>
+
+To fetch business account, you need to cal the `Fetch` method available on the `Business` client attached to the main wapi.go client. The method will return the business account details.
+
+```go
+business, err := wapi.Business.Fetch()
+```
+
+### Fetch Business Account Statistics
+
+#### Account Analytics
+
+Use the following method on Business client to fetch the account analytics.
+
+```go
+	client.Business.FetchAnalytics(business.AccountAnalyticsOptions{
+		Start:       time.Now().Add(-time.Hour * 24 * 7 * 30),
+		End:         time.Now(),
+		Granularity: business.AnalyticsRequestGranularityTypeDay,
+	})
+```
+
+<Note>Check the api reference docs [here](/api-reference/pkg/business#type-AccountAnalyticsOptions) to know about all available options to tweak the response type and scope for business account analytics.</Note>
+
+#### Conversation Statistics
+
+Use the following method on Business client to fetch the conversation statistics.
+
+```go
+	client.Business.ConversationAnalytics(business.ConversationAnalyticsOptions{
+		Start:       time.Now().Add(-time.Hour * 24 * 7 * 30),
+		End:         time.Now(),
+		Granularity: business.ConversationAnalyticsGranularityTypeDay,
+	})
+```
+
+<Note>Check the api reference docs [here](/api-reference/pkg/business#type-conversationanalyticsoptions) to know about all available options to tweak the response type and scope for business account conversation analytics.</Note>
+
+
+### Fetch Business Account Phone Numbers, Migrate New and Update Phone Numbers
+
+<Info>Visit this guide <Tooltip tip="Manage Business Account Phone Numbers">[here](/guide/building-your-application/managing-phone-numbers)</Tooltip>
+ to know more about the account phone numbers operations.</Info>
+
+
+### Fetch Business Account Templates and Create New Templates or Update Existing Templates
+
+<Info>Visit this guide <Tooltip tip="Manage Business Account Phone Numbers">[here](/guide/building-your-application/managing-message-templates)</Tooltip>
+ to know more about the account messaging templates operations.</Info>
+
+
+### Updating a user
+
+Use the following method on Business client to fetch the conversation statistics.
+
+```go
+	client.Business.ConversationAnalytics(business.ConversationAnalyticsOptions{
+		Start:       time.Now().Add(-time.Hour * 24 * 7 * 30),
+		End:         time.Now(),
+		Granularity: business.ConversationAnalyticsGranularityTypeDay,
+	})
+```
+
+<Note>Check the api reference docs [here](/api-reference/pkg/business#type-conversationanalyticsoptions) to know about all available options to tweak the response type and scope for business account conversation analytics.</Note>
+
+
+### Deleting a user access form Whatsapp Business Account 
+
+Use the following method on Business client to fetch the conversation statistics.
+
+```go
+	client.Business.ConversationAnalytics(business.ConversationAnalyticsOptions{
+		Start:       time.Now().Add(-time.Hour * 24 * 7 * 30),
+		End:         time.Now(),
+		Granularity: business.ConversationAnalyticsGranularityTypeDay,
+	})
+```
+
+<Note>Check the api reference docs [here](/api-reference/pkg/business#type-conversationanalyticsoptions) to know about all available options to tweak the response type and scope for business account conversation analytics.</Note>
+
+
+### Fetch a Product Catalog
+
+
+### Delete a Product Catalog
+

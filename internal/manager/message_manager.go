@@ -2,20 +2,24 @@ package manager
 
 import (
 	"fmt"
+	"net/http"
+	"strings"
 
-	requestclient "github.com/sarthakjdev/wapi.go/internal/request_client"
+	"github.com/sarthakjdev/wapi.go/internal/request_client"
 	"github.com/sarthakjdev/wapi.go/pkg/components"
 )
 
 // MessageManager is responsible for managing messages.
 type MessageManager struct {
-	requester requestclient.RequestClient
+	requester     request_client.RequestClient
+	PhoneNumberId string
 }
 
 // NewMessageManager creates a new instance of MessageManager.
-func NewMessageManager(requester requestclient.RequestClient) *MessageManager {
+func NewMessageManager(requester request_client.RequestClient, phoneNumberId string) *MessageManager {
 	return &MessageManager{
-		requester: requester,
+		requester:     requester,
+		PhoneNumberId: phoneNumberId,
 	}
 }
 
@@ -30,9 +34,9 @@ func (mm *MessageManager) Send(message components.BaseMessage, phoneNumber strin
 		// TODO: emit an error event here
 		return "", fmt.Errorf("error converting message to json: %v", err)
 	}
-	mm.requester.RequestCloudApi(requestclient.RequestCloudApiParams{
-		Body: string(body),
-		Path: "/" + mm.requester.PhoneNumberId + "/messages",
-	})
+
+	apiRequest := mm.requester.NewApiRequest(strings.Join([]string{mm.PhoneNumberId, "messages"}, "/"), http.MethodPost)
+	apiRequest.SetBody(string(body))
+	apiRequest.Execute()
 	return "ok", nil
 }

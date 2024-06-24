@@ -101,7 +101,7 @@ type AudioMessageEvent struct {
 ### func NewAudioMessageEvent
 
 ```go
-func NewAudioMessageEvent(baseMessageEvent BaseMessageEvent, mediaId string, audio components.AudioMessage, mime_type, sha256, mimeType string) *AudioMessageEvent
+func NewAudioMessageEvent(baseMessageEvent BaseMessageEvent, audio components.AudioMessage, mimeType, sha256, mediaId string) *AudioMessageEvent
 ```
 
 NewAudioMessageEvent creates a new AudioMessageEvent instance.
@@ -138,11 +138,12 @@ type BaseMediaMessageEvent struct {
 
 ```go
 type BaseMessageEvent struct {
-    requester   requestclient.RequestClient
+    requester   request_client.RequestClient
     MessageId   string         `json:"message_id"`
     Context     MessageContext `json:"context"`
     Timestamp   string         `json:"timestamp"`
     IsForwarded bool           `json:"is_forwarded"`
+    PhoneNumber string         `json:"phone_number"`
 }
 ```
 
@@ -150,7 +151,7 @@ type BaseMessageEvent struct {
 ### func NewBaseMessageEvent
 
 ```go
-func NewBaseMessageEvent(messageId string, timestamp string, from string, isForwarded bool, requester requestclient.RequestClient) BaseMessageEvent
+func NewBaseMessageEvent(phoneNumber string, messageId string, timestamp string, from string, isForwarded bool, requester request_client.RequestClient) BaseMessageEvent
 ```
 
 
@@ -268,7 +269,7 @@ type CustomerIdentityChangedEvent struct {
 
 ```go
 type CustomerNumberChangedEvent struct {
-    BaseMessageEvent  `json:",inline"`
+    BaseSystemEvent   `json:",inline"`
     ChangeDescription string `json:"changeDescription"`
     NewWaId           string `json:"newWaId"`
     OldWaId           string `json:"oldWaId"`

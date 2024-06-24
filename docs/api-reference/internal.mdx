@@ -2,9 +2,6 @@
 import "github.com/sarthakjdev/wapi.go/internal"
 ```
 
-## Index
-
-- [func GetValidator\(\) \*validator.Validate](<#GetValidator>)
 
 
 <a name="GetValidator"></a>
@@ -15,4 +12,20 @@ func GetValidator() *validator.Validate
 ```
 
 return a validator instance
+
+<a name="WhatsAppBusinessApiPaginationMeta"></a>
+## type WhatsAppBusinessApiPaginationMeta
+
+
+
+```go
+type WhatsAppBusinessApiPaginationMeta struct {
+    Paging struct {
+        Cursors struct {
+            Before string `json:"before,omitempty"`
+            After  string `json:"after,omitempty"`
+        } `json:"cursors,omitempty"`
+    } `json:"paging,omitempty"`
+}
+```
 

@@ -13,22 +13,22 @@ type ChannelEvent struct {
 	Data events.BaseEvent // Data is the data associated with the event.
 }
 
-// EventManger is responsible for managing events and their subscribers.
-type EventManger struct {
+// EventManager is responsible for managing events and their subscribers.
+type EventManager struct {
 	subscribers  map[events.EventType]chan ChannelEvent // subscribers is a map of event types to channels of ChannelEvent.
 	sync.RWMutex                                        // RWMutex is used to synchronize access to the subscribers map.
 }
 
 // NewEventManager creates a new instance of EventManger.
-func NewEventManager() *EventManger {
-	return &EventManger{
+func NewEventManager() *EventManager {
+	return &EventManager{
 		subscribers: make(map[events.EventType]chan ChannelEvent),
 	}
 }
 
 // Subscribe adds a new subscriber to the specified event type.
 // The subscriber will be notified when the event is published.
-func (em *EventManger) Subscribe(eventName events.EventType) (chan ChannelEvent, error) {
+func (em *EventManager) Subscribe(eventName events.EventType) (chan ChannelEvent, error) {
 	em.Lock()
 	defer em.Unlock()
 	if ch, ok := em.subscribers[eventName]; ok {
@@ -39,14 +39,14 @@ func (em *EventManger) Subscribe(eventName events.EventType) (chan ChannelEvent,
 }
 
 // Unsubscribe removes a subscriber from the specified event type.
-func (em *EventManger) Unsubscribe(id events.EventType) {
+func (em *EventManager) Unsubscribe(id events.EventType) {
 	em.Lock()
 	defer em.Unlock()
 	delete(em.subscribers, id)
 }
 
 // Publish publishes an event to the event system and notifies all the subscribers.
-func (em *EventManger) Publish(event events.EventType, data events.BaseEvent) error {
+func (em *EventManager) Publish(event events.EventType, data events.BaseEvent) error {
 	em.Lock()
 	defer em.Unlock()
 
@@ -66,7 +66,7 @@ func (em *EventManger) Publish(event events.EventType, data events.BaseEvent) er
 // On registers a handler function for the specified event type.
 // The handler function will be called whenever the event is published.
 // It returns the event type that the handler is registered for.
-func (em *EventManger) On(eventName events.EventType, handler func(events.BaseEvent)) events.EventType {
+func (em *EventManager) On(eventName events.EventType, handler func(events.BaseEvent)) events.EventType {
 	ch, _ := em.Subscribe(eventName)
 	go func() {
 		for {

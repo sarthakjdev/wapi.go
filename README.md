@@ -1,18 +1,19 @@
 <div align="center">
 <br />
 <p align="center">
-<a href="https://wapijs.co"><img src="https://media.discordapp.net/attachments/1007886641484005427/1243103800147836928/logo_light_2.png?ex=66504221&is=664ef0a1&hm=e9801618ae101bfdb39d1a13addecc2eb75c08920d9128ac670c8b4064890fb1&=&format=webp&quality=lossless&width=1210&height=723" alt="@wapijs/wapi.js"  height="200" width="360" /></a>
+<a href="https://wapijs.co"><img src="https://mintlify.s3-us-west-1.amazonaws.com/softlancer/assets/banner.svg" alt="@wapijs/Wapi.go" /></a>
 </p>
 <br />
 </div>
 
 ## 📌 Status
 
-Beta Version - This library is not stable right now. It is currently in beta version. Report issues [here](https://github.com/sarthakjdev/wapi.go/issues).
+Beta Version - This SDK is not stable right now. It is currently in beta version. Report issues [here](https://github.com/sarthakjdev/wapi.go/issues).
 
 ## 📖 About
 
-Wapi.js is a JavaScript module, written in TypeScript, designed to interact with the WhatsApp cloud API in a user-friendly manner.
+Wapi.go is a Golang SDK, that supports WhatsApp API products i.e., Business Management API and Cloud API
+to build WhatsApp applications easily.
 
 ## ✨ Features
 
@@ -33,7 +34,7 @@ This assumes you already have a working Go environment, if not please see
 go get github.com/sarthakjdev/wapi.go
 ```
 
-> Note: This library is not affiliated with the official WhatsApp Cloud API or does not act as any official solution provided the the Meta Inclusive Private Limited, this is just a open source library built for developers to support them in building whatsapp cloud api based chat bots easily.
+> Note: This SDK is not affiliated with the official WhatsApp Cloud API or does not act as any official solution provided the the Meta Inclusive Private Limited, this is just a open source SDK built for developers to support them in building whatsapp cloud api based chat bots easily.
 
 ## 🚀 Usage
 
@@ -46,6 +47,7 @@ This repository has three packages exported:
 
 - github.com/sarthakjdev/wapi.go/components
 - github.com/sarthakjdev/wapi.go/wapi/wapi
+- github.com/sarthakjdev/wapi.go/wapi/business
 - github.com/sarthakjdev/wapi.go/wapi/events
 
 ```go
@@ -71,11 +73,6 @@ whatsappClient, err := wapi.New(wapi.ClientConfig{
 
 - **Notification Payloads**: Details can be found [here](https://developers.facebook.com/docs/whatsapp/cloud-api/webhooks/components).
 
-<!-- ## 🔗 Other Links
-
-- [Website](https://wapijs.co)
-- [Documentation](https://wapijs.co/docs) -->
-
 ## 🤝 Contribution Guidelines
 
 1. Fork the Project
@@ -86,9 +83,16 @@ whatsappClient, err := wapi.New(wapi.ClientConfig{
 
 For detailed guidelines, check [Contributing.md](./CONTRIBUTING.md).
 
+# TODOs'
+
+- Handle errors gracefully
+- Handle template and interactive messages gracefully
+- Add support for more interactive messaged types like address input.
+- 
+
 ## 📜 License
 
-Distributed under the Apache 2.0 License. View [LICENSE](./LICENSE).
+Distributed under the AGPL 3.0 License. View [LICENSE](./LICENSE).
 
 ## 📞 Contact
 
@@ -96,4 +100,4 @@ Distributed under the Apache 2.0 License. View [LICENSE](./LICENSE).
 - Email: sarthak@softlancer.co
 - [Twitter](https://twitter.com/sarthakjdev) | [LinkedIn](https://www.linkedin.com/in/sarthakjdev)
 
-Note: This library is part of an open-source product-building initiative by [Softlancer](https://github.com/softlancerhq), and this repository will soon be moved under the same organization.
+Note: This SDK is part of an open-source product-building initiative by [Softlancer](https://github.com/softlancerhq), and this repository will soon be moved under the same organization.

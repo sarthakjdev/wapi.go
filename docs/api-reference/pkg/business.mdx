@@ -1,0 +1,436 @@
+```go
+import "github.com/sarthakjdev/wapi.go/pkg/business"
+```
+
+
+
+<a name="AccountAnalyticsOptions"></a>
+## type AccountAnalyticsOptions
+
+
+
+```go
+type AccountAnalyticsOptions struct {
+    Start        time.Time                       `json:"start" validate:"required"`
+    End          time.Time                       `json:"end" validate:"required"`
+    Granularity  AnalyticsRequestGranularityType `json:"granularity" validate:"required"`
+    PhoneNumbers []string                        `json:"phone_numbers,omitempty"`
+
+    // * NOT SUPPORTED AS OF NOW
+    // ProductTypes []WhatsAppBusinessAccountAnalyticsProductType `json:"product_types,omitempty"`
+    CountryCodes []string `json:"country_codes,omitempty"`
+}
+```
+
+<a name="AnalyticsDataPoint"></a>
+## type AnalyticsDataPoint
+
+
+
+```go
+type AnalyticsDataPoint struct {
+    Start     int `json:"start,omitempty"`
+    End       int `json:"end,omitempty"`
+    Sent      int `json:"sent,omitempty"`
+    Delivered int `json:"delivered,omitempty"`
+}
+```
+
+<a name="AnalyticsRequestGranularityType"></a>
+## type AnalyticsRequestGranularityType
+
+
+
+```go
+type AnalyticsRequestGranularityType string
+```
+
+<a name="AnalyticsRequestGranularityTypeHalfHour"></a>
+
+```go
+const (
+    AnalyticsRequestGranularityTypeHalfHour AnalyticsRequestGranularityType = "HALF_HOUR"
+    AnalyticsRequestGranularityTypeDay      AnalyticsRequestGranularityType = "DAY"
+    AnalyticsRequestGranularityTypeMonth    AnalyticsRequestGranularityType = "MONTH"
+)
+```
+
+<a name="BusinessClient"></a>
+## type BusinessClient
+
+
+
+```go
+type BusinessClient struct {
+    BusinessAccountId string `json:"businessAccountId" validate:"required"`
+    AccessToken       string `json:"accessToken" validate:"required"`
+    PhoneNumber       *manager.PhoneNumberManager
+    Template          *manager.TemplateManager
+    requester         *request_client.RequestClient
+}
+```
+
+<a name="NewBusinessClient"></a>
+### func NewBusinessClient
+
+```go
+func NewBusinessClient(config *BusinessClientConfig) *BusinessClient
+```
+
+
+
+<a name="BusinessClient.ConversationAnalytics"></a>
+### func \(\*BusinessClient\) ConversationAnalytics
+
+```go
+func (client *BusinessClient) ConversationAnalytics(options ConversationAnalyticsOptions) (*WhatsAppConversationAnalyticsResponse, error)
+```
+
+
+
+<a name="BusinessClient.CreateNewProductCatalog"></a>
+### func \(\*BusinessClient\) CreateNewProductCatalog
+
+```go
+func (client *BusinessClient) CreateNewProductCatalog() (string, error)
+```
+
+
+
+<a name="BusinessClient.DeleteUser"></a>
+### func \(\*BusinessClient\) DeleteUser
+
+```go
+func (client *BusinessClient) DeleteUser(userId string) (string, error)
+```
+
+
+
+<a name="BusinessClient.Fetch"></a>
+### func \(\*BusinessClient\) Fetch
+
+```go
+func (client *BusinessClient) Fetch() FetchBusinessAccountResponse
+```
+
+
+
+<a name="BusinessClient.FetchAllProductCatalogs"></a>
+### func \(\*BusinessClient\) FetchAllProductCatalogs
+
+```go
+func (client *BusinessClient) FetchAllProductCatalogs() (string, error)
+```
+
+
+
+<a name="BusinessClient.FetchAnalytics"></a>
+### func \(\*BusinessClient\) FetchAnalytics
+
+```go
+func (client *BusinessClient) FetchAnalytics(options AccountAnalyticsOptions)
+```
+
+
+
+<a name="BusinessClient.GetBusinessId"></a>
+### func \(\*BusinessClient\) GetBusinessId
+
+```go
+func (bc *BusinessClient) GetBusinessId() string
+```
+
+
+
+<a name="BusinessClient.SetBusinessId"></a>
+### func \(\*BusinessClient\) SetBusinessId
+
+```go
+func (bc *BusinessClient) SetBusinessId(id string)
+```
+
+
+
+<a name="BusinessClient.UpdateUser"></a>
+### func \(\*BusinessClient\) UpdateUser
+
+```go
+func (client *BusinessClient) UpdateUser(userId string, tasks []BusinessRole) (string, error)
+```
+
+
+
+<a name="BusinessClientConfig"></a>
+## type BusinessClientConfig
+
+
+
+```go
+type BusinessClientConfig struct {
+    BusinessAccountId string `json:"businessAccountId" validate:"required"`
+    AccessToken       string `json:"accessToken" validate:"required"`
+    Requester         *request_client.RequestClient
+}
+```
+
+<a name="BusinessRole"></a>
+## type BusinessRole
+
+
+
+```go
+type BusinessRole string
+```
+
+<a name="BusinessRoleManage"></a>
+
+```go
+const (
+    BusinessRoleManage               BusinessRole = "MANAGE"
+    BusinessRoleDevelop              BusinessRole = "DEVELOP"
+    BusinessRoleManageTemplates      BusinessRole = "MANAGE_TEMPLATES"
+    BusinessRoleManagePhone          BusinessRole = "MANAGE_PHONE"
+    BusinessRoleViewCost             BusinessRole = "VIEW_COST"
+    BusinessRoleManageExtensions     BusinessRole = "MANAGE_EXTENSIONS"
+    BusinessRoleViewPhoneAssets      BusinessRole = "VIEW_PHONE_ASSETS"
+    BusinessRoleManagePhoneAssets    BusinessRole = "MANAGE_PHONE_ASSETS"
+    BusinessRoleViewTemplates        BusinessRole = "VIEW_TEMPLATES"
+    BusinessRoleMessaging            BusinessRole = "MESSAGING"
+    BusinessRoleManageBusinessPhones BusinessRole = "MANAGE_BUSINESS_PHONES"
+)
+```
+
+<a name="BusinessRole.String"></a>
+### func \(\*BusinessRole\) String
+
+```go
+func (role *BusinessRole) String() string
+```
+
+
+
+<a name="ConversationAnalyticsGranularityType"></a>
+## type ConversationAnalyticsGranularityType
+
+
+
+```go
+type ConversationAnalyticsGranularityType string
+```
+
+<a name="ConversationAnalyticsGranularityTypeHalfHour"></a>
+
+```go
+const (
+    ConversationAnalyticsGranularityTypeHalfHour ConversationAnalyticsGranularityType = "HALF_HOUR"
+    ConversationAnalyticsGranularityTypeDay      ConversationAnalyticsGranularityType = "DAILY"
+    ConversationAnalyticsGranularityTypeMonth    ConversationAnalyticsGranularityType = "MONTHLY"
+)
+```
+
+<a name="ConversationAnalyticsOptions"></a>
+## type ConversationAnalyticsOptions
+
+
+
+```go
+type ConversationAnalyticsOptions struct {
+    Start        time.Time                            `json:"start" validate:"required"`
+    End          time.Time                            `json:"end" validate:"required"`
+    Granularity  ConversationAnalyticsGranularityType `json:"granularity" validate:"required"`
+    PhoneNumbers []string                             `json:"phone_numbers,omitempty"`
+
+    ConversationCategory  []ConversationCategoryType  `json:"conversation_category,omitempty"`
+    ConversationTypes     []ConversationCategoryType  `json:"conversation_types,omitempty"`
+    ConversationDirection []ConversationDirection     `json:"conversation_direction,omitempty"`
+    Dimensions            []ConversationDimensionType `json:"dimensions,omitempty"`
+}
+```
+
+<a name="ConversationCategoryType"></a>
+## type ConversationCategoryType
+
+
+
+```go
+type ConversationCategoryType string
+```
+
+<a name="ConversationCategoryTypeAuthentication"></a>
+
+```go
+const (
+    ConversationCategoryTypeAuthentication ConversationCategoryType = "AUTHENTICATION"
+    ConversationCategoryTypeMarketing      ConversationCategoryType = "MARKETING"
+    ConversationCategoryTypeService        ConversationCategoryType = "SERVICE"
+    ConversationCategoryTypeUtility        ConversationCategoryType = "UTILITY"
+)
+```
+
+<a name="ConversationDimensionType"></a>
+## type ConversationDimensionType
+
+
+
+```go
+type ConversationDimensionType string
+```
+
+<a name="ConversationDimensionTypeConversationCategory"></a>
+
+```go
+const (
+    ConversationDimensionTypeConversationCategory  ConversationDimensionType = "CONVERSATION_CATEGORY"
+    ConversationDimensionTypeConversationDirection ConversationDimensionType = "CONVERSATION_DIRECTION"
+    ConversationDimensionTypeConversationType      ConversationDimensionType = "CONVERSATION_TYPE"
+    ConversationDimensionTypeCountry               ConversationDimensionType = "COUNTRY"
+    ConversationDimensionTypePhone                 ConversationDimensionType = "PHONE"
+)
+```
+
+<a name="ConversationDirection"></a>
+## type ConversationDirection
+
+
+
+```go
+type ConversationDirection string
+```
+
+<a name="ConversationDirectionBusinessInitiated"></a>
+
+```go
+const (
+    ConversationDirectionBusinessInitiated ConversationDirection = "BUSINESS_INITIATED"
+    ConversationDirectionUserInitiated     ConversationDirection = "USER_INITIATED"
+)
+```
+
+<a name="ConversationType"></a>
+## type ConversationType
+
+
+
+```go
+type ConversationType string
+```
+
+<a name="ConversationTypeFreeEntry"></a>
+
+```go
+const (
+    ConversationTypeFreeEntry ConversationType = "FREE_ENTRY"
+    ConversationTypeFreeTier  ConversationType = "FREE_TIER"
+    ConversationTypeRegular   ConversationType = "REGULAR"
+)
+```
+
+<a name="FetchBusinessAccountResponse"></a>
+## type FetchBusinessAccountResponse
+
+
+
+```go
+type FetchBusinessAccountResponse struct {
+    Id                       string `json:"id" validate:"required"`
+    Name                     string `json:"name" validate:"required"`
+    TimezoneId               string `json:"timezone_id" validate:"required"`
+    MessageTemplateNamespace string `json:"message_template_namespace" validate:"required"`
+}
+```
+
+<a name="WhatsAppBusinessAccountAnalyticsProductType"></a>
+## type WhatsAppBusinessAccountAnalyticsProductType
+
+
+
+```go
+type WhatsAppBusinessAccountAnalyticsProductType int
+```
+
+<a name="WhatsAppBusinessAccountAnalyticsProductTypeNotificationMessages"></a>
+
+```go
+const (
+    WhatsAppBusinessAccountAnalyticsProductTypeNotificationMessages    WhatsAppBusinessAccountAnalyticsProductType = 0
+    WhatsAppBusinessAccountAnalyticsProductTypeCustomerSupportMessages WhatsAppBusinessAccountAnalyticsProductType = 2
+)
+```
+
+<a name="WhatsAppConversationAnalyticsEdge"></a>
+## type WhatsAppConversationAnalyticsEdge
+
+
+
+```go
+type WhatsAppConversationAnalyticsEdge struct {
+    Data []struct {
+        DataPoints []WhatsAppConversationAnalyticsNode `json:"data_points,omitempty"`
+    }   `json:"data,omitempty"`
+    Paging internal.WhatsAppBusinessApiPaginationMeta `json:"paging,omitempty"`
+}
+```
+
+<a name="WhatsAppConversationAnalyticsNode"></a>
+## type WhatsAppConversationAnalyticsNode
+
+
+
+```go
+type WhatsAppConversationAnalyticsNode struct {
+    Start                 int    `json:"start" validate:"required"`
+    End                   int    `json:"end,omitempty" validate:"required"`
+    Conversation          int    `json:"conversation,omitempty"`
+    PhoneNumber           string `json:"phone_number,omitempty"`
+    Country               string `json:"country,omitempty"`
+    ConversationType      string `json:"conversation_type,omitempty"`
+    ConversationDirection string `json:"conversation_direction,omitempty"`
+    ConversationCategory  string `json:"conversation_category,omitempty"`
+    Cost                  int    `json:"cost,omitempty"`
+}
+```
+
+<a name="WhatsAppConversationAnalyticsResponse"></a>
+## type WhatsAppConversationAnalyticsResponse
+
+
+
+```go
+type WhatsAppConversationAnalyticsResponse struct {
+    ConversationAnalytics []WhatsAppConversationAnalyticsEdge `json:"conversation_analytics" validate:"required"`
+}
+```
+
+<a name="WhatsappBusinessAccount"></a>
+## type WhatsappBusinessAccount
+
+
+
+```go
+type WhatsappBusinessAccount struct {
+    BusinessVerificationStatus string `json:"business_verification_status,omitempty"`
+    Country                    string `json:"country,omitempty"`
+    Currency                   string `json:"currency,omitempty"`
+    IsTemplateAnalyticsEnabled string `json:"is_enabled_for_insights,omitempty"`
+    MessageTemplateNamespace   string `json:"message_template_namespace,omitempty"`
+    Name                       string `json:"name,omitempty"`
+    OwnershipType              string `json:"ownership_type,omitempty"`
+    PrimaryFundingId           string `json:"primary_funding_id,omitempty"`
+    PurchaseOrderNumber        string `json:"purchase_order_number,omitempty"`
+    TimezoneId                 string `json:"timezone_id,omitempty"`
+}
+```
+
+<a name="WhatsappBusinessAccountAnalyticsResponse"></a>
+## type WhatsappBusinessAccountAnalyticsResponse
+
+
+
+```go
+type WhatsappBusinessAccountAnalyticsResponse struct {
+    PhoneNumbers []string             `json:"phone_numbers,omitempty"`
+    Granularity  string               `json:"granularity,omitempty"`
+    DataPoints   []AnalyticsDataPoint `json:"data_points,omitempty"`
+}
+```
+

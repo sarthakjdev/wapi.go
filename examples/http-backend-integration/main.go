@@ -11,8 +11,7 @@ import (
 
 func main() {
 
-	whatsappClient, err := wapi.New(wapi.ClientConfig{
-		PhoneNumberId:     "",
+	client := wapi.New(&wapi.ClientConfig{
 		ApiAccessToken:    "",
 		BusinessAccountId: "",
 		WebhookPath:       "/webhook",
@@ -20,7 +19,7 @@ func main() {
 		WebhookServerPort: 8080,
 	})
 
-	whatsappClient.On(events.TextMessageEventType, func(event events.BaseEvent) {
+	client.On(events.TextMessageEventType, func(event events.BaseEvent) {
 		textMessageEvent := event.(*events.TextMessageEvent)
 		reply, err := components.NewTextMessage(components.TextMessageConfigs{
 			Text: "Hello, from wapi.go",
@@ -32,13 +31,8 @@ func main() {
 		textMessageEvent.Reply(reply)
 	})
 
-	getHandler := whatsappClient.GetWebhookGetRequestHandler()
-	postHandler := whatsappClient.GetWebhookPostRequestHandler()
-
-	if err != nil {
-		fmt.Println("error creating client", err)
-		return
-	}
+	getHandler := client.GetWebhookGetRequestHandler()
+	postHandler := client.GetWebhookPostRequestHandler()
 
 	server := echo.New()
 

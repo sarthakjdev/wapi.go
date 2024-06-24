@@ -1,75 +1,68 @@
 package wapi
 
 import (
-	"fmt"
-
 	"github.com/labstack/echo/v4"
-	"github.com/sarthakjdev/wapi.go/internal"
 	"github.com/sarthakjdev/wapi.go/internal/manager"
-	requestclient "github.com/sarthakjdev/wapi.go/internal/request_client"
+	"github.com/sarthakjdev/wapi.go/internal/request_client"
+	"github.com/sarthakjdev/wapi.go/pkg/business"
 	"github.com/sarthakjdev/wapi.go/pkg/events"
+	"github.com/sarthakjdev/wapi.go/pkg/messaging"
 )
 
-// Client represents a WhatsApp client.
+type ClientConfig struct {
+	BusinessAccountId string
+	ApiAccessToken    string
+	WebhookSecret     string `validate:"required"`
+
+	// these two are not required, because may be user want to use their own server
+	WebhookPath       string
+	WebhookServerPort int
+}
+
 type Client struct {
-	Media             manager.MediaManager
-	Message           manager.MessageManager
-	webhook           manager.WebhookManager
-	phoneNumberId     string
+	Business     business.BusinessClient     // Business is the business client.
+	Messaging    []messaging.MessagingClient // MessagingClient is the messaging client.
+	eventManager *manager.EventManager       // eventManager is the event manager.
+	webhook      *manager.WebhookManager     // webhook is the webhook manager.
+	requester    *request_client.RequestClient
+
 	apiAccessToken    string
 	businessAccountId string
 }
 
-// ClientConfig represents the configuration options for the WhatsApp client.
-type ClientConfig struct {
-	PhoneNumberId     string `validate:"required"`
-	ApiAccessToken    string `validate:"required"`
-	BusinessAccountId string `validate:"required"`
-	WebhookPath       string `validate:"required"`
-	WebhookSecret     string `validate:"required"`
-	WebhookServerPort int
+func New(config *ClientConfig) *Client {
+	eventManager := *manager.NewEventManager()
+	requester := *request_client.NewRequestClient(config.ApiAccessToken)
+	return &Client{
+		businessAccountId: config.BusinessAccountId,
+		apiAccessToken:    config.BusinessAccountId,
+		Messaging:         []messaging.MessagingClient{},
+		eventManager:      &eventManager,
+		Business: *business.NewBusinessClient(&business.BusinessClientConfig{
+			BusinessAccountId: config.BusinessAccountId,
+			AccessToken:       config.ApiAccessToken,
+			Requester:         &requester,
+		}),
+		webhook:   manager.NewWebhook(&manager.WebhookManagerConfig{Path: config.WebhookPath, Secret: config.WebhookSecret, Port: config.WebhookServerPort, EventManager: eventManager, Requester: requester}),
+		requester: &requester,
+	}
 }
 
-// NewWapiClient creates a new instance of Client.
-func New(configs ClientConfig) (*Client, error) {
-	// Validate the client configuration options
-	err := internal.GetValidator().Struct(configs)
-	if err != nil {
-		return nil, fmt.Errorf("error validating client config: %w", err)
-	}
-
+func (client *Client) NewMessagingClient(phoneNumberId string) *messaging.MessagingClient {
 	// Create a new request client
-	requester := *requestclient.NewRequestClient(configs.PhoneNumberId, configs.ApiAccessToken)
-
-	// Create a new event manager
-	eventManager := *manager.NewEventManager()
 
 	// Create a new Client instance with the provided configurations
-	return &Client{
-		Media:             *manager.NewMediaManager(requester),
-		Message:           *manager.NewMessageManager(requester),
-		webhook:           *manager.NewWebhook(&manager.WebhookManagerConfig{Path: configs.WebhookPath, Secret: configs.WebhookSecret, Port: configs.WebhookServerPort, EventManager: eventManager, Requester: requester}),
-		phoneNumberId:     configs.PhoneNumberId,
-		apiAccessToken:    configs.ApiAccessToken,
-		businessAccountId: configs.BusinessAccountId,
-	}, nil
-}
+	messagingClient := &messaging.MessagingClient{
+		Media:             *manager.NewMediaManager(*client.requester),
+		Message:           *manager.NewMessageManager(*client.requester, phoneNumberId),
+		PhoneNumberId:     phoneNumberId,
+		ApiAccessToken:    client.apiAccessToken,
+		BusinessAccountId: client.businessAccountId,
+		Requester:         client.requester,
+	}
 
-// GetPhoneNumberId returns the phone number ID associated with the client.
-func (client *Client) GetPhoneNumberId() string {
-	return client.phoneNumberId
-}
-
-// SetPhoneNumberId sets the phone number ID for the client.
-func (client *Client) SetPhoneNumberId(phoneNumberId string) {
-	client.phoneNumberId = phoneNumberId
-}
-
-// InitiateClient initializes the client and starts listening to events from the webhook.
-// It returns true if the client was successfully initiated.
-func (client *Client) InitiateClient() bool {
-	client.webhook.ListenToEvents()
-	return true
+	client.Messaging = append(client.Messaging, *messagingClient)
+	return messagingClient
 }
 
 // GetWebhookGetRequestHandler returns the handler function for handling GET requests to the webhook.
@@ -84,5 +77,13 @@ func (client *Client) GetWebhookPostRequestHandler() func(c echo.Context) error 
 
 // OnMessage registers a handler for a specific event type.
 func (client *Client) On(eventType events.EventType, handler func(events.BaseEvent)) {
-	client.webhook.EventManager.On(eventType, handler)
+	client.webhook.
+		EventManager.On(eventType, handler)
+}
+
+// InitiateClient initializes the client and starts listening to events from the webhook.
+// It returns true if the client was successfully initiated.
+func (client *Client) Initiate() bool {
+	client.webhook.ListenToEvents()
+	return true
 }

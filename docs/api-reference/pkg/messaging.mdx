@@ -1,0 +1,96 @@
+```go
+import "github.com/sarthakjdev/wapi.go/pkg/messaging"
+```
+
+
+
+<a name="MessagingClient"></a>
+## type MessagingClient
+
+MessagingClient represents a WhatsApp client.
+
+```go
+type MessagingClient struct {
+    Media             manager.MediaManager
+    Message           manager.MessageManager
+    PhoneNumberId     string
+    ApiAccessToken    string
+    BusinessAccountId string
+    Requester         *request_client.RequestClient
+}
+```
+
+<a name="MessagingClient.Deregister"></a>
+### func \(\*MessagingClient\) Deregister
+
+```go
+func (client *MessagingClient) Deregister() (RegisterResponse, error)
+```
+
+
+
+<a name="MessagingClient.GetApiAccessToken"></a>
+### func \(\*MessagingClient\) GetApiAccessToken
+
+```go
+func (client *MessagingClient) GetApiAccessToken() string
+```
+
+
+
+<a name="MessagingClient.GetBusinessAccountId"></a>
+### func \(\*MessagingClient\) GetBusinessAccountId
+
+```go
+func (client *MessagingClient) GetBusinessAccountId() string
+```
+
+
+
+<a name="MessagingClient.GetPhoneNumberId"></a>
+### func \(\*MessagingClient\) GetPhoneNumberId
+
+```go
+func (client *MessagingClient) GetPhoneNumberId() string
+```
+
+GetPhoneNumberId returns the phone number ID associated with the client.
+
+<a name="MessagingClient.Register"></a>
+### func \(\*MessagingClient\) Register
+
+```go
+func (client *MessagingClient) Register(pin string) (RegisterResponse, error)
+```
+
+this register function is for one time registration of the phone number to enable the usage with WhatsApp Cloud API
+
+<a name="MessagingClient.SetApiAccessToken"></a>
+### func \(\*MessagingClient\) SetApiAccessToken
+
+```go
+func (client *MessagingClient) SetApiAccessToken(apiAccessToken string)
+```
+
+
+
+<a name="MessagingClient.SetPhoneNumberId"></a>
+### func \(\*MessagingClient\) SetPhoneNumberId
+
+```go
+func (client *MessagingClient) SetPhoneNumberId(phoneNumberId string)
+```
+
+SetPhoneNumberId sets the phone number ID for the client.
+
+<a name="RegisterResponse"></a>
+## type RegisterResponse
+
+
+
+```go
+type RegisterResponse struct {
+    Success bool `json:"success"`
+}
+```
+

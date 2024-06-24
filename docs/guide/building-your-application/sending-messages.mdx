@@ -1,0 +1,32 @@
+---
+title: Sending Messages
+description: Learn how to send messages using the Wapi.go SDK
+---
+
+<Tip>Check the architecture [guide](/guide/building-your-application/sdk-architecture) once before moving ahead with this send message guide.</Tip>
+
+Wapi.go SDK provides a simple and easy to use classes architecture to send messages. You can send message of following types using the Wapi.go SDK:
+
+## Send a message
+
+You can send a message to a user using the `send` method available on the messaging client on main client cloud api manager. Here is an example of how you can send a message:
+
+
+
+```go
+// assuming you already have initiated the client 
+const textMessage = new TextMessage({
+    text: 'Hello, how are you?'
+})
+
+// send a message
+const response = await whatsappClient.message.send({
+    to: '919876543210',
+    message: textMessagew
+})
+```
+
+<Warning>The .send() method is a asynchronous method and returns a promise of response which can either be a success response or a error response. It is suggested to acknowledge the response, as calling the .send() method does not gurantees the message has been sent, there may be some API error which may lead to message not being sent, the SDK does not retries the message, it is the application login responsibility to add retry mechanism. However, if you think this should be added to the SDK itlsef, you are invited to open a issue on the github repository of the SDK. </Warning>
+
+
+

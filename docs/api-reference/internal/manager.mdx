@@ -1,0 +1,1550 @@
+```go
+import "github.com/sarthakjdev/wapi.go/internal/manager"
+```
+
+
+
+<a name="AdInteractionSourceMediaTypeEnum"></a>
+## type AdInteractionSourceMediaTypeEnum
+
+
+
+```go
+type AdInteractionSourceMediaTypeEnum string
+```
+
+<a name="AdInteractionSourceMediaTypeImage"></a>
+
+```go
+const (
+    AdInteractionSourceMediaTypeImage AdInteractionSourceMediaTypeEnum = "image"
+    AdInteractionSourceMediaTypeVideo AdInteractionSourceMediaTypeEnum = "video"
+)
+```
+
+<a name="AdInteractionSourceTypeEnum"></a>
+## type AdInteractionSourceTypeEnum
+
+
+
+```go
+type AdInteractionSourceTypeEnum string
+```
+
+<a name="AdInteractionSourceTypeUnknown"></a>
+
+```go
+const (
+    AdInteractionSourceTypeUnknown AdInteractionSourceTypeEnum = "unknown"
+)
+```
+
+<a name="Change"></a>
+## type Change
+
+
+
+```go
+type Change struct {
+    Value Value  `json:"value"`
+    Field string `json:"field"`
+}
+```
+
+<a name="ChannelEvent"></a>
+## type ChannelEvent
+
+ChannelEvent represents an event that can be published and subscribed to.
+
+```go
+type ChannelEvent struct {
+    Type events.EventType // Type is the type of the event.
+    Data events.BaseEvent // Data is the data associated with the event.
+}
+```
+
+<a name="Contact"></a>
+## type Contact
+
+
+
+```go
+type Contact struct {
+    WaId    string  `json:"wa_id"`
+    Profile Profile `json:"profile"`
+}
+```
+
+<a name="Conversation"></a>
+## type Conversation
+
+
+
+```go
+type Conversation struct {
+    Id     string `json:"id"`
+    Origin Origin `json:"origin,omitempty"`
+}
+```
+
+<a name="CreatePhoneNumberResponse"></a>
+## type CreatePhoneNumberResponse
+
+
+
+```go
+type CreatePhoneNumberResponse struct {
+    Id string `json:"id,omitempty"`
+}
+```
+
+<a name="DeleteQrCodeResponse"></a>
+## type DeleteQrCodeResponse
+
+DeleteQrCodeResponse represents the response of deleting a QR code.
+
+```go
+type DeleteQrCodeResponse struct {
+    Success bool `json:"success,omitempty"`
+}
+```
+
+<a name="Entry"></a>
+## type Entry
+
+
+
+```go
+type Entry struct {
+    Id      string   `json:"id"`
+    Changes []Change `json:"changes"`
+}
+```
+
+<a name="Error"></a>
+## type Error
+
+
+
+```go
+type Error struct {
+}
+```
+
+<a name="EventManager"></a>
+## type EventManager
+
+EventManager is responsible for managing events and their subscribers.
+
+```go
+type EventManager struct {
+    subscribers  map[events.EventType]chan ChannelEvent // subscribers is a map of event types to channels of ChannelEvent.
+    sync.RWMutex                                        // RWMutex is used to synchronize access to the subscribers map.
+}
+```
+
+<a name="NewEventManager"></a>
+### func NewEventManager
+
+```go
+func NewEventManager() *EventManager
+```
+
+NewEventManager creates a new instance of EventManger.
+
+<a name="EventManager.On"></a>
+### func \(\*EventManager\) On
+
+```go
+func (em *EventManager) On(eventName events.EventType, handler func(events.BaseEvent)) events.EventType
+```
+
+On registers a handler function for the specified event type. The handler function will be called whenever the event is published. It returns the event type that the handler is registered for.
+
+<a name="EventManager.Publish"></a>
+### func \(\*EventManager\) Publish
+
+```go
+func (em *EventManager) Publish(event events.EventType, data events.BaseEvent) error
+```
+
+Publish publishes an event to the event system and notifies all the subscribers.
+
+<a name="EventManager.Subscribe"></a>
+### func \(\*EventManager\) Subscribe
+
+```go
+func (em *EventManager) Subscribe(eventName events.EventType) (chan ChannelEvent, error)
+```
+
+Subscribe adds a new subscriber to the specified event type. The subscriber will be notified when the event is published.
+
+<a name="EventManager.Unsubscribe"></a>
+### func \(\*EventManager\) Unsubscribe
+
+```go
+func (em *EventManager) Unsubscribe(id events.EventType)
+```
+
+Unsubscribe removes a subscriber from the specified event type.
+
+<a name="FetchPhoneNumberFilters"></a>
+## type FetchPhoneNumberFilters
+
+FetchPhoneNumberFilters holds the filters for fetching phone numbers.
+
+```go
+type FetchPhoneNumberFilters struct {
+    GetSandboxNumbers bool
+}
+```
+
+<a name="GenerateQrCodeResponse"></a>
+## type GenerateQrCodeResponse
+
+GenerateQrCodeResponse represents the response of generating a QR code.
+
+```go
+type GenerateQrCodeResponse struct {
+    Code             string `json:"code,omitempty"`
+    PrefilledMessage string `json:"prefilled_message,omitempty"`
+    DeepLinkUrl      string `json:"deep_link_url,omitempty"`
+    QrImageUrl       string `json:"qr_image_url,omitempty"`
+}
+```
+
+<a name="GetAllQrCodesResponse"></a>
+## type GetAllQrCodesResponse
+
+GetAllQrCodesResponse represents the response of getting all QR codes for a phone number.
+
+```go
+type GetAllQrCodesResponse struct {
+    Data []GenerateQrCodeResponse `json:"data,omitempty"`
+}
+```
+
+<a name="InteractiveNotificationTypeEnum"></a>
+## type InteractiveNotificationTypeEnum
+
+
+
+```go
+type InteractiveNotificationTypeEnum string
+```
+
+<a name="NotificationTypeButtonReply"></a>
+
+```go
+const (
+    NotificationTypeButtonReply InteractiveNotificationTypeEnum = "button_reply"
+    NotificationTypeListReply   InteractiveNotificationTypeEnum = "list_reply"
+)
+```
+
+<a name="MediaManager"></a>
+## type MediaManager
+
+MediaManager is responsible for managing media related operations.
+
+```go
+type MediaManager struct {
+    requester request_client.RequestClient
+}
+```
+
+<a name="NewMediaManager"></a>
+### func NewMediaManager
+
+```go
+func NewMediaManager(requester request_client.RequestClient) *MediaManager
+```
+
+NewMediaManager creates a new instance of MediaManager.
+
+<a name="MediaManager.GetMediaIdByUrl"></a>
+### func \(\*MediaManager\) GetMediaIdByUrl
+
+```go
+func (mm *MediaManager) GetMediaIdByUrl(id string)
+```
+
+GetMediaIdByUrl retrieves the media ID by its URL.
+
+<a name="MediaManager.GetMediaUrlById"></a>
+### func \(\*MediaManager\) GetMediaUrlById
+
+```go
+func (mm *MediaManager) GetMediaUrlById(id string)
+```
+
+GetMediaUrlById retrieves the media URL by its ID.
+
+<a name="Message"></a>
+## type Message
+
+
+
+```go
+type Message struct {
+    Id                                              string                                      `json:"id"`
+    From                                            string                                      `json:"from"`
+    Timestamp                                       string                                      `json:"timestamp"`
+    Type                                            NotificationMessageTypeEnum                 `json:"type"`
+    Context                                         NotificationPayloadMessageContextSchemaType `json:"context"`
+    Errors                                          []Error                                     `json:",inline"`
+    NotificationPayloadTextMessageSchemaType        `json:",inline"`
+    NotificationPayloadAudioMessageSchemaType       `json:",inline"`
+    NotificationPayloadImageMessageSchemaType       `json:",inline"`
+    NotificationPayloadButtonMessageSchemaType      `json:",inline"`
+    NotificationPayloadDocumentMessageSchemaType    `json:",inline"`
+    NotificationPayloadOrderMessageSchemaType       `json:",inline"`
+    NotificationPayloadStickerMessageSchemaType     `json:",inline"`
+    NotificationPayloadSystemMessageSchemaType      `json:",inline"`
+    NotificationPayloadVideoMessageSchemaType       `json:",inline"`
+    NotificationPayloadReactionMessageSchemaType    `json:",inline"`
+    NotificationPayloadLocationMessageSchemaType    `json:",inline"`
+    NotificationPayloadContactMessageSchemaType     `json:",inline"`
+    NotificationPayloadInteractionMessageSchemaType `json:",inline"`
+}
+```
+
+<a name="MessageManager"></a>
+## type MessageManager
+
+MessageManager is responsible for managing messages.
+
+```go
+type MessageManager struct {
+    requester     request_client.RequestClient
+    PhoneNumberId string
+}
+```
+
+<a name="NewMessageManager"></a>
+### func NewMessageManager
+
+```go
+func NewMessageManager(requester request_client.RequestClient, phoneNumberId string) *MessageManager
+```
+
+NewMessageManager creates a new instance of MessageManager.
+
+<a name="MessageManager.Send"></a>
+### func \(\*MessageManager\) Send
+
+```go
+func (mm *MessageManager) Send(message components.BaseMessage, phoneNumber string) (string, error)
+```
+
+Send sends a message with the given parameters and returns the response. TODO: return the structured response from here
+
+<a name="MessageStatusCategoryEnum"></a>
+## type MessageStatusCategoryEnum
+
+
+
+```go
+type MessageStatusCategoryEnum string
+```
+
+<a name="MessageStatusCategorySent"></a>
+
+```go
+const (
+    MessageStatusCategorySent MessageStatusCategoryEnum = "sent"
+)
+```
+
+<a name="MessageStatusEnum"></a>
+## type MessageStatusEnum
+
+
+
+```go
+type MessageStatusEnum string
+```
+
+<a name="MessageStatusDelivered"></a>
+
+```go
+const (
+    MessageStatusDelivered   MessageStatusEnum = "delivered"
+    MessageStatusRead        MessageStatusEnum = "read"
+    MessageStatusUnDelivered MessageStatusEnum = "undelivered"
+    MessageStatusFailed      MessageStatusEnum = "failed"
+    MessageStatusSent        MessageStatusEnum = "sent"
+)
+```
+
+<a name="MessageTemplateCategory"></a>
+## type MessageTemplateCategory
+
+MessageTemplateCategory represents the category of a WhatsApp Business message template.
+
+```go
+type MessageTemplateCategory string
+```
+
+<a name="MessageTemplateCategoryUtility"></a>Constants representing different message template categories.
+
+```go
+const (
+    MessageTemplateCategoryUtility        MessageTemplateCategory = "UTILITY"
+    MessageTemplateCategoryMarketing      MessageTemplateCategory = "MARKETING"
+    MessageTemplateCategoryAuthentication MessageTemplateCategory = "AUTHENTICATION"
+)
+```
+
+<a name="MessageTemplateComponentFormat"></a>
+## type MessageTemplateComponentFormat
+
+MessageTemplateComponentFormat represents the format of a message template component.
+
+```go
+type MessageTemplateComponentFormat string
+```
+
+<a name="MessageTemplateComponentFormatText"></a>Constants representing different message template component formats.
+
+```go
+const (
+    MessageTemplateComponentFormatText     MessageTemplateComponentFormat = "TEXT"
+    MessageTemplateComponentFormatImage    MessageTemplateComponentFormat = "IMAGE"
+    MessageTemplateComponentFormatDocument MessageTemplateComponentFormat = "DOCUMENT"
+    MessageTemplateComponentFormatVideo    MessageTemplateComponentFormat = "VIDEO"
+    MessageTemplateComponentFormatLocation MessageTemplateComponentFormat = "LOCATION"
+)
+```
+
+<a name="MessageTemplateComponentType"></a>
+## type MessageTemplateComponentType
+
+MessageTemplateComponentType represents the type of a message template component.
+
+```go
+type MessageTemplateComponentType string
+```
+
+<a name="MessageTemplateComponentTypeGreeting"></a>Constants representing different message template component types.
+
+```go
+const (
+    MessageTemplateComponentTypeGreeting         MessageTemplateComponentType = "GREETING"
+    MessageTemplateComponentTypeHeader           MessageTemplateComponentType = "HEADER"
+    MessageTemplateComponentTypeBody             MessageTemplateComponentType = "BODY"
+    MessageTemplateComponentTypeFooter           MessageTemplateComponentType = "FOOTER"
+    MessageTemplateComponentTypeButtons          MessageTemplateComponentType = "BUTTONS"
+    MessageTemplateComponentTypeCarousel         MessageTemplateComponentType = "CAROUSEL"
+    MessageTemplateComponentTypeLimitedTimeOffer MessageTemplateComponentType = "LIMITED_TIME_OFFER"
+)
+```
+
+<a name="MessageTemplateCreationResponse"></a>
+## type MessageTemplateCreationResponse
+
+
+
+```go
+type MessageTemplateCreationResponse struct {
+    Id       string                  `json:"id,omitempty"`
+    Status   MessageTemplateStatus   `json:"status,omitempty"`
+    Category MessageTemplateCategory `json:"category,omitempty"`
+}
+```
+
+<a name="MessageTemplateStatus"></a>
+## type MessageTemplateStatus
+
+MessageTemplateStatus represents the status of a WhatsApp Business message template.
+
+```go
+type MessageTemplateStatus string
+```
+
+<a name="MessageTemplateStatusApproved"></a>Constants representing different message template statuses.
+
+```go
+const (
+    MessageTemplateStatusApproved MessageTemplateStatus = "APPROVED"
+    MessageTemplateStatusRejected MessageTemplateStatus = "REJECTED"
+    MessageTemplateStatusPending  MessageTemplateStatus = "PENDING"
+)
+```
+
+<a name="Metadata"></a>
+## type Metadata
+
+
+
+```go
+type Metadata struct {
+    DisplayPhoneNumber string `json:"display_phone_number"`
+    PhoneNumberId      string `json:"phone_number_id"`
+}
+```
+
+<a name="NotificationMessageTypeEnum"></a>
+## type NotificationMessageTypeEnum
+
+
+
+```go
+type NotificationMessageTypeEnum string
+```
+
+<a name="NotificationMessageTypeText"></a>
+
+```go
+const (
+    NotificationMessageTypeText        NotificationMessageTypeEnum = "text"
+    NotificationMessageTypeAudio       NotificationMessageTypeEnum = "audio"
+    NotificationMessageTypeImage       NotificationMessageTypeEnum = "image"
+    NotificationMessageTypeButton      NotificationMessageTypeEnum = "button"
+    NotificationMessageTypeDocument    NotificationMessageTypeEnum = "document"
+    NotificationMessageTypeOrder       NotificationMessageTypeEnum = "order"
+    NotificationMessageTypeSticker     NotificationMessageTypeEnum = "sticker"
+    NotificationMessageTypeSystem      NotificationMessageTypeEnum = "system"
+    NotificationMessageTypeVideo       NotificationMessageTypeEnum = "video"
+    NotificationMessageTypeReaction    NotificationMessageTypeEnum = "reaction"
+    NotificationMessageTypeInteractive NotificationMessageTypeEnum = "interactive"
+    NotificationMessageTypeUnknown     NotificationMessageTypeEnum = "unknown"
+    NotificationMessageTypeLocation    NotificationMessageTypeEnum = "location"
+    NotificationMessageTypeContacts    NotificationMessageTypeEnum = "contacts"
+)
+```
+
+<a name="NotificationPayloadAudioMessageSchemaType"></a>
+## type NotificationPayloadAudioMessageSchemaType
+
+
+
+```go
+type NotificationPayloadAudioMessageSchemaType struct {
+    Audio struct {
+        Id       string `json:"id,omitempty"`
+        MIMEType string `json:"mime_type,omitempty"`
+        SHA256   string `json:"sha256,omitempty"`
+    } `json:"audio,omitempty"`
+}
+```
+
+<a name="NotificationPayloadButtonInteractionMessageSchemaType"></a>
+## type NotificationPayloadButtonInteractionMessageSchemaType
+
+
+
+```go
+type NotificationPayloadButtonInteractionMessageSchemaType struct {
+    ButtonReply struct {
+        ReplyId string `json:"reply_id"`
+        Title   string `json:"title"`
+    } `json:"button_reply,omitempty"`
+}
+```
+
+<a name="NotificationPayloadButtonMessageSchemaType"></a>
+## type NotificationPayloadButtonMessageSchemaType
+
+
+
+```go
+type NotificationPayloadButtonMessageSchemaType struct {
+    Button struct {
+        Payload string `json:"payload"`
+        Text    string `json:"text"`
+    } `json:"button,omitempty"`
+}
+```
+
+<a name="NotificationPayloadContactMessageSchemaType"></a>
+## type NotificationPayloadContactMessageSchemaType
+
+
+
+```go
+type NotificationPayloadContactMessageSchemaType struct {
+    Contacts []Contact `json:"contacts"`
+}
+```
+
+<a name="NotificationPayloadDocumentMessageSchemaType"></a>
+## type NotificationPayloadDocumentMessageSchemaType
+
+
+
+```go
+type NotificationPayloadDocumentMessageSchemaType struct {
+    Document struct {
+        Id       string `json:"id"`
+        MIMEType string `json:"mime_type"`
+        SHA256   string `json:"sha256"`
+        Caption  string `json:"caption,omitempty"`
+        Filename string `json:"filename,omitempty"`
+    } `json:"document,omitempty"`
+}
+```
+
+<a name="NotificationPayloadErrorSchemaType"></a>
+## type NotificationPayloadErrorSchemaType
+
+
+
+```go
+type NotificationPayloadErrorSchemaType struct {
+    Code      int    `json:"code"`
+    Title     string `json:"title"`
+    Message   string `json:"message"`
+    ErrorData struct {
+        Details string `json:"details"`
+    }   `json:"error_data,omitempty"`
+}
+```
+
+<a name="NotificationPayloadImageMessageSchemaType"></a>
+## type NotificationPayloadImageMessageSchemaType
+
+
+
+```go
+type NotificationPayloadImageMessageSchemaType struct {
+    Image struct {
+        Id       string `json:"id"`
+        MIMEType string `json:"mime_type"`
+        SHA256   string `json:"sha256"`
+        Caption  string `json:"caption,omitempty"`
+    } `json:"image,omitempty"`
+}
+```
+
+<a name="NotificationPayloadInteractionMessageSchemaType"></a>
+## type NotificationPayloadInteractionMessageSchemaType
+
+
+
+```go
+type NotificationPayloadInteractionMessageSchemaType struct {
+    Interactive struct {
+        Type                                                  InteractiveNotificationTypeEnum `json:"type"`
+        NotificationPayloadButtonInteractionMessageSchemaType `json:",inline,omitempty"`
+        NotificationPayloadListInteractionMessageSchemaType   `json:",inline,omitempty"`
+    } `json:"interactive,omitempty"`
+}
+```
+
+<a name="NotificationPayloadListInteractionMessageSchemaType"></a>
+## type NotificationPayloadListInteractionMessageSchemaType
+
+
+
+```go
+type NotificationPayloadListInteractionMessageSchemaType struct {
+    ListReply struct {
+        Id          string `json:"id"`
+        Title       string `json:"title"`
+        Description string `json:"description"`
+    } `json:"list_reply,omitempty"`
+}
+```
+
+<a name="NotificationPayloadLocationMessageSchemaType"></a>
+## type NotificationPayloadLocationMessageSchemaType
+
+
+
+```go
+type NotificationPayloadLocationMessageSchemaType struct {
+    Location struct {
+        Latitude  float64 `json:"latitude"`
+        Longitude float64 `json:"longitude"`
+        Name      string  `json:"name,omitempty"`
+        Address   string  `json:"address,omitempty"`
+    } `json:"location,omitempty"`
+}
+```
+
+<a name="NotificationPayloadMessageContextSchemaType"></a>
+## type NotificationPayloadMessageContextSchemaType
+
+
+
+```go
+type NotificationPayloadMessageContextSchemaType struct {
+    Forwarded           bool   `json:"forwarded,omitempty"`
+    FrequentlyForwarded bool   `json:"frequently_forwarded,omitempty"`
+    From                string `json:"from,omitempty"`
+    Id                  string `json:"id"`
+    ReferredProduct     struct {
+        CatalogId         string `json:"catalog_id"`
+        ProductRetailerId string `json:"product_retailer_id"`
+    }   `json:"referred_product,omitempty"`
+}
+```
+
+<a name="NotificationPayloadOrderMessageSchemaType"></a>
+## type NotificationPayloadOrderMessageSchemaType
+
+
+
+```go
+type NotificationPayloadOrderMessageSchemaType struct {
+    // OrderText string `json:"text"`
+    Order struct {
+        CatalogId    string `json:"catalog_id"`
+        ProductItems []struct {
+            ProductRetailerId string `json:"product_retailer_id"`
+            Quantity          string `json:"quantity"`
+            ItemPrice         string `json:"item_price"`
+            Currency          string `json:"currency"`
+        }   `json:"product_items"`
+    } `json:"order,omitempty"`
+}
+```
+
+<a name="NotificationPayloadReactionMessageSchemaType"></a>
+## type NotificationPayloadReactionMessageSchemaType
+
+
+
+```go
+type NotificationPayloadReactionMessageSchemaType struct {
+    Reaction struct {
+        MessageId string `json:"message_id"`
+        Emoji     string `json:"emoji"`
+    } `json:"reaction,omitempty"`
+}
+```
+
+<a name="NotificationPayloadStickerMessageSchemaType"></a>
+## type NotificationPayloadStickerMessageSchemaType
+
+
+
+```go
+type NotificationPayloadStickerMessageSchemaType struct {
+    Sticker struct {
+        Id       string `json:"id"`
+        MIMEType string `json:"mime_type"`
+        SHA256   string `json:"sha256"`
+        Animated bool   `json:"animated"`
+    } `json:"sticker,omitempty"`
+}
+```
+
+<a name="NotificationPayloadSystemMessageSchemaType"></a>
+## type NotificationPayloadSystemMessageSchemaType
+
+
+
+```go
+type NotificationPayloadSystemMessageSchemaType struct {
+    System struct {
+        Identity string                     `json:"identity"`
+        Body     string                     `json:"body"`
+        Customer string                     `json:"customer"`
+        Type     SystemNotificationTypeEnum `json:"type"`
+        WaId     string                     `json:"wa_id"`
+    }   `json:"system,omitempty"`
+    Identity struct {
+        Acknowledged     string `json:"acknowledged"`
+        CreatedTimestamp string `json:"created_timestamp"`
+        Hash             string `json:"hash"`
+    }   `json:"identity,omitempty"`
+}
+```
+
+<a name="NotificationPayloadTextMessageSchemaType"></a>
+## type NotificationPayloadTextMessageSchemaType
+
+
+
+```go
+type NotificationPayloadTextMessageSchemaType struct {
+    Text struct {
+        Body string `json:"body"`
+    }   `json:"text,omitempty"`
+    Referral struct {
+        SourceUrl    string                           `json:"source_url"`
+        SourceType   AdInteractionSourceTypeEnum      `json:"source_type"`
+        SourceId     string                           `json:"source_id"`
+        Headline     string                           `json:"headline"`
+        Body         string                           `json:"body"`
+        ImageUrl     string                           `json:"image_url,omitempty"`
+        VideoUrl     string                           `json:"video_url,omitempty"`
+        ThumbnailUrl string                           `json:"thumbnail_url"`
+        CtwaCLId     string                           `json:"ctwa_clid"`
+        MediaType    AdInteractionSourceMediaTypeEnum `json:"media_type"`
+    }   `json:"referral,omitempty"`
+}
+```
+
+<a name="NotificationPayloadVideoMessageSchemaType"></a>
+## type NotificationPayloadVideoMessageSchemaType
+
+
+
+```go
+type NotificationPayloadVideoMessageSchemaType struct {
+    Video struct {
+        Id       string `json:"id"`
+        MIMEType string `json:"mime_type"`
+        SHA256   string `json:"sha256"`
+        Caption  string `json:"caption,omitempty"`
+        Filename string `json:"filename,omitempty"`
+    } `json:"video,omitempty"`
+}
+```
+
+<a name="NotificationReasonEnum"></a>
+## type NotificationReasonEnum
+
+
+
+```go
+type NotificationReasonEnum string
+```
+
+<a name="NotificationReasonMessage"></a>
+
+```go
+const (
+    NotificationReasonMessage NotificationReasonEnum = "message"
+)
+```
+
+<a name="Origin"></a>
+## type Origin
+
+
+
+```go
+type Origin struct {
+    Type                MessageStatusCategoryEnum `json:"type"`
+    ExpirationTimestamp string                    `json:"expiration_timestamp,omitempty"`
+}
+```
+
+<a name="PhoneNumberManager"></a>
+## type PhoneNumberManager
+
+PhoneNumberManager is responsible for managing phone numbers for WhatsApp Business API and phone number specific operations.
+
+```go
+type PhoneNumberManager struct {
+    businessAccountId string
+    apiAccessToken    string
+    requester         *request_client.RequestClient
+}
+```
+
+<a name="NewPhoneNumberManager"></a>
+### func NewPhoneNumberManager
+
+```go
+func NewPhoneNumberManager(config *PhoneNumberManagerConfig) *PhoneNumberManager
+```
+
+NewPhoneNumberManager creates a new instance of PhoneNumberManager.
+
+<a name="PhoneNumberManager.Create"></a>
+### func \(\*PhoneNumberManager\) Create
+
+```go
+func (manager *PhoneNumberManager) Create(phoneNumber, verifiedName, countryCode string) (CreatePhoneNumberResponse, error)
+```
+
+
+
+<a name="PhoneNumberManager.DeleteQrCode"></a>
+### func \(\*PhoneNumberManager\) DeleteQrCode
+
+```go
+func (manager *PhoneNumberManager) DeleteQrCode(phoneNumber, id string) (*DeleteQrCodeResponse, error)
+```
+
+DeleteQrCode deletes a QR code by its ID for the specified phone number.
+
+<a name="PhoneNumberManager.Fetch"></a>
+### func \(\*PhoneNumberManager\) Fetch
+
+```go
+func (manager *PhoneNumberManager) Fetch(phoneNumberId string) (*WhatsappBusinessAccountPhoneNumber, error)
+```
+
+Fetch fetches a phone number by its ID.
+
+<a name="PhoneNumberManager.FetchAll"></a>
+### func \(\*PhoneNumberManager\) FetchAll
+
+```go
+func (manager *PhoneNumberManager) FetchAll(options FetchPhoneNumberFilters) (*WhatsappBusinessAccountPhoneNumberEdge, error)
+```
+
+FetchAll fetches all phone numbers based on the provided filters.
+
+<a name="PhoneNumberManager.GenerateQrCode"></a>
+### func \(\*PhoneNumberManager\) GenerateQrCode
+
+```go
+func (manager *PhoneNumberManager) GenerateQrCode(phoneNumber string, prefilledMessage string) (*GenerateQrCodeResponse, error)
+```
+
+GenerateQrCode generates a QR code for the specified phone number with the given prefilled message.
+
+<a name="PhoneNumberManager.GetAllQrCodes"></a>
+### func \(\*PhoneNumberManager\) GetAllQrCodes
+
+```go
+func (manager *PhoneNumberManager) GetAllQrCodes(phoneNumber string) (*GetAllQrCodesResponse, error)
+```
+
+GetAllQrCodes gets all QR codes for the specified phone number.
+
+<a name="PhoneNumberManager.GetQrCodeById"></a>
+### func \(\*PhoneNumberManager\) GetQrCodeById
+
+```go
+func (manager *PhoneNumberManager) GetQrCodeById(phoneNumber, id string) (*GetAllQrCodesResponse, error)
+```
+
+GetQrCodeById gets a QR code by its ID for the specified phone number.
+
+<a name="PhoneNumberManager.RequestVerificationCode"></a>
+### func \(\*PhoneNumberManager\) RequestVerificationCode
+
+```go
+func (manager *PhoneNumberManager) RequestVerificationCode(phoneNumberId string, codeMethod VerifyCodeMethod, languageCode string) (RequestVerificationCodeResponse, error)
+```
+
+
+
+<a name="PhoneNumberManager.UpdateQrCode"></a>
+### func \(\*PhoneNumberManager\) UpdateQrCode
+
+```go
+func (manager *PhoneNumberManager) UpdateQrCode(phoneNumber, id, prefilledMessage string) (*GenerateQrCodeResponse, error)
+```
+
+UpdateQrCode updates a QR code by its ID for the specified phone number with the given prefilled message.
+
+<a name="PhoneNumberManager.VerifyCode"></a>
+### func \(\*PhoneNumberManager\) VerifyCode
+
+```go
+func (manager *PhoneNumberManager) VerifyCode(phoneNumberId, verificationCode string) (VerifyCodeResponse, error)
+```
+
+
+
+<a name="PhoneNumberManagerConfig"></a>
+## type PhoneNumberManagerConfig
+
+PhoneNumberManagerConfig holds the configuration for PhoneNumberManager.
+
+```go
+type PhoneNumberManagerConfig struct {
+    BusinessAccountId string
+    ApiAccessToken    string
+    Requester         *request_client.RequestClient
+}
+```
+
+<a name="Pricing"></a>
+## type Pricing
+
+
+
+```go
+type Pricing struct {
+    PricingModel string                    `json:"pricing_model"`
+    Category     MessageStatusCategoryEnum `json:"category"`
+}
+```
+
+<a name="Profile"></a>
+## type Profile
+
+
+
+```go
+type Profile struct {
+    Name string `json:"name"`
+}
+```
+
+<a name="RequestVerificationCodeResponse"></a>
+## type RequestVerificationCodeResponse
+
+
+
+```go
+type RequestVerificationCodeResponse struct {
+    Success bool `json:"success,omitempty"`
+}
+```
+
+<a name="Status"></a>
+## type Status
+
+
+
+```go
+type Status struct {
+    Conversation Conversation `json:"conversation,omitempty"`
+    Errors       []Error      `json:"errors,omitempty"`
+    Status       string       `json:"status"`
+    Timestamp    string       `json:"timestamp"`
+    RecipientId  string       `json:"recipient_id"`
+    Pricing      Pricing      `json:"pricing,omitempty"`
+}
+```
+
+<a name="SystemNotificationTypeEnum"></a>
+## type SystemNotificationTypeEnum
+
+
+
+```go
+type SystemNotificationTypeEnum string
+```
+
+<a name="SystemNotificationTypeCustomerPhoneNumberChange"></a>
+
+```go
+const (
+    SystemNotificationTypeCustomerPhoneNumberChange SystemNotificationTypeEnum = "user_changed_number"
+    SystemNotificationTypeCustomerIdentityChanged   SystemNotificationTypeEnum = "customer_identity_changed"
+)
+```
+
+<a name="TemplateAnalyticsType"></a>
+## type TemplateAnalyticsType
+
+
+
+```go
+type TemplateAnalyticsType struct {
+}
+```
+
+<a name="TemplateManager"></a>
+## type TemplateManager
+
+TemplateManager is responsible for managing WhatsApp Business message templates.
+
+```go
+type TemplateManager struct {
+    businessAccountId string
+    apiAccessToken    string
+    requester         *request_client.RequestClient
+}
+```
+
+<a name="NewTemplateManager"></a>
+### func NewTemplateManager
+
+```go
+func NewTemplateManager(config *TemplateManagerConfig) *TemplateManager
+```
+
+NewTemplateManager creates a new TemplateManager with the given configuration.
+
+<a name="TemplateManager.Create"></a>
+### func \(\*TemplateManager\) Create
+
+```go
+func (manager *TemplateManager) Create(body WhatsappMessageTemplateCreateRequestBody) (*MessageTemplateCreationResponse, error)
+```
+
+
+
+<a name="TemplateManager.Delete"></a>
+### func \(\*TemplateManager\) Delete
+
+```go
+func (tm *TemplateManager) Delete(id string)
+```
+
+
+
+<a name="TemplateManager.Fetch"></a>
+### func \(\*TemplateManager\) Fetch
+
+```go
+func (manager *TemplateManager) Fetch(Id string) (*WhatsAppBusinessMessageTemplateNode, error)
+```
+
+Fetch fetches a single WhatsApp Business message template by its ID.
+
+<a name="TemplateManager.FetchAll"></a>
+### func \(\*TemplateManager\) FetchAll
+
+```go
+func (manager *TemplateManager) FetchAll() (*WhatsAppBusinessTemplatesFetchResponseEdge, error)
+```
+
+FetchAll fetches all WhatsApp Business message templates.
+
+<a name="TemplateManager.FetchMessageTemplatePreviews"></a>
+### func \(\*TemplateManager\) FetchMessageTemplatePreviews
+
+```go
+func (tm *TemplateManager) FetchMessageTemplatePreviews()
+```
+
+
+
+<a name="TemplateManager.FetchPerformanceAnalytics"></a>
+### func \(\*TemplateManager\) FetchPerformanceAnalytics
+
+```go
+func (manager *TemplateManager) FetchPerformanceAnalytics(templateName, templateId string) (string, error)
+```
+
+
+
+<a name="TemplateManager.MigrateFromOtherBusinessAccount"></a>
+### func \(\*TemplateManager\) MigrateFromOtherBusinessAccount
+
+```go
+func (manager *TemplateManager) MigrateFromOtherBusinessAccount(sourcePageNumber int, sourceWabaId int) (string, error)
+```
+
+
+
+<a name="TemplateManager.Update"></a>
+### func \(\*TemplateManager\) Update
+
+```go
+func (manager *TemplateManager) Update(templateId string, updates WhatsAppBusinessAccountMessageTemplateUpdateRequestBody) (*MessageTemplateCreationResponse, error)
+```
+
+
+
+<a name="TemplateManagerConfig"></a>
+## type TemplateManagerConfig
+
+TemplateManagerConfig represents the configuration for creating a new TemplateManager.
+
+```go
+type TemplateManagerConfig struct {
+    BusinessAccountId string
+    ApiAccessToken    string
+    Requester         *request_client.RequestClient
+}
+```
+
+<a name="TemplateMessagePreviewEdge"></a>
+## type TemplateMessagePreviewEdge
+
+
+
+```go
+type TemplateMessagePreviewEdge struct {
+    Data   []TemplateMessagePreviewNode               `json:"data,omitempty"`
+    Paging internal.WhatsAppBusinessApiPaginationMeta `json:"paging,omitempty"`
+}
+```
+
+<a name="TemplateMessagePreviewNode"></a>
+## type TemplateMessagePreviewNode
+
+
+
+```go
+type TemplateMessagePreviewNode struct {
+    Body     string                                                `json:"body,omitempty"`
+    Buttons  []WhatsAppBusinessAccountMessageTemplatePreviewButton `json:"buttons,omitempty"`
+    Footer   string                                                `json:"footer,omitempty"`
+    Header   string                                                `json:"header,omitempty"`
+    Language string                                                `json:"language,omitempty"`
+}
+```
+
+<a name="TemplatePerformanceAnalytics"></a>
+## type TemplatePerformanceAnalytics
+
+
+
+```go
+type TemplatePerformanceAnalytics struct {
+}
+```
+
+<a name="Value"></a>
+## type Value
+
+
+
+```go
+type Value struct {
+    MessagingProduct string    `json:"messaging_product"`
+    Metadata         Metadata  `json:"metadata"`
+    Contacts         []Contact `json:"contacts,omitempty"`
+    Statuses         []Status  `json:"statuses,omitempty"`
+    Messages         []Message `json:"messages,omitempty"`
+    Errors           []Error   `json:"errors,omitempty"`
+}
+```
+
+<a name="VerifyCodeMethod"></a>
+## type VerifyCodeMethod
+
+
+
+```go
+type VerifyCodeMethod string
+```
+
+<a name="VerifyCodeMethodSms"></a>
+
+```go
+const (
+    VerifyCodeMethodSms   VerifyCodeMethod = "SMS"
+    VerifyCodeMethodVoice VerifyCodeMethod = "VOICE"
+)
+```
+
+<a name="VerifyCodeResponse"></a>
+## type VerifyCodeResponse
+
+
+
+```go
+type VerifyCodeResponse struct {
+    Success bool `json:"success,omitempty"`
+}
+```
+
+<a name="WebhookManager"></a>
+## type WebhookManager
+
+WebhookManager represents a manager for handling webhooks.
+
+```go
+type WebhookManager struct {
+    secret       string
+    path         string
+    port         int
+    EventManager EventManager
+    Requester    request_client.RequestClient
+}
+```
+
+<a name="NewWebhook"></a>
+### func NewWebhook
+
+```go
+func NewWebhook(options *WebhookManagerConfig) *WebhookManager
+```
+
+NewWebhook creates a new WebhookManager with the given options.
+
+<a name="WebhookManager.GetRequestHandler"></a>
+### func \(\*WebhookManager\) GetRequestHandler
+
+```go
+func (wh *WebhookManager) GetRequestHandler(c echo.Context) error
+```
+
+GetRequestHandler handles GET requests to the webhook endpoint.
+
+<a name="WebhookManager.ListenToEvents"></a>
+### func \(\*WebhookManager\) ListenToEvents
+
+```go
+func (wh *WebhookManager) ListenToEvents()
+```
+
+ListenToEvents starts listening to events and handles incoming requests.
+
+<a name="WebhookManager.PostRequestHandler"></a>
+### func \(\*WebhookManager\) PostRequestHandler
+
+```go
+func (wh *WebhookManager) PostRequestHandler(c echo.Context) error
+```
+
+PostRequestHandler handles POST requests to the webhook endpoint.
+
+<a name="WebhookManager.createEchoHttpServer"></a>
+### func \(\*WebhookManager\) createEchoHttpServer
+
+```go
+func (wh *WebhookManager) createEchoHttpServer() *echo.Echo
+```
+
+createEchoHttpServer creates a new instance of Echo HTTP server. This function is used in case the client has not provided any custom HTTP server.
+
+<a name="WebhookManagerConfig"></a>
+## type WebhookManagerConfig
+
+WebhookManagerConfig represents the configuration options for creating a new WebhookManager.
+
+```go
+type WebhookManagerConfig struct {
+    Secret       string                       `validate:"required"`
+    EventManager EventManager                 `validate:"required"`
+    Requester    request_client.RequestClient `validate:"required"`
+    Path         string
+    Port         int
+}
+```
+
+<a name="WhatsAppBusinessAccountMessageTemplateDeleteRequestBody"></a>
+## type WhatsAppBusinessAccountMessageTemplateDeleteRequestBody
+
+
+
+```go
+type WhatsAppBusinessAccountMessageTemplateDeleteRequestBody struct {
+    HsmId string `json:"hsm_id,omitempty"`
+    Name  string `json:"name,omitempty"`
+}
+```
+
+<a name="WhatsAppBusinessAccountMessageTemplatePreviewButton"></a>
+## type WhatsAppBusinessAccountMessageTemplatePreviewButton
+
+
+
+```go
+type WhatsAppBusinessAccountMessageTemplatePreviewButton struct {
+    AutoFillText string `json:"auto_fill_text,omitempty"`
+    Text         string `json:"text,omitempty"`
+}
+```
+
+<a name="WhatsAppBusinessAccountMessageTemplateUpdateRequestBody"></a>
+## type WhatsAppBusinessAccountMessageTemplateUpdateRequestBody
+
+this is the request body for the message template update request
+
+```go
+type WhatsAppBusinessAccountMessageTemplateUpdateRequestBody struct {
+    Components            []WhatsappMessageTemplateComponentCreateOrUpdateRequestBody `json:"components,omitempty"`
+    Category              string                                                      `json:"category,omitempty"`
+    MessageSendTtlSeconds int                                                         `json:"message_send_ttl_seconds,omitempty"`
+}
+```
+
+<a name="WhatsAppBusinessHSMWhatsAppBusinessHSMQualityScoreShape"></a>
+## type WhatsAppBusinessHSMWhatsAppBusinessHSMQualityScoreShape
+
+WhatsAppBusinessHSMWhatsAppBusinessHSMQualityScoreShape represents the quality score of a WhatsApp Business message template.
+
+```go
+type WhatsAppBusinessHSMWhatsAppBusinessHSMQualityScoreShape struct {
+    Date    int      `json:"date,omitempty"`
+    Reasons []string `json:"reasons,omitempty"`
+    Score   int      `json:"score,omitempty"`
+}
+```
+
+<a name="WhatsAppBusinessHSMWhatsAppHSMComponent"></a>
+## type WhatsAppBusinessHSMWhatsAppHSMComponent
+
+WhatsAppBusinessHSMWhatsAppHSMComponent represents a component in a WhatsApp Business message template.
+
+```go
+type WhatsAppBusinessHSMWhatsAppHSMComponent struct {
+    AddSecurityRecommendation bool                                                      `json:"add_security_recommendation,omitempty"`
+    Buttons                   []WhatsAppBusinessHSMWhatsAppHSMComponentButton           `json:"buttons,omitempty"`
+    Cards                     []WhatsAppBusinessHSMWhatsAppHSMComponentCard             `json:"cards,omitempty"`
+    CodeExpirationMinutes     int                                                       `json:"code_expiration_minutes,omitempty"`
+    Example                   WhatsAppBusinessHSMWhatsAppHSMComponentExample            `json:"example,omitempty"`
+    Format                    string                                                    `json:"format,omitempty"`
+    LimitedTimeOffer          WhatsAppBusinessHSMWhatsAppLimitedTimeOfferParameterShape `json:"limited_time_offer,omitempty"`
+    Text                      string                                                    `json:"text,omitempty"`
+    Type                      string                                                    `json:"type,omitempty"`
+}
+```
+
+<a name="WhatsAppBusinessHSMWhatsAppHSMComponentButton"></a>
+## type WhatsAppBusinessHSMWhatsAppHSMComponentButton
+
+WhatsAppBusinessHSMWhatsAppHSMComponentButton represents a button component in a WhatsApp Business message template.
+
+```go
+type WhatsAppBusinessHSMWhatsAppHSMComponentButton struct {
+}
+```
+
+<a name="WhatsAppBusinessHSMWhatsAppHSMComponentCard"></a>
+## type WhatsAppBusinessHSMWhatsAppHSMComponentCard
+
+WhatsAppBusinessHSMWhatsAppHSMComponentCard represents a card component in a WhatsApp Business message template.
+
+```go
+type WhatsAppBusinessHSMWhatsAppHSMComponentCard struct {
+}
+```
+
+<a name="WhatsAppBusinessHSMWhatsAppHSMComponentExample"></a>
+## type WhatsAppBusinessHSMWhatsAppHSMComponentExample
+
+WhatsAppBusinessHSMWhatsAppHSMComponentExample represents an example component in a WhatsApp Business message template.
+
+```go
+type WhatsAppBusinessHSMWhatsAppHSMComponentExample struct {
+}
+```
+
+<a name="WhatsAppBusinessHSMWhatsAppLimitedTimeOfferParameterShape"></a>
+## type WhatsAppBusinessHSMWhatsAppLimitedTimeOfferParameterShape
+
+WhatsAppBusinessHSMWhatsAppLimitedTimeOfferParameterShape represents a limited time offer parameter in a WhatsApp Business message template.
+
+```go
+type WhatsAppBusinessHSMWhatsAppLimitedTimeOfferParameterShape struct {
+}
+```
+
+<a name="WhatsAppBusinessMessageTemplateNode"></a>
+## type WhatsAppBusinessMessageTemplateNode
+
+WhatsAppBusinessMessageTemplateNode represents a WhatsApp Business message template.
+
+```go
+type WhatsAppBusinessMessageTemplateNode struct {
+    Id                         string                                                  `json:"id,omitempty"`
+    Category                   MessageTemplateCategory                                 `json:"category,omitempty"`
+    Components                 []WhatsAppBusinessHSMWhatsAppHSMComponent               `json:"components,omitempty"`
+    CorrectCategory            string                                                  `json:"correct_category,omitempty"`
+    CtaUrlLinkTrackingOptedOut bool                                                    `json:"cta_url_link_tracking_opted_out,omitempty"`
+    Language                   string                                                  `json:"language,omitempty"`
+    LibraryTemplateName        string                                                  `json:"library_template_name,omitempty"`
+    MessageSendTtlSeconds      int                                                     `json:"message_send_ttl_seconds,omitempty"`
+    Name                       string                                                  `json:"name,omitempty"`
+    PreviousCategory           string                                                  `json:"previous_category,omitempty"`
+    QualityScore               WhatsAppBusinessHSMWhatsAppBusinessHSMQualityScoreShape `json:"quality_score,omitempty"`
+    RejectedReason             string                                                  `json:"rejected_reason,omitempty"`
+    Status                     MessageTemplateStatus                                   `json:"status,omitempty"`
+}
+```
+
+<a name="WhatsAppBusinessTemplatesFetchResponseEdge"></a>
+## type WhatsAppBusinessTemplatesFetchResponseEdge
+
+WhatsAppBusinessTemplatesFetchResponseEdge represents the response structure for fetching WhatsApp Business message templates.
+
+```go
+type WhatsAppBusinessTemplatesFetchResponseEdge struct {
+    Data   []WhatsAppBusinessMessageTemplateNode      `json:"data,omitempty"`
+    Paging internal.WhatsAppBusinessApiPaginationMeta `json:"paging,omitempty"`
+}
+```
+
+<a name="WhatsappApiNotificationPayloadSchemaType"></a>
+## type WhatsappApiNotificationPayloadSchemaType
+
+
+
+```go
+type WhatsappApiNotificationPayloadSchemaType struct {
+    Object string  `json:"object"`
+    Entry  []Entry `json:"entry"`
+}
+```
+
+<a name="WhatsappBusinessAccountPhoneNumber"></a>
+## type WhatsappBusinessAccountPhoneNumber
+
+WhatsappBusinessAccountPhoneNumber represents a WhatsApp Business Account phone number.
+
+```go
+type WhatsappBusinessAccountPhoneNumber struct {
+    VerifiedName       string `json:"verified_name,omitempty"`
+    DisplayPhoneNumber string `json:"display_phone_number,omitempty"`
+    Id                 string `json:"id,omitempty"`
+    QualityRating      string `json:"quality_rating,omitempty"`
+    CodeVerification   struct {
+        Status string `json:"code_verification_status,omitempty"`
+    }   `json:"code_verification_status,omitempty"`
+    PlatformType string `json:"platform_type,omitempty"`
+}
+```
+
+<a name="WhatsappBusinessAccountPhoneNumberEdge"></a>
+## type WhatsappBusinessAccountPhoneNumberEdge
+
+WhatsappBusinessAccountPhoneNumberEdge represents a list of WhatsApp Business Account phone numbers.
+
+```go
+type WhatsappBusinessAccountPhoneNumberEdge struct {
+    Data    []WhatsappBusinessAccountPhoneNumber       `json:"data,omitempty"`
+    Paging  internal.WhatsAppBusinessApiPaginationMeta `json:"paging,omitempty"`
+    Summary string                                     `json:"summary,omitempty"`
+}
+```
+
+<a name="WhatsappMessageTemplateButtonCreateRequestBody"></a>
+## type WhatsappMessageTemplateButtonCreateRequestBody
+
+WhatsappMessageTemplateButtonCreateRequestBody represents the request body for creating a button in a message template.
+
+```go
+type WhatsappMessageTemplateButtonCreateRequestBody struct {
+    // enum {QUICK_REPLY, URL, PHONE_NUMBER, OTP, MPM, CATALOG, FLOW, VOICE_CALL}
+    Type                 string `json:"type,omitempty"`
+    Text                 string `json:"text,omitempty"`
+    Url                  string `json:"url,omitempty"`
+    PhoneNumber          string `json:"phone_number,omitempty"`
+    Example              string `json:"example,omitempty"`
+    FlowId               string `json:"flow_id,omitempty"`
+    ZeroTapTermsAccepted bool   `json:"zero_tap_terms_accepted,omitempty"`
+}
+```
+
+<a name="WhatsappMessageTemplateComponentCreateOrUpdateRequestBody"></a>
+## type WhatsappMessageTemplateComponentCreateOrUpdateRequestBody
+
+WhatsappMessageTemplateComponentCreateOrUpdateRequestBody represents the request body for creating or updating a component in a message template.
+
+```go
+type WhatsappMessageTemplateComponentCreateOrUpdateRequestBody struct {
+    Type    MessageTemplateComponentType                     `json:"type,omitempty"`
+    Format  MessageTemplateComponentFormat                   `json:"format,omitempty"`
+    Text    string                                           `json:"text,omitempty"`
+    Buttons []WhatsappMessageTemplateButtonCreateRequestBody `json:"buttons,omitempty"`
+}
+```
+
+<a name="WhatsappMessageTemplateComponentCreateOrUpdateRequestBody.AddButton"></a>
+### func \(\*WhatsappMessageTemplateComponentCreateOrUpdateRequestBody\) AddButton
+
+```go
+func (component *WhatsappMessageTemplateComponentCreateOrUpdateRequestBody) AddButton(button WhatsappMessageTemplateButtonCreateRequestBody)
+```
+
+AddButton adds a button to the component.
+
+<a name="WhatsappMessageTemplateCreateRequestBody"></a>
+## type WhatsappMessageTemplateCreateRequestBody
+
+WhatsappMessageTemplateCreateRequestBody represents the request body for creating a message template.
+
+```go
+type WhatsappMessageTemplateCreateRequestBody struct {
+    AllowCategoryChange bool `json:"allow_category_change,omitempty" `
+
+    // enum {UTILITY, MARKETING, AUTHENTICATION}
+    Category string `json:"category,omitempty" validate:"required"`
+
+    Components                  []WhatsappMessageTemplateComponentCreateOrUpdateRequestBody `json:"components" validate:"required"`
+    Name                        string                                                      `json:"name,omitempty" validate:"required"`
+    Language                    string                                                      `json:"language" validate:"required"`
+    LibraryTemplateName         string                                                      `json:"library_template_name,omitempty"`
+    LibraryTemplateButtonInputs []WhatsappMessageTemplateButtonCreateRequestBody            `json:"library_template_button_inputs,omitempty"`
+}
+```
+
+<a name="WhatsappMessageTemplateCreateRequestBody.AddComponent"></a>
+### func \(\*WhatsappMessageTemplateCreateRequestBody\) AddComponent
+
+```go
+func (body *WhatsappMessageTemplateCreateRequestBody) AddComponent(component WhatsappMessageTemplateComponentCreateOrUpdateRequestBody)
+```
+
+
+

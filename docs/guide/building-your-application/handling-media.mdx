@@ -1,0 +1,28 @@
+---
+title: Handling Media
+description: Learn how to handle media messages using the Wapi.go SDK
+---
+
+
+Officially Whatsapp supports uploading of media via API, getting Media Url from media Id and deleting the media. But the SDK as of now only supports the two features: 
+
+- [Getting media Url from media Id](#getting-media-url-from-media-id)
+- [Deleting the media](#deleting-media)
+
+
+## Getting media Url from media Id
+
+You can get the media Url from media Id using the `getMediaUrl` method available on the [client](api-reference/classes/Client) class media manager. Here is an example of how you can get the media Url:
+
+```typescript
+	await whatsappClient.media.getUrl('mediaId')
+```
+
+
+## Deleting media
+
+You can delete a media using the `deleteMedia` method available on the [client](api-reference/classes/Client) class media manager. Here is an example of how you can delete the media:
+
+```typescript
+	await whatsappClient.media.delete('mediaId')
+```

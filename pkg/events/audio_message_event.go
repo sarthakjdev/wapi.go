@@ -11,7 +11,7 @@ type AudioMessageEvent struct {
 }
 
 // NewAudioMessageEvent creates a new AudioMessageEvent instance.
-func NewAudioMessageEvent(baseMessageEvent BaseMessageEvent, mediaId string, audio components.AudioMessage, mime_type, sha256, mimeType string) *AudioMessageEvent {
+func NewAudioMessageEvent(baseMessageEvent BaseMessageEvent, audio components.AudioMessage, mimeType, sha256, mediaId string) *AudioMessageEvent {
 	return &AudioMessageEvent{
 		BaseMediaMessageEvent: BaseMediaMessageEvent{
 			BaseMessageEvent: baseMessageEvent,

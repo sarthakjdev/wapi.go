@@ -1,0 +1,61 @@
+---
+title: Replying and Reacting to messages
+description: Learn how to reply and react to messages using the Wapi.go SDK
+---
+
+
+## Replying to Messages
+
+You can reply to a messsage via event listerner handler. 
+
+```typescript
+
+// assuming you already have initiated the client,
+// you can do the following to reply to incoming messages
+
+
+// in the similar way, any incoming message event, 
+// which is not a System event can be replied back to.
+```
+
+
+## Reacting to Messages
+
+There are mainly two ways you can react to a message:
+
+### Via Incoming Message Event
+
+You can listen to incoming messages and reply to them using the `on` method available on the [client](api-reference/classes/Client) event. Here is an example of how you can listen to incoming messages and react to them:
+
+```typescript
+
+// assuming you already have initiated the client,
+// you can do the following to reply to incoming messages
+
+
+// in the similar way, any incoming message event, 
+// which is not a System event can be replied back to.
+```
+
+
+### Via Sending a Reaction message
+
+You can also send a message of type  `Reaction` to a message. Here is an example of how you can send a reaction a message:
+
+```typescript
+
+// assuming you already have initiated the client,
+
+const replyMessageComponent = new ReplyMessage({
+    message: new TextMessage({
+        text: 'This is a reply.'
+    })
+})
+
+// send a reaction message
+await whatsappClient.message.send({
+    message: replyMessageComponent,
+    phoneNumber: '1234567890',
+})
+
+```
