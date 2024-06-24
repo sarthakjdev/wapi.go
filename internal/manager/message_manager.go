@@ -3,6 +3,7 @@ package manager
 import (
 	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/sarthakjdev/wapi.go/internal/request_client"
 	"github.com/sarthakjdev/wapi.go/pkg/components"
@@ -33,10 +34,9 @@ func (mm *MessageManager) Send(message components.BaseMessage, phoneNumber strin
 		// TODO: emit an error event here
 		return "", fmt.Errorf("error converting message to json: %v", err)
 	}
-	mm.requester.Request(request_client.RequestCloudApiParams{
-		Body:   string(body),
-		Path:   "/" + mm.PhoneNumberId + "/messages",
-		Method: http.MethodPost,
-	})
+
+	apiRequest := mm.requester.NewApiRequest(strings.Join([]string{mm.PhoneNumberId, "messages"}, "/"), http.MethodPost)
+	apiRequest.SetBody(string(body))
+	apiRequest.Execute()
 	return "ok", nil
 }

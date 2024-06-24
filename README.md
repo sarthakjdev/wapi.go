@@ -1,7 +1,7 @@
 <div align="center">
 <br />
 <p align="center">
-<a href="https://wapijs.co"><img src="https://media.discordapp.net/attachments/907937769014325288/1248544029705240629/image.png?ex=66640cbd&is=6662bb3d&hm=9339e051f865880d2d8bfa7d04288f0eaeab042614aca4dd127e210377aeecb9&=&format=webp&quality=lossless&width=2261&height=1034" alt="@wapijs/Wapi.go" /></a>
+<a href="https://wapijs.co"><img src="https://mintlify.s3-us-west-1.amazonaws.com/softlancer/assets/banner.svg" alt="@wapijs/Wapi.go" /></a>
 </p>
 <br />
 </div>
@@ -12,7 +12,8 @@ Beta Version - This SDK is not stable right now. It is currently in beta version
 
 ## 📖 About
 
-Wapi.go is a Golang module, written in TypeScript, designed to interact with the WhatsApp cloud API in a user-friendly manner.
+Wapi.go is a Golang SDK, that supports WhatsApp API products i.e., Business Management API and Cloud API
+to build WhatsApp applications easily.
 
 ## ✨ Features
 
@@ -46,6 +47,7 @@ This repository has three packages exported:
 
 - github.com/sarthakjdev/wapi.go/components
 - github.com/sarthakjdev/wapi.go/wapi/wapi
+- github.com/sarthakjdev/wapi.go/wapi/business
 - github.com/sarthakjdev/wapi.go/wapi/events
 
 ```go

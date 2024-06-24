@@ -2,8 +2,6 @@
 import "github.com/sarthakjdev/wapi.go/internal/manager"
 ```
 
-Package manager provides functionality to manage phone numbers for WhatsApp Business API.
-
 
 
 <a name="AdInteractionSourceMediaTypeEnum"></a>
@@ -86,6 +84,17 @@ type Contact struct {
 type Conversation struct {
     Id     string `json:"id"`
     Origin Origin `json:"origin,omitempty"`
+}
+```
+
+<a name="CreatePhoneNumberResponse"></a>
+## type CreatePhoneNumberResponse
+
+
+
+```go
+type CreatePhoneNumberResponse struct {
+    Id string `json:"id,omitempty"`
 }
 ```
 
@@ -823,7 +832,7 @@ PhoneNumberManager is responsible for managing phone numbers for WhatsApp Busine
 ```go
 type PhoneNumberManager struct {
     businessAccountId string
-    aApiAccessToken   string
+    apiAccessToken    string
     requester         *request_client.RequestClient
 }
 ```
@@ -836,6 +845,15 @@ func NewPhoneNumberManager(config *PhoneNumberManagerConfig) *PhoneNumberManager
 ```
 
 NewPhoneNumberManager creates a new instance of PhoneNumberManager.
+
+<a name="PhoneNumberManager.Create"></a>
+### func \(\*PhoneNumberManager\) Create
+
+```go
+func (manager *PhoneNumberManager) Create(phoneNumber, verifiedName, countryCode string) (CreatePhoneNumberResponse, error)
+```
+
+
 
 <a name="PhoneNumberManager.DeleteQrCode"></a>
 ### func \(\*PhoneNumberManager\) DeleteQrCode
@@ -891,6 +909,15 @@ func (manager *PhoneNumberManager) GetQrCodeById(phoneNumber, id string) (*GetAl
 
 GetQrCodeById gets a QR code by its ID for the specified phone number.
 
+<a name="PhoneNumberManager.RequestVerificationCode"></a>
+### func \(\*PhoneNumberManager\) RequestVerificationCode
+
+```go
+func (manager *PhoneNumberManager) RequestVerificationCode(phoneNumberId string, codeMethod VerifyCodeMethod, languageCode string) (RequestVerificationCodeResponse, error)
+```
+
+
+
 <a name="PhoneNumberManager.UpdateQrCode"></a>
 ### func \(\*PhoneNumberManager\) UpdateQrCode
 
@@ -899,6 +926,15 @@ func (manager *PhoneNumberManager) UpdateQrCode(phoneNumber, id, prefilledMessag
 ```
 
 UpdateQrCode updates a QR code by its ID for the specified phone number with the given prefilled message.
+
+<a name="PhoneNumberManager.VerifyCode"></a>
+### func \(\*PhoneNumberManager\) VerifyCode
+
+```go
+func (manager *PhoneNumberManager) VerifyCode(phoneNumberId, verificationCode string) (VerifyCodeResponse, error)
+```
+
+
 
 <a name="PhoneNumberManagerConfig"></a>
 ## type PhoneNumberManagerConfig
@@ -933,6 +969,17 @@ type Pricing struct {
 ```go
 type Profile struct {
     Name string `json:"name"`
+}
+```
+
+<a name="RequestVerificationCodeResponse"></a>
+## type RequestVerificationCodeResponse
+
+
+
+```go
+type RequestVerificationCodeResponse struct {
+    Success bool `json:"success,omitempty"`
 }
 ```
 
@@ -1038,15 +1085,6 @@ func (manager *TemplateManager) FetchAll() (*WhatsAppBusinessTemplatesFetchRespo
 
 FetchAll fetches all WhatsApp Business message templates.
 
-<a name="TemplateManager.FetchAnalytics"></a>
-### func \(\*TemplateManager\) FetchAnalytics
-
-```go
-func (manager *TemplateManager) FetchAnalytics() (string, error)
-```
-
-
-
 <a name="TemplateManager.FetchMessageTemplatePreviews"></a>
 ### func \(\*TemplateManager\) FetchMessageTemplatePreviews
 
@@ -1146,6 +1184,35 @@ type Value struct {
     Statuses         []Status  `json:"statuses,omitempty"`
     Messages         []Message `json:"messages,omitempty"`
     Errors           []Error   `json:"errors,omitempty"`
+}
+```
+
+<a name="VerifyCodeMethod"></a>
+## type VerifyCodeMethod
+
+
+
+```go
+type VerifyCodeMethod string
+```
+
+<a name="VerifyCodeMethodSms"></a>
+
+```go
+const (
+    VerifyCodeMethodSms   VerifyCodeMethod = "SMS"
+    VerifyCodeMethodVoice VerifyCodeMethod = "VOICE"
+)
+```
+
+<a name="VerifyCodeResponse"></a>
+## type VerifyCodeResponse
+
+
+
+```go
+type VerifyCodeResponse struct {
+    Success bool `json:"success,omitempty"`
 }
 ```
 

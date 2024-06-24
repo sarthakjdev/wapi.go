@@ -16,8 +16,18 @@ type MessagingClient struct {
     PhoneNumberId     string
     ApiAccessToken    string
     BusinessAccountId string
+    Requester         *request_client.RequestClient
 }
 ```
+
+<a name="MessagingClient.Deregister"></a>
+### func \(\*MessagingClient\) Deregister
+
+```go
+func (client *MessagingClient) Deregister() (RegisterResponse, error)
+```
+
+
 
 <a name="MessagingClient.GetApiAccessToken"></a>
 ### func \(\*MessagingClient\) GetApiAccessToken
@@ -46,6 +56,15 @@ func (client *MessagingClient) GetPhoneNumberId() string
 
 GetPhoneNumberId returns the phone number ID associated with the client.
 
+<a name="MessagingClient.Register"></a>
+### func \(\*MessagingClient\) Register
+
+```go
+func (client *MessagingClient) Register(pin string) (RegisterResponse, error)
+```
+
+this register function is for one time registration of the phone number to enable the usage with WhatsApp Cloud API
+
 <a name="MessagingClient.SetApiAccessToken"></a>
 ### func \(\*MessagingClient\) SetApiAccessToken
 
@@ -63,4 +82,15 @@ func (client *MessagingClient) SetPhoneNumberId(phoneNumberId string)
 ```
 
 SetPhoneNumberId sets the phone number ID for the client.
+
+<a name="RegisterResponse"></a>
+## type RegisterResponse
+
+
+
+```go
+type RegisterResponse struct {
+    Success bool `json:"success"`
+}
+```
 

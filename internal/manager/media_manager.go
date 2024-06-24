@@ -1,6 +1,10 @@
 package manager
 
-import "github.com/sarthakjdev/wapi.go/internal/request_client"
+import (
+	"strings"
+
+	"github.com/sarthakjdev/wapi.go/internal/request_client"
+)
 
 // MediaManager is responsible for managing media related operations.
 type MediaManager struct {
@@ -16,6 +20,8 @@ func NewMediaManager(requester request_client.RequestClient) *MediaManager {
 
 // GetMediaUrlById retrieves the media URL by its ID.
 func (mm *MediaManager) GetMediaUrlById(id string) {
+	apiRequest := mm.requester.NewApiRequest(strings.Join([]string{"media", id}, "/"), "GET")
+	apiRequest.Execute()
 
 }
 

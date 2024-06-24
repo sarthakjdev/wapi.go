@@ -63,11 +63,9 @@ func (baseMessageEvent *BaseMessageEvent) Reply(Message components.BaseMessage) 
 		return "", err
 	}
 
-	baseMessageEvent.requester.Request(request_client.RequestCloudApiParams{
-		Body:   string(body),
-		Path:   strings.Join([]string{baseMessageEvent.PhoneNumber, "/messages"}, ""),
-		Method: http.MethodPost,
-	})
+	apiRequest := baseMessageEvent.requester.NewApiRequest(strings.Join([]string{baseMessageEvent.PhoneNumber, "messages"}, "/"), http.MethodPost)
+	apiRequest.SetBody(string(body))
+	apiRequest.Execute()
 
 	return "", nil
 

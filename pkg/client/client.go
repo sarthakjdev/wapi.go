@@ -58,6 +58,7 @@ func (client *Client) NewMessagingClient(phoneNumberId string) *messaging.Messag
 		PhoneNumberId:     phoneNumberId,
 		ApiAccessToken:    client.apiAccessToken,
 		BusinessAccountId: client.businessAccountId,
+		Requester:         client.requester,
 	}
 
 	client.Messaging = append(client.Messaging, *messagingClient)

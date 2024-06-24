@@ -73,15 +73,15 @@ type FetchBusinessAccountResponse struct {
 }
 
 func (client *BusinessClient) Fetch() FetchBusinessAccountResponse {
-	apiRequest := client.requester.NewBusinessApiRequest(client.BusinessAccountId, http.MethodGet)
+	apiRequest := client.requester.NewApiRequest(client.BusinessAccountId, http.MethodGet)
 	response, err := apiRequest.Execute()
 	if err != nil {
 		// return wapi.go custom error here
 		fmt.Println("Error while fetching business account", err)
 	}
-	var response_to_return FetchBusinessAccountResponse
-	json.Unmarshal([]byte(response), &response_to_return)
-	return response_to_return
+	var responseToReturn FetchBusinessAccountResponse
+	json.Unmarshal([]byte(response), &responseToReturn)
+	return responseToReturn
 }
 
 type AnalyticsRequestGranularityType string
@@ -124,8 +124,8 @@ type WhatsappBusinessAccountAnalyticsResponse struct {
 }
 
 func (client *BusinessClient) FetchAnalytics(options AccountAnalyticsOptions) {
-	apiRequest := client.requester.NewBusinessApiRequest(client.BusinessAccountId, http.MethodGet)
-	analyticsField := apiRequest.AddField(request_client.BusinessApiRequestQueryParamField{
+	apiRequest := client.requester.NewApiRequest(client.BusinessAccountId, http.MethodGet)
+	analyticsField := apiRequest.AddField(request_client.ApiRequestQueryParamField{
 		Name:    "analytics",
 		Filters: map[string]string{},
 	})
@@ -152,9 +152,9 @@ func (client *BusinessClient) FetchAnalytics(options AccountAnalyticsOptions) {
 		// return wapi.go custom error here
 		fmt.Println("Error while fetching business account", err)
 	}
-	var response_to_return WhatsappBusinessAccountAnalyticsResponse
-	json.Unmarshal([]byte(response), &response_to_return)
-	fmt.Println("Response to return is", response_to_return)
+	var responseToReturn WhatsappBusinessAccountAnalyticsResponse
+	json.Unmarshal([]byte(response), &responseToReturn)
+	fmt.Println("Response to return is", responseToReturn)
 }
 
 type ConversationCategoryType string
@@ -235,8 +235,8 @@ type WhatsAppConversationAnalyticsResponse struct {
 }
 
 func (client *BusinessClient) ConversationAnalytics(options ConversationAnalyticsOptions) (*WhatsAppConversationAnalyticsResponse, error) {
-	apiRequest := client.requester.NewBusinessApiRequest(client.BusinessAccountId, http.MethodGet)
-	analyticsField := apiRequest.AddField(request_client.BusinessApiRequestQueryParamField{
+	apiRequest := client.requester.NewApiRequest(client.BusinessAccountId, http.MethodGet)
+	analyticsField := apiRequest.AddField(request_client.ApiRequestQueryParamField{
 		Name:    "conversation_analytics",
 		Filters: map[string]string{},
 	})
@@ -298,17 +298,17 @@ func (client *BusinessClient) ConversationAnalytics(options ConversationAnalytic
 		// return wapi.go custom error here
 		fmt.Println("Error while fetching business account", err)
 	}
-	var response_to_return WhatsAppConversationAnalyticsResponse
-	json.Unmarshal([]byte(response), &response_to_return)
+	var responseToReturn WhatsAppConversationAnalyticsResponse
+	json.Unmarshal([]byte(response), &responseToReturn)
 
-	fmt.Println("Response to return is", response_to_return)
+	fmt.Println("Response to return is", responseToReturn)
 
-	return &response_to_return, nil
+	return &responseToReturn, nil
 }
 
 func (client *BusinessClient) FetchAllProductCatalogs() (string, error) {
 	// https://developers.facebook.com/docs/graph-api/reference/whats-app-business-account/product_catalogs/#Reading
-	apiRequest := client.requester.NewBusinessApiRequest(strings.Join([]string{client.BusinessAccountId, "product_catalogs"}, "/"), http.MethodGet)
+	apiRequest := client.requester.NewApiRequest(strings.Join([]string{client.BusinessAccountId, "product_catalogs"}, "/"), http.MethodGet)
 	response, err := apiRequest.Execute()
 	return response, err
 
@@ -316,7 +316,7 @@ func (client *BusinessClient) FetchAllProductCatalogs() (string, error) {
 
 func (client *BusinessClient) CreateNewProductCatalog() (string, error) {
 	// https://developers.facebook.com/docs/graph-api/reference/whats-app-business-account/product_catalogs/#Creating
-	apiRequest := client.requester.NewBusinessApiRequest(strings.Join([]string{client.BusinessAccountId, "product_catalogs"}, "/"), http.MethodPost)
+	apiRequest := client.requester.NewApiRequest(strings.Join([]string{client.BusinessAccountId, "product_catalogs"}, "/"), http.MethodPost)
 	response, err := apiRequest.Execute()
 	return response, err
 }
@@ -345,7 +345,7 @@ func (client *BusinessClient) UpdateUser(userId string, tasks []BusinessRole) (s
 
 	// https://developers.facebook.com/docs/graph-api/reference/whats-app-business-account/#Updating
 
-	apiRequest := client.requester.NewBusinessApiRequest(strings.Join([]string{client.BusinessAccountId, "assigned_users."}, "/"), http.MethodPost)
+	apiRequest := client.requester.NewApiRequest(strings.Join([]string{client.BusinessAccountId, "assigned_users."}, "/"), http.MethodPost)
 	apiRequest.AddQueryParam("user", userId)
 	roles := make([]string, len(tasks))
 	for i, task := range tasks {
@@ -363,7 +363,7 @@ func (client *BusinessClient) DeleteUser(userId string) (string, error) {
 
 	// https://developers.facebook.com/docs/graph-api/reference/whats-app-business-account/#Deleting
 
-	apiRequest := client.requester.NewBusinessApiRequest(strings.Join([]string{client.BusinessAccountId, "assigned_users."}, "/"), http.MethodDelete)
+	apiRequest := client.requester.NewApiRequest(strings.Join([]string{client.BusinessAccountId, "assigned_users."}, "/"), http.MethodDelete)
 	apiRequest.AddQueryParam("user", userId)
 	response, err := apiRequest.Execute()
 	return response, err

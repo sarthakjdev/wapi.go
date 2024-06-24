@@ -44,9 +44,7 @@ type RequestCloudApiParams struct {
 	QueryParam map[string]string
 }
 
-// Request makes a request to the cloud API with the given parameters.
-// It returns the response body as a string and any error encountered.
-func (requestClientInstance *RequestClient) Request(params RequestCloudApiParams) (string, error) {
+func (requestClientInstance *RequestClient) request(params RequestCloudApiParams) (string, error) {
 	queryParamString := ""
 	if len(params.QueryParam) > 0 {
 		queryParamString = "?"
@@ -65,8 +63,6 @@ func (requestClientInstance *RequestClient) Request(params RequestCloudApiParams
 
 	requestPath := strings.Join(
 		[]string{REQUEST_PROTOCOL, "://", requestClientInstance.baseUrl, "/", requestClientInstance.apiVersion, "/", params.Path, queryParamString}, "")
-
-	fmt.Println("Requesting cloud api with path", requestPath)
 
 	httpRequest, err := http.NewRequest(params.Method,
 		requestPath,
@@ -87,42 +83,39 @@ func (requestClientInstance *RequestClient) Request(params RequestCloudApiParams
 	if err != nil {
 		return "", err
 	}
-
-	fmt.Println("Response from cloud api is", string(body))
-
 	return string(body), nil
 }
 
-func (client *RequestClient) NewBusinessApiRequest(path, method string) *WhatsappBusinessManagementApiRequest {
-	return &WhatsappBusinessManagementApiRequest{
+func (client *RequestClient) NewApiRequest(path, method string) *ApiRequest {
+	return &ApiRequest{
 		Path:        path,
-		Fields:      []BusinessApiRequestQueryParamField{},
+		Fields:      []ApiRequestQueryParamField{},
 		Requester:   client,
 		Method:      method,
 		QueryParams: map[string]string{},
 	}
 }
 
-type BusinessApiRequestQueryParamField struct {
+type ApiRequestQueryParamField struct {
 	Name    string
 	Filters map[string]string
 }
 
-func (field *BusinessApiRequestQueryParamField) AddFilter(key, value string) {
+func (field *ApiRequestQueryParamField) AddFilter(key, value string) {
 	field.Filters[key] = value
 }
 
-type WhatsappBusinessManagementApiRequest struct {
+type ApiRequest struct {
 	Path        string
 	Method      string
 	Body        string
-	Fields      []BusinessApiRequestQueryParamField
+	Fields      []ApiRequestQueryParamField
 	QueryParams map[string]string
 	Requester   *RequestClient
 }
 
-func (request *WhatsappBusinessManagementApiRequest) AddField(field BusinessApiRequestQueryParamField) *BusinessApiRequestQueryParamField {
-	// * NOTE:  when we say we need to add a field to the request, it means we need to add a query param to the request
+func (request *ApiRequest) AddField(field ApiRequestQueryParamField) *ApiRequestQueryParamField {
+	// * NOTE:  when we say we need to add a field to the request, it means we need to add a query param to the request with key "fields"
 	// * note that if there need to be multiple fields in a single request then the list of fields should be command separated
 	// * for example: fields=field1,field2,field3
 	// * also note that if there filters in a field then they should be called like a function in the param string, for ex: fields=field1.filter1(value1).filter2(value2),field2.filter1(value1)
@@ -130,24 +123,28 @@ func (request *WhatsappBusinessManagementApiRequest) AddField(field BusinessApiR
 	return &field
 }
 
-func (request *WhatsappBusinessManagementApiRequest) AddQueryParam(key, value string) {
+// AddQueryParam adds a query parameter to the request.
+func (request *ApiRequest) AddQueryParam(key, value string) {
 	request.QueryParams[key] = value
 }
 
-func (request *WhatsappBusinessManagementApiRequest) SetMethod(method string) {
+// SetMethod sets the method for the request.
+func (request *ApiRequest) SetMethod(method string) {
 	request.Method = method
 }
 
-func (request *WhatsappBusinessManagementApiRequest) SetBody(body string) {
+// SetBody sets the body for the request.
+func (request *ApiRequest) SetBody(body string) {
 	request.Body = body
 }
 
-func (businessRequest *WhatsappBusinessManagementApiRequest) Execute() (string, error) {
+// Execute executes the request and returns the response.
+func (request *ApiRequest) Execute() (string, error) {
 	// check if there are any fields in the request
 	var queryParam = map[string]string{}
-	if len(businessRequest.Fields) > 0 {
+	if len(request.Fields) > 0 {
 		fieldsString := ""
-		for _, field := range businessRequest.Fields {
+		for _, field := range request.Fields {
 			newFieldString := ""
 			if fieldsString != "" {
 				newFieldString = ","
@@ -163,18 +160,16 @@ func (businessRequest *WhatsappBusinessManagementApiRequest) Execute() (string, 
 		queryParam["fields"] = fieldsString
 	}
 
-	if len(businessRequest.QueryParams) > 0 {
-		for key, value := range businessRequest.QueryParams {
+	if len(request.QueryParams) > 0 {
+		for key, value := range request.QueryParams {
 			queryParam[key] = value
 		}
 	}
 
-	fmt.Println("Query params are", queryParam)
-
-	response, err := businessRequest.Requester.Request(RequestCloudApiParams{
-		Path:       businessRequest.Path,
-		Body:       businessRequest.Body,
-		Method:     businessRequest.Method,
+	response, err := request.Requester.request(RequestCloudApiParams{
+		Path:       request.Path,
+		Body:       request.Body,
+		Method:     request.Method,
 		QueryParam: queryParam,
 	})
 

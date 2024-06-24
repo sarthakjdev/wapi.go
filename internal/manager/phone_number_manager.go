@@ -1,4 +1,3 @@
-// Package manager provides functionality to manage phone numbers for WhatsApp Business API.
 package manager
 
 import (
@@ -13,7 +12,7 @@ import (
 // PhoneNumberManager is responsible for managing phone numbers for WhatsApp Business API and phone number specific operations.
 type PhoneNumberManager struct {
 	businessAccountId string
-	aApiAccessToken   string
+	apiAccessToken    string
 	requester         *request_client.RequestClient
 }
 
@@ -27,7 +26,7 @@ type PhoneNumberManagerConfig struct {
 // NewPhoneNumberManager creates a new instance of PhoneNumberManager.
 func NewPhoneNumberManager(config *PhoneNumberManagerConfig) *PhoneNumberManager {
 	return &PhoneNumberManager{
-		aApiAccessToken:   config.ApiAccessToken,
+		apiAccessToken:    config.ApiAccessToken,
 		businessAccountId: config.BusinessAccountId,
 		requester:         config.Requester,
 	}
@@ -59,7 +58,7 @@ type FetchPhoneNumberFilters struct {
 
 // FetchAll fetches all phone numbers based on the provided filters.
 func (manager *PhoneNumberManager) FetchAll(options FetchPhoneNumberFilters) (*WhatsappBusinessAccountPhoneNumberEdge, error) {
-	apiRequest := manager.requester.NewBusinessApiRequest(strings.Join([]string{manager.businessAccountId, "/", "phone_numbers"}, ""), http.MethodGet)
+	apiRequest := manager.requester.NewApiRequest(strings.Join([]string{manager.businessAccountId, "/", "phone_numbers"}, ""), http.MethodGet)
 
 	apiRequest.AddQueryParam("filtering", `[{"field":"account_mode","operator":"EQUAL","value":"LIVE"}]`)
 	response, err := apiRequest.Execute()
@@ -68,15 +67,15 @@ func (manager *PhoneNumberManager) FetchAll(options FetchPhoneNumberFilters) (*W
 		return nil, err
 	}
 
-	var response_to_return WhatsappBusinessAccountPhoneNumberEdge
-	json.Unmarshal([]byte(response), &response_to_return)
+	var responseToReturn WhatsappBusinessAccountPhoneNumberEdge
+	json.Unmarshal([]byte(response), &responseToReturn)
 
-	return &response_to_return, nil
+	return &responseToReturn, nil
 }
 
 // Fetch fetches a phone number by its ID.
 func (manager *PhoneNumberManager) Fetch(phoneNumberId string) (*WhatsappBusinessAccountPhoneNumber, error) {
-	apiRequest := manager.requester.NewBusinessApiRequest(phoneNumberId, http.MethodGet)
+	apiRequest := manager.requester.NewApiRequest(phoneNumberId, http.MethodGet)
 
 	response, err := apiRequest.Execute()
 
@@ -84,11 +83,60 @@ func (manager *PhoneNumberManager) Fetch(phoneNumberId string) (*WhatsappBusines
 		return nil, err
 	}
 
-	var response_to_return WhatsappBusinessAccountPhoneNumber
-	json.Unmarshal([]byte(response), &response_to_return)
+	var responseToReturn WhatsappBusinessAccountPhoneNumber
+	json.Unmarshal([]byte(response), &responseToReturn)
 
-	return &response_to_return, nil
+	return &responseToReturn, nil
 
+}
+
+type CreatePhoneNumberResponse struct {
+	Id string `json:"id,omitempty"`
+}
+
+func (manager *PhoneNumberManager) Create(phoneNumber, verifiedName, countryCode string) (CreatePhoneNumberResponse, error) {
+	apiRequest := manager.requester.NewApiRequest(strings.Join([]string{manager.businessAccountId, "/phone_numbers"}, ""), http.MethodPost)
+	apiRequest.AddQueryParam("phone_number", phoneNumber)
+	apiRequest.AddQueryParam("cc", countryCode)
+	apiRequest.AddQueryParam("verified_name", verifiedName)
+	response, err := apiRequest.Execute()
+	responseToReturn := CreatePhoneNumberResponse{}
+	json.Unmarshal([]byte(response), &responseToReturn)
+	return responseToReturn, err
+}
+
+type VerifyCodeMethod string
+
+const (
+	VerifyCodeMethodSms   VerifyCodeMethod = "SMS"
+	VerifyCodeMethodVoice VerifyCodeMethod = "VOICE"
+)
+
+type RequestVerificationCodeResponse struct {
+	Success bool `json:"success,omitempty"`
+}
+
+func (manager *PhoneNumberManager) RequestVerificationCode(phoneNumberId string, codeMethod VerifyCodeMethod, languageCode string) (RequestVerificationCodeResponse, error) {
+	apiRequest := manager.requester.NewApiRequest(strings.Join([]string{phoneNumberId, "request_code"}, "/"), http.MethodPost)
+	apiRequest.AddQueryParam("code_method", string(codeMethod))
+	apiRequest.AddQueryParam("language", languageCode)
+	response, err := apiRequest.Execute()
+	responseToReturn := RequestVerificationCodeResponse{}
+	json.Unmarshal([]byte(response), &responseToReturn)
+	return responseToReturn, err
+}
+
+type VerifyCodeResponse struct {
+	Success bool `json:"success,omitempty"`
+}
+
+func (manager *PhoneNumberManager) VerifyCode(phoneNumberId, verificationCode string) (VerifyCodeResponse, error) {
+	apiRequest := manager.requester.NewApiRequest(strings.Join([]string{phoneNumberId, "verify_code"}, "/"), http.MethodPost)
+	apiRequest.AddQueryParam("code", verificationCode)
+	response, err := apiRequest.Execute()
+	responseToReturn := VerifyCodeResponse{}
+	json.Unmarshal([]byte(response), &responseToReturn)
+	return responseToReturn, err
 }
 
 // GenerateQrCodeResponse represents the response of generating a QR code.
@@ -101,8 +149,7 @@ type GenerateQrCodeResponse struct {
 
 // GenerateQrCode generates a QR code for the specified phone number with the given prefilled message.
 func (manager *PhoneNumberManager) GenerateQrCode(phoneNumber string, prefilledMessage string) (*GenerateQrCodeResponse, error) {
-
-	apiRequest := manager.requester.NewBusinessApiRequest(strings.Join([]string{phoneNumber, "/message_qrdls"}, ""), http.MethodPost)
+	apiRequest := manager.requester.NewApiRequest(strings.Join([]string{phoneNumber, "/message_qrdls"}, ""), http.MethodPost)
 	jsonBody, err := json.Marshal(map[string]string{
 		"prefilled_message": prefilledMessage,
 		"generate_qr_image": "PNG",
@@ -115,10 +162,9 @@ func (manager *PhoneNumberManager) GenerateQrCode(phoneNumber string, prefilledM
 	if err != nil {
 		return nil, err
 	}
-
-	var response_to_return GenerateQrCodeResponse
-	json.Unmarshal([]byte(response), &response_to_return)
-	return &response_to_return, nil
+	var responseToReturn GenerateQrCodeResponse
+	json.Unmarshal([]byte(response), &responseToReturn)
+	return &responseToReturn, nil
 }
 
 // GetAllQrCodesResponse represents the response of getting all QR codes for a phone number.
@@ -128,28 +174,27 @@ type GetAllQrCodesResponse struct {
 
 // GetAllQrCodes gets all QR codes for the specified phone number.
 func (manager *PhoneNumberManager) GetAllQrCodes(phoneNumber string) (*GetAllQrCodesResponse, error) {
-	apiRequest := manager.requester.NewBusinessApiRequest(strings.Join([]string{phoneNumber, "/message_qrdls"}, ""), http.MethodGet)
+	apiRequest := manager.requester.NewApiRequest(strings.Join([]string{phoneNumber, "/message_qrdls"}, ""), http.MethodGet)
 	response, err := apiRequest.Execute()
 	if err != nil {
 		return nil, err
 	}
 
-	var response_to_return GetAllQrCodesResponse
-	json.Unmarshal([]byte(response), &response_to_return)
-	return &response_to_return, nil
+	var responseToReturn GetAllQrCodesResponse
+	json.Unmarshal([]byte(response), &responseToReturn)
+	return &responseToReturn, nil
 }
 
 // GetQrCodeById gets a QR code by its ID for the specified phone number.
 func (manager *PhoneNumberManager) GetQrCodeById(phoneNumber, id string) (*GetAllQrCodesResponse, error) {
-	apiRequest := manager.requester.NewBusinessApiRequest(strings.Join([]string{phoneNumber, "/message_qrdls", "/", id}, ""), http.MethodDelete)
+	apiRequest := manager.requester.NewApiRequest(strings.Join([]string{phoneNumber, "/message_qrdls", "/", id}, ""), http.MethodDelete)
 	response, err := apiRequest.Execute()
-
 	if err != nil {
 		return nil, err
 	}
-	var response_to_return GetAllQrCodesResponse
-	json.Unmarshal([]byte(response), &response_to_return)
-	return &response_to_return, nil
+	var responseToReturn GetAllQrCodesResponse
+	json.Unmarshal([]byte(response), &responseToReturn)
+	return &responseToReturn, nil
 }
 
 // DeleteQrCodeResponse represents the response of deleting a QR code.
@@ -159,20 +204,20 @@ type DeleteQrCodeResponse struct {
 
 // DeleteQrCode deletes a QR code by its ID for the specified phone number.
 func (manager *PhoneNumberManager) DeleteQrCode(phoneNumber, id string) (*DeleteQrCodeResponse, error) {
-	apiRequest := manager.requester.NewBusinessApiRequest(strings.Join([]string{phoneNumber, "/message_qrdls", "/", id}, ""), http.MethodDelete)
+	apiRequest := manager.requester.NewApiRequest(strings.Join([]string{phoneNumber, "/message_qrdls", "/", id}, ""), http.MethodDelete)
 	response, err := apiRequest.Execute()
 
 	if err != nil {
 		return nil, err
 	}
-	var response_to_return DeleteQrCodeResponse
-	json.Unmarshal([]byte(response), &response_to_return)
-	return &response_to_return, nil
+	var responseToReturn DeleteQrCodeResponse
+	json.Unmarshal([]byte(response), &responseToReturn)
+	return &responseToReturn, nil
 }
 
 // UpdateQrCode updates a QR code by its ID for the specified phone number with the given prefilled message.
 func (manager *PhoneNumberManager) UpdateQrCode(phoneNumber, id, prefilledMessage string) (*GenerateQrCodeResponse, error) {
-	apiRequest := manager.requester.NewBusinessApiRequest(strings.Join([]string{phoneNumber, "/message_qrdls"}, ""), http.MethodPost)
+	apiRequest := manager.requester.NewApiRequest(strings.Join([]string{phoneNumber, "/message_qrdls"}, ""), http.MethodPost)
 	jsonBody, err := json.Marshal(map[string]string{
 		"prefilled_message": prefilledMessage,
 		"code":              id,
@@ -186,7 +231,7 @@ func (manager *PhoneNumberManager) UpdateQrCode(phoneNumber, id, prefilledMessag
 		return nil, err
 	}
 
-	var response_to_return GenerateQrCodeResponse
-	json.Unmarshal([]byte(response), &response_to_return)
-	return &response_to_return, nil
+	var responseToReturn GenerateQrCodeResponse
+	json.Unmarshal([]byte(response), &responseToReturn)
+	return &responseToReturn, nil
 }

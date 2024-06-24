@@ -113,12 +113,12 @@ type WhatsAppBusinessHSMWhatsAppBusinessHSMQualityScoreShape struct {
 
 // FetchAll fetches all WhatsApp Business message templates.
 func (manager *TemplateManager) FetchAll() (*WhatsAppBusinessTemplatesFetchResponseEdge, error) {
-	apiRequest := manager.requester.NewBusinessApiRequest(strings.Join([]string{manager.businessAccountId, "/", "message_templates"}, ""), http.MethodGet)
+	apiRequest := manager.requester.NewApiRequest(strings.Join([]string{manager.businessAccountId, "/", "message_templates"}, ""), http.MethodGet)
 
 	fields := []string{"id", "category", "components", "correct_category", "cta_url_link_tracking_opted_out", "language", "library_template_name", "message_send_ttl_seconds", "name", "previous_category", "quality_score", "rejected_reason", "status", "sub_category"}
 
 	for _, field := range fields {
-		apiRequest.AddField(request_client.BusinessApiRequestQueryParamField{
+		apiRequest.AddField(request_client.ApiRequestQueryParamField{
 			Name:    field,
 			Filters: map[string]string{},
 		})
@@ -130,17 +130,17 @@ func (manager *TemplateManager) FetchAll() (*WhatsAppBusinessTemplatesFetchRespo
 		return nil, err
 	}
 
-	var response_to_return WhatsAppBusinessTemplatesFetchResponseEdge
-	json.Unmarshal([]byte(response), &response_to_return)
-	return &response_to_return, nil
+	var responseToReturn WhatsAppBusinessTemplatesFetchResponseEdge
+	json.Unmarshal([]byte(response), &responseToReturn)
+	return &responseToReturn, nil
 }
 
 // Fetch fetches a single WhatsApp Business message template by its ID.
 func (manager *TemplateManager) Fetch(Id string) (*WhatsAppBusinessMessageTemplateNode, error) {
-	apiRequest := manager.requester.NewBusinessApiRequest(strings.Join([]string{Id}, ""), http.MethodGet)
+	apiRequest := manager.requester.NewApiRequest(strings.Join([]string{Id}, ""), http.MethodGet)
 	fields := []string{"id", "category", "components", "correct_category", "cta_url_link_tracking_opted_out", "language", "library_template_name", "message_send_ttl_seconds", "name", "previous_category", "quality_score", "rejected_reason", "status", "sub_category"}
 	for _, field := range fields {
-		apiRequest.AddField(request_client.BusinessApiRequestQueryParamField{
+		apiRequest.AddField(request_client.ApiRequestQueryParamField{
 			Name:    field,
 			Filters: map[string]string{},
 		})
@@ -149,9 +149,9 @@ func (manager *TemplateManager) Fetch(Id string) (*WhatsAppBusinessMessageTempla
 	if err != nil {
 		return nil, err
 	}
-	var response_to_return WhatsAppBusinessMessageTemplateNode
-	json.Unmarshal([]byte(response), &response_to_return)
-	return &response_to_return, nil
+	var responseToReturn WhatsAppBusinessMessageTemplateNode
+	json.Unmarshal([]byte(response), &responseToReturn)
+	return &responseToReturn, nil
 }
 
 // WhatsappMessageTemplateButtonCreateRequestBody represents the request body for creating a button in a message template.
@@ -230,7 +230,7 @@ type MessageTemplateCreationResponse struct {
 }
 
 func (manager *TemplateManager) Create(body WhatsappMessageTemplateCreateRequestBody) (*MessageTemplateCreationResponse, error) {
-	apiRequest := manager.requester.NewBusinessApiRequest(strings.Join([]string{manager.businessAccountId, "/", "message_templates"}, ""), http.MethodPost)
+	apiRequest := manager.requester.NewApiRequest(strings.Join([]string{manager.businessAccountId, "/", "message_templates"}, ""), http.MethodPost)
 	jsonBody, err := json.Marshal(body)
 	if err != nil {
 		return nil, err
@@ -241,9 +241,9 @@ func (manager *TemplateManager) Create(body WhatsappMessageTemplateCreateRequest
 		return nil, err
 	}
 
-	var response_to_return MessageTemplateCreationResponse
-	json.Unmarshal([]byte(response), &response_to_return)
-	return &response_to_return, nil
+	var responseToReturn MessageTemplateCreationResponse
+	json.Unmarshal([]byte(response), &responseToReturn)
+	return &responseToReturn, nil
 
 }
 
@@ -255,7 +255,7 @@ type WhatsAppBusinessAccountMessageTemplateUpdateRequestBody struct {
 }
 
 func (manager *TemplateManager) Update(templateId string, updates WhatsAppBusinessAccountMessageTemplateUpdateRequestBody) (*MessageTemplateCreationResponse, error) {
-	apiRequest := manager.requester.NewBusinessApiRequest(strings.Join([]string{templateId}, ""), http.MethodPost)
+	apiRequest := manager.requester.NewApiRequest(strings.Join([]string{templateId}, ""), http.MethodPost)
 	jsonBody, err := json.Marshal(updates)
 	if err != nil {
 		return nil, err
@@ -266,9 +266,9 @@ func (manager *TemplateManager) Update(templateId string, updates WhatsAppBusine
 		return nil, err
 	}
 
-	var response_to_return MessageTemplateCreationResponse
-	json.Unmarshal([]byte(response), &response_to_return)
-	return &response_to_return, nil
+	var responseToReturn MessageTemplateCreationResponse
+	json.Unmarshal([]byte(response), &responseToReturn)
+	return &responseToReturn, nil
 
 	// https://developers.facebook.com/docs/graph-api/reference/whats-app-business-hsm/#:~:text=2.0%20Access%20Token-,Updating,-You%20can%20update
 }
@@ -310,21 +310,10 @@ type TemplateAnalyticsType struct {
 type TemplatePerformanceAnalytics struct {
 }
 
-func (manager *TemplateManager) FetchAnalytics() (string, error) {
-	// https://graph.facebook.com/LATEST-VERSION/WHATSAPP-BUSINESS-ACCOUNT-ID?fields=analytics&access_token=ACCESS-TOKEN
-
-	apiRequest := manager.requester.NewBusinessApiRequest(strings.Join([]string{}, "/"), http.MethodGet)
-
-	response, err := apiRequest.Execute()
-
-	return response, err
-
-}
-
 func (manager *TemplateManager) FetchPerformanceAnalytics(templateName, templateId string) (string, error) {
 	// /v20.0/{whats-app-business-account-id}/template_performance_metrics
 	// https://developers.facebook.com/docs/graph-api/reference/whats-app-business-account/template_performance_metrics/
-	apiRequest := manager.requester.NewBusinessApiRequest(strings.Join([]string{manager.businessAccountId, "template_performance_metrics"}, "/"), http.MethodGet)
+	apiRequest := manager.requester.NewApiRequest(strings.Join([]string{manager.businessAccountId, "template_performance_metrics"}, "/"), http.MethodGet)
 	apiRequest.AddQueryParam("name", templateName)
 	apiRequest.AddQueryParam("template_id", templateId)
 	response, err := apiRequest.Execute()
@@ -339,7 +328,7 @@ func (manager *TemplateManager) FetchPerformanceAnalytics(templateName, template
 func (manager *TemplateManager) MigrateFromOtherBusinessAccount(sourcePageNumber int, sourceWabaId int) (string, error) {
 	// /{whats_app_business_account_id}/migrate_message_templates
 
-	apiRequest := manager.requester.NewBusinessApiRequest(strings.Join([]string{manager.businessAccountId, "migrate_message_templates"}, "/"), http.MethodGet)
+	apiRequest := manager.requester.NewApiRequest(strings.Join([]string{manager.businessAccountId, "migrate_message_templates"}, "/"), http.MethodGet)
 	apiRequest.AddQueryParam("page_number", string(sourcePageNumber))
 	apiRequest.AddQueryParam("source_waba_id", string(sourceWabaId))
 	response, err := apiRequest.Execute()
