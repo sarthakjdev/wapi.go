@@ -123,7 +123,7 @@ type WhatsappBusinessAccountAnalyticsResponse struct {
 	DataPoints   []AnalyticsDataPoint `json:"data_points,omitempty"`
 }
 
-func (client *BusinessClient) FetchAnalytics(options AccountAnalyticsOptions) {
+func (client *BusinessClient) FetchAnalytics(options AccountAnalyticsOptions) (WhatsappBusinessAccountAnalyticsResponse, error) {
 	apiRequest := client.requester.NewApiRequest(client.BusinessAccountId, http.MethodGet)
 	analyticsField := apiRequest.AddField(request_client.ApiRequestQueryParamField{
 		Name:    "analytics",
@@ -154,7 +154,7 @@ func (client *BusinessClient) FetchAnalytics(options AccountAnalyticsOptions) {
 	}
 	var responseToReturn WhatsappBusinessAccountAnalyticsResponse
 	json.Unmarshal([]byte(response), &responseToReturn)
-	fmt.Println("Response to return is", responseToReturn)
+	return responseToReturn, nil
 }
 
 type ConversationCategoryType string
@@ -307,6 +307,7 @@ func (client *BusinessClient) ConversationAnalytics(options ConversationAnalytic
 }
 
 func (client *BusinessClient) FetchAllProductCatalogs() (string, error) {
+	// ! TODO: implement proper response struct
 	// https://developers.facebook.com/docs/graph-api/reference/whats-app-business-account/product_catalogs/#Reading
 	apiRequest := client.requester.NewApiRequest(strings.Join([]string{client.BusinessAccountId, "product_catalogs"}, "/"), http.MethodGet)
 	response, err := apiRequest.Execute()
@@ -314,11 +315,16 @@ func (client *BusinessClient) FetchAllProductCatalogs() (string, error) {
 
 }
 
-func (client *BusinessClient) CreateNewProductCatalog() (string, error) {
-	// https://developers.facebook.com/docs/graph-api/reference/whats-app-business-account/product_catalogs/#Creating
+type CreateProductCatalogOptions struct {
+	Success string `json:"success,omitempty"`
+}
+
+func (client *BusinessClient) CreateNewProductCatalog() (CreateProductCatalogOptions, error) {
 	apiRequest := client.requester.NewApiRequest(strings.Join([]string{client.BusinessAccountId, "product_catalogs"}, "/"), http.MethodPost)
 	response, err := apiRequest.Execute()
-	return response, err
+	var responseToReturn CreateProductCatalogOptions
+	json.Unmarshal([]byte(response), &responseToReturn)
+	return responseToReturn, err
 }
 
 type BusinessRole string
@@ -337,35 +343,36 @@ const (
 	BusinessRoleManageBusinessPhones BusinessRole = "MANAGE_BUSINESS_PHONES"
 )
 
-func (role *BusinessRole) String() string {
-	return string(*role)
-}
+// ! TODO: Implement this
+// func (role *BusinessRole) String() string {
+// 	return string(*role)
+// }
 
-func (client *BusinessClient) UpdateUser(userId string, tasks []BusinessRole) (string, error) {
+// func (client *BusinessClient) UpdateUser(userId string, tasks []BusinessRole) (string, error) {
 
-	// https://developers.facebook.com/docs/graph-api/reference/whats-app-business-account/#Updating
+// 	// https://developers.facebook.com/docs/graph-api/reference/whats-app-business-account/#Updating
 
-	apiRequest := client.requester.NewApiRequest(strings.Join([]string{client.BusinessAccountId, "assigned_users."}, "/"), http.MethodPost)
-	apiRequest.AddQueryParam("user", userId)
-	roles := make([]string, len(tasks))
-	for i, task := range tasks {
-		roles[i] = task.String()
-	}
-	apiRequest.AddQueryParam("tasks", strings.Join(roles, ","))
+// 	apiRequest := client.requester.NewApiRequest(strings.Join([]string{client.BusinessAccountId, "assigned_users."}, "/"), http.MethodPost)
+// 	apiRequest.AddQueryParam("user", userId)
+// 	roles := make([]string, len(tasks))
+// 	for i, task := range tasks {
+// 		roles[i] = task.String()
+// 	}
+// 	apiRequest.AddQueryParam("tasks", strings.Join(roles, ","))
 
-	response, err := apiRequest.Execute()
+// 	response, err := apiRequest.Execute()
 
-	return response, err
+// 	return response, err
 
-}
+// }
 
-func (client *BusinessClient) DeleteUser(userId string) (string, error) {
+// func (client *BusinessClient) DeleteUser(userId string) (string, error) {
 
-	// https://developers.facebook.com/docs/graph-api/reference/whats-app-business-account/#Deleting
+// 	// https://developers.facebook.com/docs/graph-api/reference/whats-app-business-account/#Deleting
 
-	apiRequest := client.requester.NewApiRequest(strings.Join([]string{client.BusinessAccountId, "assigned_users."}, "/"), http.MethodDelete)
-	apiRequest.AddQueryParam("user", userId)
-	response, err := apiRequest.Execute()
-	return response, err
+// 	apiRequest := client.requester.NewApiRequest(strings.Join([]string{client.BusinessAccountId, "assigned_users."}, "/"), http.MethodDelete)
+// 	apiRequest.AddQueryParam("user", userId)
+// 	response, err := apiRequest.Execute()
+// 	return response, err
 
-}
+// }

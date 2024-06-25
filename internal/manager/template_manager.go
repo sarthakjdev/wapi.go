@@ -317,11 +317,9 @@ func (manager *TemplateManager) FetchPerformanceAnalytics(templateName, template
 	apiRequest.AddQueryParam("name", templateName)
 	apiRequest.AddQueryParam("template_id", templateId)
 	response, err := apiRequest.Execute()
-
 	if err != nil {
 		return "", err
 	}
-
 	return response, nil
 }
 

@@ -1,7 +1,7 @@
 <div align="center">
 <br />
 <p align="center">
-<a href="https://wapijs.co"><img src="https://mintlify.s3-us-west-1.amazonaws.com/softlancer/assets/banner.svg" alt="@wapijs/Wapi.go" /></a>
+<a href="https://wapijs.co"><img src="https://mintlify.s3-us-west-1.amazonaws.com/softlancer/assets/banner.svg" alt="Wapi.go" /></a>
 </p>
 <br />
 </div>
