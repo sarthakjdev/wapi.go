@@ -300,51 +300,20 @@ type TemplateMessagePreviewEdge struct {
 	Paging internal.WhatsAppBusinessApiPaginationMeta `json:"paging,omitempty"`
 }
 
-func (tm *TemplateManager) FetchMessageTemplatePreviews() {
-	// https://developers.facebook.com/docs/graph-api/reference/whats-app-business-account/message_template_previews/
+type TemplateMigrationResponse struct {
+	MigratedTemplates []string          `json:"migrated_templates,omitempty"`
+	FailedTemplates   map[string]string `json:"failed_templates,omitempty"`
 }
 
-type TemplateAnalyticsType struct {
-}
-
-type TemplatePerformanceAnalytics struct {
-}
-
-func (manager *TemplateManager) FetchPerformanceAnalytics(templateName, templateId string) (string, error) {
-	// /v20.0/{whats-app-business-account-id}/template_performance_metrics
-	// https://developers.facebook.com/docs/graph-api/reference/whats-app-business-account/template_performance_metrics/
-	apiRequest := manager.requester.NewApiRequest(strings.Join([]string{manager.businessAccountId, "template_performance_metrics"}, "/"), http.MethodGet)
-	apiRequest.AddQueryParam("name", templateName)
-	apiRequest.AddQueryParam("template_id", templateId)
-	response, err := apiRequest.Execute()
-	if err != nil {
-		return "", err
-	}
-	return response, nil
-}
-
-func (manager *TemplateManager) MigrateFromOtherBusinessAccount(sourcePageNumber int, sourceWabaId int) (string, error) {
-	// /{whats_app_business_account_id}/migrate_message_templates
-
+func (manager *TemplateManager) MigrateFromOtherBusinessAccount(sourcePageNumber int, sourceWabaId int) (*TemplateMigrationResponse, error) {
 	apiRequest := manager.requester.NewApiRequest(strings.Join([]string{manager.businessAccountId, "migrate_message_templates"}, "/"), http.MethodGet)
 	apiRequest.AddQueryParam("page_number", string(sourcePageNumber))
 	apiRequest.AddQueryParam("source_waba_id", string(sourceWabaId))
 	response, err := apiRequest.Execute()
-
 	if err != nil {
-		return "", err
+		return nil, err
 	}
-
-	return response, nil
-
-	// Struct {
-	// 	migrated_templates: List [
-	// 	string
-	// 	],
-	// 	failed_templates: Map {
-	// 	string: string
-	// 	},
-	// 	}
-
-	// return type
+	var responseToReturn TemplateMigrationResponse
+	json.Unmarshal([]byte(response), &responseToReturn)
+	return &responseToReturn, nil
 }

@@ -28,7 +28,7 @@ func (mm *MediaManager) GetMediaUrlById(id string) (string, error) {
 
 // GetMediaIdByUrl retrieves the media ID by its URL.
 func (mm *MediaManager) DeleteMedia(id string) (string, error) {
-	apiRequest := mm.requester.NewApiRequest(strings.Join([]string{"media", id}, "/"), "")
+	apiRequest := mm.requester.NewApiRequest(strings.Join([]string{"media", id}, "/"), http.MethodDelete)
 	response, err := apiRequest.Execute()
 	return response, err
 }

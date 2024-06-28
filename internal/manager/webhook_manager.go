@@ -79,7 +79,6 @@ func (wh *WebhookManager) PostRequestHandler(c echo.Context) error {
 	}
 
 	var payload WhatsappApiNotificationPayloadSchemaType
-
 	if err := json.Unmarshal(body, &payload); err != nil {
 		fmt.Println("Error unmarshaling JSON:", err)
 		c.String(400, "Invalid JSON data")
@@ -93,335 +92,34 @@ func (wh *WebhookManager) PostRequestHandler(c echo.Context) error {
 	for _, entry := range payload.Entry {
 		for _, change := range entry.Changes {
 
-			if len(change.Value.Statuses) > 0 {
-				for _, status := range change.Value.Statuses {
-
-					switch status.Status {
-					case string(MessageStatusDelivered):
-						{
-							wh.EventManager.Publish(events.MessageDeliveredEventType, events.NewMessageDeliveredEvent(events.BaseSystemEvent{
-								Timestamp: status.Timestamp,
-							}, status.Conversation.Id, status.RecipientId))
-						}
-
-					case string(MessageStatusRead):
-						{
-							wh.EventManager.Publish(events.MessageReadEventType, events.NewMessageReadEvent(events.BaseSystemEvent{
-								Timestamp: status.Timestamp,
-							}, status.Conversation.Id, status.RecipientId))
-						}
-					case string(MessageStatusSent):
-						{
-							wh.EventManager.Publish(events.MessageSentEventType, events.NewMessageSentEvent(events.BaseSystemEvent{
-								Timestamp: status.Timestamp,
-							}, status.Conversation.Id, status.RecipientId))
-						}
-					case string(MessageStatusFailed):
-						{
-							// ! TODO: check and properly emit the error event here.
-						}
-					}
-
+			switch change.Field {
+			case WebhookFieldEnumMessages:
+				err := wh.handleMessagesSubscriptionEvents(change.Value.Messages, change.Value.Statuses, change.Value.Metadata.PhoneNumberId)
+				if err != nil {
+					fmt.Println("Error handling messages subscription events:", err)
+					c.String(500, "Internal server error")
+					return err
 				}
-			}
-
-			// this is the id of the phone number which can ve used to respond to the events received
-			phoneNumberId := change.Value.Metadata.PhoneNumberId
-
-			for _, message := range change.Value.Messages {
-				switch message.Type {
-				case NotificationMessageTypeText:
-					{
-						wh.EventManager.Publish(events.TextMessageEventType, events.NewTextMessageEvent(
-							events.NewBaseMessageEvent(
-								phoneNumberId,
-								message.Id,
-								message.Timestamp,
-								message.From,
-								message.Context.Forwarded,
-								wh.Requester),
-							message.Text.Body),
-						)
-					}
-				case NotificationMessageTypeImage:
-					{
-
-						imageMessageComponent, err := components.NewImageMessage(components.ImageMessageConfigs{
-							Id:      message.Image.Id,
-							Caption: message.Image.Caption,
-						})
-
-						if err != nil {
-							// ! TODO: emit error event here
-							fmt.Println("Error creating image message:", err)
-							c.String(500, "Internal server error")
-							return err
-						}
-
-						wh.EventManager.Publish(events.ImageMessageEventType, events.NewImageMessageEvent(
-							events.NewBaseMessageEvent(
-								phoneNumberId,
-								message.Id,
-								message.Timestamp,
-								message.From,
-								message.Context.Forwarded,
-								wh.Requester),
-							*imageMessageComponent,
-							message.Image.MIMEType, message.Image.SHA256, message.Image.Id),
-						)
-					}
-				case NotificationMessageTypeAudio:
-					{
-
-						audioMessageComponent, err := components.NewAudioMessage(components.AudioMessageConfigs{
-							Id: message.Audio.Id,
-						})
-
-						if err != nil {
-							// ! TODO: emit error event here
-							fmt.Println("Error creating audio message:", err)
-							c.String(500, "Internal server error")
-							return err
-						}
-
-						wh.EventManager.Publish(events.AudioMessageEventType, events.NewAudioMessageEvent(
-							events.NewBaseMessageEvent(
-								phoneNumberId,
-								message.Id,
-								message.Timestamp,
-								message.From,
-								message.Context.Forwarded,
-								wh.Requester),
-							*audioMessageComponent,
-							message.Audio.MIMEType, message.Audio.SHA256, message.Audio.Id),
-						)
-
-					}
-				case NotificationMessageTypeVideo:
-					{
-
-						videoMessageComponent, err := components.NewVideoMessage(components.VideoMessageConfigs{
-							Id:      message.Video.Id,
-							Caption: message.Video.Caption,
-						})
-
-						if err != nil {
-							// ! TODO: emit error event here
-							fmt.Println("Error creating Video message:", err)
-							c.String(500, "Internal server error")
-							return err
-						}
-
-						wh.EventManager.Publish(events.VideoMessageEventType, events.NewVideoMessageEvent(
-							events.NewBaseMessageEvent(
-								phoneNumberId,
-								message.Id,
-								message.Timestamp,
-								message.From,
-								message.Context.Forwarded,
-								wh.Requester),
-							*videoMessageComponent,
-							message.Video.MIMEType, message.Video.SHA256, message.Video.Id),
-						)
-
-					}
-				case NotificationMessageTypeDocument:
-					{
-						documentMessageComponent, err := components.NewVideoMessage(components.VideoMessageConfigs{
-							Id:      message.Document.Id,
-							Caption: message.Document.Caption,
-						})
-
-						if err != nil {
-							// ! TODO: emit error event here
-							fmt.Println("Error creating document message:", err)
-							c.String(500, "Internal server error")
-							return err
-						}
-
-						wh.EventManager.Publish(events.DocumentMessageEventType, events.NewVideoMessageEvent(
-							events.NewBaseMessageEvent(
-								phoneNumberId,
-								message.Id,
-								message.Timestamp,
-								message.From,
-								message.Context.Forwarded,
-								wh.Requester),
-							*documentMessageComponent,
-							message.Document.MIMEType, message.Document.SHA256, message.Document.Id),
-						)
-					}
-				case NotificationMessageTypeLocation:
-					{
-						locationMessageComponent, err := components.NewLocationMessage(message.Location.Latitude, message.Location.Longitude)
-
-						if err != nil {
-							// ! TODO: emit error event here
-							fmt.Println("Error creating location message:", err)
-							c.String(500, "Internal server error")
-							return err
-						}
-
-						wh.EventManager.Publish(events.LocationMessageEventType, events.NewLocationMessageEvent(
-							events.NewBaseMessageEvent(
-								phoneNumberId,
-								message.Id,
-								message.Timestamp,
-								message.From,
-								message.Context.Forwarded,
-								wh.Requester),
-							*locationMessageComponent),
-						)
-					}
-				case NotificationMessageTypeContacts:
-					{
-						wh.EventManager.Publish(events.ContactMessageEventType, events.NewTextMessageEvent(
-							events.NewBaseMessageEvent(
-								phoneNumberId,
-								message.Id,
-								message.Timestamp,
-								message.From,
-								message.Context.Forwarded,
-								wh.Requester),
-							message.Text.Body),
-						)
-					}
-				case NotificationMessageTypeSticker:
-					{
-
-						stickerMessageComponent, err := components.NewStickerMessage(&components.StickerMessageConfigs{
-							Id: message.Sticker.Id,
-						})
-
-						if err != nil {
-							// ! TODO: emit error event here
-							fmt.Println("Error creating Sticker message:", err)
-							c.String(500, "Internal server error")
-							return err
-						}
-
-						wh.EventManager.Publish(events.StickerMessageEventType, events.NewStickerMessageEvent(
-							events.NewBaseMessageEvent(
-								phoneNumberId,
-								message.Id,
-								message.Timestamp,
-								message.From,
-								message.Context.Forwarded,
-								wh.Requester),
-							*stickerMessageComponent,
-							message.Sticker.MIMEType, message.Sticker.SHA256, message.Sticker.Id),
-						)
-
-					}
-				case NotificationMessageTypeButton:
-					{
-						wh.EventManager.Publish(events.QuickReplyMessageEventType, events.NewQuickReplyButtonInteractionEvent(
-							events.NewBaseMessageEvent(
-								phoneNumberId,
-								message.Id,
-								message.Timestamp,
-								message.From,
-								message.Context.Forwarded,
-								wh.Requester),
-							message.Button.Text,
-							message.Button.Payload,
-						))
-					}
-				case NotificationMessageTypeInteractive:
-					{
-						if message.Interactive.Type == "list" {
-							wh.EventManager.Publish(events.ListInteractionMessageEventType, events.NewListInteractionEvent(
-								events.NewBaseMessageEvent(
-									phoneNumberId,
-									message.Id,
-									message.Timestamp,
-									message.From,
-									message.Context.Forwarded,
-									wh.Requester),
-								message.Interactive.ListReply.Title,
-								message.Interactive.ListReply.Id,
-								message.Interactive.ListReply.Description,
-							))
-						} else {
-							wh.EventManager.Publish(events.ReplyButtonInteractionEventType, events.NewReplyButtonInteractionEvent(
-								events.NewBaseMessageEvent(
-									phoneNumberId,
-									message.Id,
-									message.Timestamp,
-									message.From,
-									message.Context.Forwarded,
-									wh.Requester),
-								message.Interactive.ButtonReply.Title,
-								message.Interactive.ButtonReply.ReplyId,
-							))
-						}
-					}
-				case NotificationMessageTypeReaction:
-					{
-						reactionMessageComponent, err := components.NewReactionMessage(components.ReactionMessageParams{
-							MessageId: message.Reaction.MessageId,
-							Emoji:     message.Reaction.Emoji,
-						})
-
-						if err != nil {
-							// ! TODO: emit error event here
-							fmt.Println("Error creating location message:", err)
-							c.String(500, "Internal server error")
-							return err
-						}
-
-						wh.EventManager.Publish(events.ReactionMessageEventType, events.NewReactionMessageEvent(
-							events.NewBaseMessageEvent(
-								phoneNumberId,
-								message.Id,
-								message.Timestamp,
-								message.From,
-								message.Context.Forwarded,
-								wh.Requester),
-							*reactionMessageComponent,
-						))
-					}
-				case NotificationMessageTypeOrder:
-					{
-						wh.EventManager.Publish(events.OrderReceivedEventType, events.NewTextMessageEvent(
-							events.NewBaseMessageEvent(
-								phoneNumberId,
-								message.Id,
-								message.Timestamp,
-								message.From,
-								message.Context.Forwarded,
-								wh.Requester),
-							message.Text.Body),
-						)
-					}
-				case NotificationMessageTypeSystem:
-					{
-						if message.System.Type == SystemNotificationTypeCustomerIdentityChanged {
-							wh.EventManager.Publish(events.CustomerIdentityChangedEventType, events.CustomerIdentityChangedEvent{
-								BaseSystemEvent: events.BaseSystemEvent{
-									Timestamp: message.Timestamp,
-								},
-								Acknowledged:      message.Identity.Acknowledged,
-								CreationTimestamp: message.Identity.CreatedTimestamp,
-								Hash:              message.Identity.Hash,
-							})
-						} else {
-							wh.EventManager.Publish(events.CustomerNumberChangedEventType, events.CustomerNumberChangedEvent{
-								BaseSystemEvent: events.BaseSystemEvent{
-									Timestamp: message.Timestamp,
-								},
-								NewWaId:           message.System.WaId,
-								OldWaId:           message.System.Customer,
-								ChangeDescription: message.System.Body,
-							})
-						}
-					}
-				case NotificationMessageTypeUnknown:
-					{
-						// ! TODO: handle error in the event and then emit it.
-					}
-				}
-
+			case WebhookFieldEnumAccountReview:
+				wh.handleAccountReviewSubscriptionEvents(change.Value.AccountReviewUpdateValue)
+			case WebhookFieldEnumAccountAlerts:
+				wh.handleAccountAlertsSubscriptionEvents(change.Value.AccountAlertsValue)
+			case WebhookFieldEnumAccountUpdate:
+				wh.handleAccountUpdateSubscriptionEvents(change.Value.AccountUpdateValue)
+			case WebhookFieldEnumTemplateCategoryUpdate:
+				wh.handleTemplateCategoryUpdateSubscriptionEvents(change.Value.TemplateCategoryUpdateValue)
+			case WebhookFieldEnumMessageTemplateQuality:
+				wh.handleMessageTemplateQualitySubscriptionEvents(change.Value.TemplateQualityUpdateValue)
+			case WebhookFieldEnumMessageTemplateStatus:
+				wh.handleMessageTemplateStatusSubscriptionEvents(change.Value.TemplateStatusUpdateValue)
+			case WebhookFieldEnumPhoneNumberName:
+				wh.handlePhoneNumberNameSubscriptionEvents(change.Value.PhoneNumberNameUpdateValue)
+			case WebhookFieldEnumPhoneNumberQuality:
+				wh.handlePhoneNumberQualitySubscriptionEvents(change.Value.PhoneNumberQualityUpdateValue)
+			case WebhookFieldEnumBusinessCapability:
+				wh.handleBusinessCapabilitySubscriptionEvents(change.Value.BusinessCapabilityUpdateValue)
+			case WebhookFieldEnumSecurity:
+				wh.handleSecuritySubscriptionEvents(change.Value.SecurityValue)
 			}
 		}
 	}
@@ -456,4 +154,367 @@ func (wh *WebhookManager) ListenToEvents() {
 	if err := server.Shutdown(ctx); err != nil {
 		log.Fatal(err) // Handle shutdown errors gracefully
 	}
+}
+
+func (wh *WebhookManager) handleMessagesSubscriptionEvents(messages []Message, statuses []Status, phoneNumberId string) error {
+	// consider the field here too, because we will be supporting more events
+	if len(statuses) > 0 {
+		for _, status := range statuses {
+			switch status.Status {
+			case string(MessageStatusDelivered):
+				{
+					wh.EventManager.Publish(events.MessageDeliveredEventType, events.NewMessageDeliveredEvent(events.BaseSystemEvent{
+						Timestamp: status.Timestamp,
+					}, status.Conversation.Id, status.RecipientId))
+				}
+
+			case string(MessageStatusRead):
+				{
+					wh.EventManager.Publish(events.MessageReadEventType, events.NewMessageReadEvent(events.BaseSystemEvent{
+						Timestamp: status.Timestamp,
+					}, status.Conversation.Id, status.RecipientId))
+				}
+			case string(MessageStatusSent):
+				{
+					wh.EventManager.Publish(events.MessageSentEventType, events.NewMessageSentEvent(events.BaseSystemEvent{
+						Timestamp: status.Timestamp,
+					}, status.Conversation.Id, status.RecipientId))
+				}
+			case string(MessageStatusFailed):
+				{
+					// ! TODO: check and properly emit the error event here.
+				}
+			}
+
+		}
+	}
+
+	for _, message := range messages {
+		switch message.Type {
+		case NotificationMessageTypeText:
+			{
+				wh.EventManager.Publish(events.TextMessageEventType, events.NewTextMessageEvent(
+					events.NewBaseMessageEvent(
+						phoneNumberId,
+						message.Id,
+						message.Timestamp,
+						message.From,
+						message.Context.Forwarded,
+						wh.Requester),
+					message.Text.Body),
+				)
+			}
+		case NotificationMessageTypeImage:
+			{
+				imageMessageComponent, err := components.NewImageMessage(components.ImageMessageConfigs{
+					Id:      message.Image.Id,
+					Caption: message.Image.Caption,
+				})
+
+				if err != nil {
+					// ! TODO: emit error event here
+					fmt.Println("Error creating image message:", err)
+					return err
+				}
+
+				wh.EventManager.Publish(events.ImageMessageEventType, events.NewImageMessageEvent(
+					events.NewBaseMessageEvent(
+						phoneNumberId,
+						message.Id,
+						message.Timestamp,
+						message.From,
+						message.Context.Forwarded,
+						wh.Requester),
+					*imageMessageComponent,
+					message.Image.MIMEType, message.Image.SHA256, message.Image.Id),
+				)
+			}
+		case NotificationMessageTypeAudio:
+			{
+
+				audioMessageComponent, err := components.NewAudioMessage(components.AudioMessageConfigs{
+					Id: message.Audio.Id,
+				})
+
+				if err != nil {
+					// ! TODO: emit error event here
+					fmt.Println("Error creating audio message:", err)
+					return err
+				}
+
+				wh.EventManager.Publish(events.AudioMessageEventType, events.NewAudioMessageEvent(
+					events.NewBaseMessageEvent(
+						phoneNumberId,
+						message.Id,
+						message.Timestamp,
+						message.From,
+						message.Context.Forwarded,
+						wh.Requester),
+					*audioMessageComponent,
+					message.Audio.MIMEType, message.Audio.SHA256, message.Audio.Id),
+				)
+
+			}
+		case NotificationMessageTypeVideo:
+			{
+
+				videoMessageComponent, err := components.NewVideoMessage(components.VideoMessageConfigs{
+					Id:      message.Video.Id,
+					Caption: message.Video.Caption,
+				})
+
+				if err != nil {
+					// ! TODO: emit error event here
+					fmt.Println("Error creating Video message:", err)
+					return err
+				}
+
+				wh.EventManager.Publish(events.VideoMessageEventType, events.NewVideoMessageEvent(
+					events.NewBaseMessageEvent(
+						phoneNumberId,
+						message.Id,
+						message.Timestamp,
+						message.From,
+						message.Context.Forwarded,
+						wh.Requester),
+					*videoMessageComponent,
+					message.Video.MIMEType, message.Video.SHA256, message.Video.Id),
+				)
+
+			}
+		case NotificationMessageTypeDocument:
+			{
+				documentMessageComponent, err := components.NewVideoMessage(components.VideoMessageConfigs{
+					Id:      message.Document.Id,
+					Caption: message.Document.Caption,
+				})
+
+				if err != nil {
+					// ! TODO: emit error event here
+					fmt.Println("Error creating document message:", err)
+					return err
+				}
+
+				wh.EventManager.Publish(events.DocumentMessageEventType, events.NewVideoMessageEvent(
+					events.NewBaseMessageEvent(
+						phoneNumberId,
+						message.Id,
+						message.Timestamp,
+						message.From,
+						message.Context.Forwarded,
+						wh.Requester),
+					*documentMessageComponent,
+					message.Document.MIMEType, message.Document.SHA256, message.Document.Id),
+				)
+			}
+		case NotificationMessageTypeLocation:
+			{
+				locationMessageComponent, err := components.NewLocationMessage(message.Location.Latitude, message.Location.Longitude)
+
+				if err != nil {
+					// ! TODO: emit error event here
+					fmt.Println("Error creating location message:", err)
+					return err
+				}
+
+				wh.EventManager.Publish(events.LocationMessageEventType, events.NewLocationMessageEvent(
+					events.NewBaseMessageEvent(
+						phoneNumberId,
+						message.Id,
+						message.Timestamp,
+						message.From,
+						message.Context.Forwarded,
+						wh.Requester),
+					*locationMessageComponent),
+				)
+			}
+		case NotificationMessageTypeContacts:
+			{
+				wh.EventManager.Publish(events.ContactMessageEventType, events.NewTextMessageEvent(
+					events.NewBaseMessageEvent(
+						phoneNumberId,
+						message.Id,
+						message.Timestamp,
+						message.From,
+						message.Context.Forwarded,
+						wh.Requester),
+					message.Text.Body),
+				)
+			}
+		case NotificationMessageTypeSticker:
+			{
+
+				stickerMessageComponent, err := components.NewStickerMessage(&components.StickerMessageConfigs{
+					Id: message.Sticker.Id,
+				})
+
+				if err != nil {
+					// ! TODO: emit error event here
+					fmt.Println("Error creating Sticker message:", err)
+					return err
+				}
+
+				wh.EventManager.Publish(events.StickerMessageEventType, events.NewStickerMessageEvent(
+					events.NewBaseMessageEvent(
+						phoneNumberId,
+						message.Id,
+						message.Timestamp,
+						message.From,
+						message.Context.Forwarded,
+						wh.Requester),
+					*stickerMessageComponent,
+					message.Sticker.MIMEType, message.Sticker.SHA256, message.Sticker.Id),
+				)
+
+			}
+		case NotificationMessageTypeButton:
+			{
+				wh.EventManager.Publish(events.QuickReplyMessageEventType, events.NewQuickReplyButtonInteractionEvent(
+					events.NewBaseMessageEvent(
+						phoneNumberId,
+						message.Id,
+						message.Timestamp,
+						message.From,
+						message.Context.Forwarded,
+						wh.Requester),
+					message.Button.Text,
+					message.Button.Payload,
+				))
+			}
+		case NotificationMessageTypeInteractive:
+			{
+				if message.Interactive.Type == "list" {
+					wh.EventManager.Publish(events.ListInteractionMessageEventType, events.NewListInteractionEvent(
+						events.NewBaseMessageEvent(
+							phoneNumberId,
+							message.Id,
+							message.Timestamp,
+							message.From,
+							message.Context.Forwarded,
+							wh.Requester),
+						message.Interactive.ListReply.Title,
+						message.Interactive.ListReply.Id,
+						message.Interactive.ListReply.Description,
+					))
+				} else {
+					wh.EventManager.Publish(events.ReplyButtonInteractionEventType, events.NewReplyButtonInteractionEvent(
+						events.NewBaseMessageEvent(
+							phoneNumberId,
+							message.Id,
+							message.Timestamp,
+							message.From,
+							message.Context.Forwarded,
+							wh.Requester),
+						message.Interactive.ButtonReply.Title,
+						message.Interactive.ButtonReply.ReplyId,
+					))
+				}
+			}
+		case NotificationMessageTypeReaction:
+			{
+				reactionMessageComponent, err := components.NewReactionMessage(components.ReactionMessageParams{
+					MessageId: message.Reaction.MessageId,
+					Emoji:     message.Reaction.Emoji,
+				})
+
+				if err != nil {
+					// ! TODO: emit error event here
+					fmt.Println("Error creating location message:", err)
+					return err
+				}
+
+				wh.EventManager.Publish(events.ReactionMessageEventType, events.NewReactionMessageEvent(
+					events.NewBaseMessageEvent(
+						phoneNumberId,
+						message.Id,
+						message.Timestamp,
+						message.From,
+						message.Context.Forwarded,
+						wh.Requester),
+					*reactionMessageComponent,
+				))
+			}
+		case NotificationMessageTypeOrder:
+			{
+				wh.EventManager.Publish(events.OrderReceivedEventType, events.NewTextMessageEvent(
+					events.NewBaseMessageEvent(
+						phoneNumberId,
+						message.Id,
+						message.Timestamp,
+						message.From,
+						message.Context.Forwarded,
+						wh.Requester),
+					message.Text.Body),
+				)
+			}
+		case NotificationMessageTypeSystem:
+			{
+				if message.System.Type == SystemNotificationTypeCustomerIdentityChanged {
+					wh.EventManager.Publish(events.CustomerIdentityChangedEventType, events.CustomerIdentityChangedEvent{
+						BaseSystemEvent: events.BaseSystemEvent{
+							Timestamp: message.Timestamp,
+						},
+						Acknowledged:      message.Identity.Acknowledged,
+						CreationTimestamp: message.Identity.CreatedTimestamp,
+						Hash:              message.Identity.Hash,
+					})
+				} else {
+					wh.EventManager.Publish(events.CustomerNumberChangedEventType, events.CustomerNumberChangedEvent{
+						BaseSystemEvent: events.BaseSystemEvent{
+							Timestamp: message.Timestamp,
+						},
+						NewWaId:           message.System.WaId,
+						OldWaId:           message.System.Customer,
+						ChangeDescription: message.System.Body,
+					})
+				}
+			}
+		case NotificationMessageTypeUnknown:
+			{
+				// ! TODO: handle error in the event and then emit it.
+			}
+		}
+	}
+
+	return nil
+}
+
+func (wh *WebhookManager) handleAccountAlertsSubscriptionEvents(value AccountAlertsValue) {
+
+}
+
+func (wh *WebhookManager) handleSecuritySubscriptionEvents(value SecurityValue) {
+
+}
+
+func (wh *WebhookManager) handleAccountUpdateSubscriptionEvents(value AccountUpdateValue) {
+
+}
+
+func (wh *WebhookManager) handleAccountReviewSubscriptionEvents(value AccountReviewUpdateValue) {
+
+}
+
+func (wh *WebhookManager) handleBusinessCapabilitySubscriptionEvents(value BusinessCapabilityUpdateValue) {
+
+}
+
+func (wh *WebhookManager) handleMessageTemplateQualitySubscriptionEvents(value TemplateQualityUpdateValue) {
+
+}
+
+func (wh *WebhookManager) handleMessageTemplateStatusSubscriptionEvents(value TemplateStatusUpdateValue) {
+
+}
+
+func (wh *WebhookManager) handlePhoneNumberNameSubscriptionEvents(value PhoneNumberNameUpdateValue) {
+
+}
+
+func (wh *WebhookManager) handlePhoneNumberQualitySubscriptionEvents(value PhoneNumberQualityUpdateValue) {
+
+}
+
+func (wh *WebhookManager) handleTemplateCategoryUpdateSubscriptionEvents(value TemplateCategoryUpdateValue) {
+
 }
