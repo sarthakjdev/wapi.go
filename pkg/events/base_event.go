@@ -26,6 +26,10 @@ type BaseSystemEventInterface interface {
 	BaseEvent
 }
 
+type BaseBusinessAccountEventInterface interface {
+	BaseEvent
+}
+
 type BaseMessageEvent struct {
 	requester   request_client.RequestClient
 	MessageId   string         `json:"message_id"`
@@ -98,4 +102,12 @@ type BaseSystemEvent struct {
 
 func (bme BaseSystemEvent) GetEventType() string {
 	return "system"
+}
+
+type BaseBusinessAccountEvent struct {
+	Timestamp string `json:"timestamp"`
+}
+
+func (bme BaseBusinessAccountEvent) GetEventType() string {
+	return "business_account"
 }

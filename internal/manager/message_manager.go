@@ -28,7 +28,6 @@ func NewMessageManager(requester request_client.RequestClient, phoneNumberId str
 func (mm *MessageManager) Send(message components.BaseMessage, phoneNumber string) (string, error) {
 	body, err := message.ToJson(components.ApiCompatibleJsonConverterConfigs{
 		SendToPhoneNumber: phoneNumber,
-		// ReplyToMessageId: "wamid.HBgMOTE5NjQzNTAwNTQ1FQIAERgSQzVGOTlFMzExQ0VCQTg0MUFCAA==",
 	})
 	if err != nil {
 		// TODO: emit an error event here
@@ -37,6 +36,6 @@ func (mm *MessageManager) Send(message components.BaseMessage, phoneNumber strin
 
 	apiRequest := mm.requester.NewApiRequest(strings.Join([]string{mm.PhoneNumberId, "messages"}, "/"), http.MethodPost)
 	apiRequest.SetBody(string(body))
-	apiRequest.Execute()
-	return "ok", nil
+	response, err := apiRequest.Execute()
+	return response, err
 }

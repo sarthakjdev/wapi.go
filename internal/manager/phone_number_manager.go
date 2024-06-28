@@ -87,7 +87,6 @@ func (manager *PhoneNumberManager) Fetch(phoneNumberId string) (*WhatsappBusines
 	json.Unmarshal([]byte(response), &responseToReturn)
 
 	return &responseToReturn, nil
-
 }
 
 type CreatePhoneNumberResponse struct {

@@ -1,20 +1,20 @@
 <div align="center">
 <br />
 <p align="center">
-<a href="https://wapijs.co"><img src="https://mintlify.s3-us-west-1.amazonaws.com/softlancer/assets/banner.svg" alt="@wapijs/Wapi.go" /></a>
+<a href="https://wapijs.co"><img src="https://mintlify.s3-us-west-1.amazonaws.com/softlancer/assets/banner.svg" alt="Wapi.go" /></a>
 </p>
 <br />
 </div>
 
 Visit the documentation of the SDK [here](https://golang.wapikit.com)
 
-## 📌 Status
+## Status
 
 Beta Version - This SDK is not stable right now. It is currently in beta version. Report issues [here](https://github.com/sarthakjdev/wapi.go/issues).
 
 This SDK is part of a technical suite built to support the WhatsApp Business Application Development ecosystem. This SDK also has a Node.js version, you can check it out [here](https://sarthakjdev/wapi.js/js).
 
-## 📖 About
+## About
 
 Wapi.go is a Golang SDK, that supports WhatsApp API products i.e., Business Management API and Cloud API
 to build WhatsApp applications easily.
@@ -22,7 +22,7 @@ This SDK supports managing WhatsApp business accounts, and managing phone number
 
 You can listen to the incoming webhook events via the inbuilt standalone HTTP server built using echo and also you can integrate the SDK within your existing backend applications using the getters for the route handlers of the webhook server.
 
-## ✨ Features
+## Features
 
 - Supports multiple phone number messaging clients.
 - Supports WhatsApp
@@ -32,7 +32,7 @@ You can listen to the incoming webhook events via the inbuilt standalone HTTP se
 - Upload Media to WhatsApp servers
 - Reply and React to incoming messages.
 
-## 💻 Installation
+## Installation
 
 This assumes you already have a working Go environment, if not please see
 [this page](https://golang.org/doc/install) first.
@@ -45,7 +45,7 @@ go get github.com/sarthakjdev/wapi.go
 
 > Note: This SDK is not affiliated with the official WhatsApp Cloud API or does not act as any official solution provided the the Meta Inclusive Private Limited, this is just a open source SDK built for developers to support them in building whatsapp cloud api based chat bots easily.
 
-## 🚀 Usage
+## Usage
 
 You can check out the example WhatsApp bot here. [Example Chatbot](./example-chat-bot/)
 
@@ -76,13 +76,13 @@ whatsappClient, err := wapi.New(wapi.ClientConfig{
 	})
 ```
 
-## 🔗 References
+## References
 
 - **Message Structures**: Refer to the WhatsApp Docs [here](https://developers.facebook.com/docs/whatsapp/cloud-api/reference/messages).
 
 - **Notification Payloads**: Details can be found [here](https://developers.facebook.com/docs/whatsapp/cloud-api/webhooks/components).
 
-## 🤝 Contribution Guidelines
+## Contribution Guidelines
 
 1. Fork the Project
 2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
@@ -96,14 +96,13 @@ For detailed guidelines, check [Contributing.md](./CONTRIBUTING.md).
 
 - Handle errors gracefully
 - Handle template and interactive messages gracefully
-- Add support for more interactive messaged types like address input.
--
+- Add support for more interactive message types like address input.
 
-## 📜 License
+## License
 
 Distributed under the AGPL 3.0 License. View [LICENSE](./LICENSE).
 
-## 📞 Contact
+## Contact
 
 - [Sarthak Jain](https://sarthakjdev.com)
 - Email: sarthak@softlancer.co

@@ -1,6 +1,7 @@
 package manager
 
 import (
+	"net/http"
 	"strings"
 
 	"github.com/sarthakjdev/wapi.go/internal/request_client"
@@ -19,12 +20,15 @@ func NewMediaManager(requester request_client.RequestClient) *MediaManager {
 }
 
 // GetMediaUrlById retrieves the media URL by its ID.
-func (mm *MediaManager) GetMediaUrlById(id string) {
-	apiRequest := mm.requester.NewApiRequest(strings.Join([]string{"media", id}, "/"), "GET")
-	apiRequest.Execute()
-
+func (mm *MediaManager) GetMediaUrlById(id string) (string, error) {
+	apiRequest := mm.requester.NewApiRequest(strings.Join([]string{"media", id}, "/"), http.MethodGet)
+	response, err := apiRequest.Execute()
+	return response, err
 }
 
 // GetMediaIdByUrl retrieves the media ID by its URL.
-func (mm *MediaManager) GetMediaIdByUrl(id string) {
+func (mm *MediaManager) DeleteMedia(id string) (string, error) {
+	apiRequest := mm.requester.NewApiRequest(strings.Join([]string{"media", id}, "/"), http.MethodDelete)
+	response, err := apiRequest.Execute()
+	return response, err
 }
