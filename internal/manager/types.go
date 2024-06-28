@@ -381,22 +381,8 @@ type SecurityValue struct {
 }
 
 type Change struct {
-	Value ChangeValue      `json:"value"`
+	Value interface{}      `json:"value"`
 	Field WebhookFieldEnum `json:"field"`
-}
-
-type ChangeValue struct {
-	MessagesValue                 `json:",inline"`
-	TemplateStatusUpdateValue     `json:",inline"`
-	BusinessCapabilityUpdateValue `json:",inline"`
-	AccountReviewUpdateValue      `json:",inline"`
-	AccountUpdateValue            `json:",inline"`
-	AccountAlertsValue            `json:",inline"`
-	PhoneNumberQualityUpdateValue `json:",inline"`
-	PhoneNumberNameUpdateValue    `json:",inline"`
-	TemplateQualityUpdateValue    `json:",inline"`
-	TemplateCategoryUpdateValue   `json:",inline"`
-	SecurityValue                 `json:",inline"`
 }
 
 type MessagesValue struct {

@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"net/http"
 	"os"
 	"os/signal"
 	"time"
@@ -91,35 +92,172 @@ func (wh *WebhookManager) PostRequestHandler(c echo.Context) error {
 
 	for _, entry := range payload.Entry {
 		for _, change := range entry.Changes {
-
 			switch change.Field {
 			case WebhookFieldEnumMessages:
-				err := wh.handleMessagesSubscriptionEvents(change.Value.Messages, change.Value.Statuses, change.Value.Metadata.PhoneNumberId)
+				var messageValue MessagesValue
+				valueBytes, err := json.Marshal(change.Value)
+				if err != nil {
+					return c.String(http.StatusInternalServerError, "Error marshaling messages value")
+				}
+				if err := json.Unmarshal(valueBytes, &messageValue); err != nil {
+					return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid MessagesValue JSON: %v", err))
+				}
+				err = wh.handleMessagesSubscriptionEvents(messageValue.Messages, messageValue.Statuses, messageValue.Metadata.PhoneNumberId)
 				if err != nil {
 					fmt.Println("Error handling messages subscription events:", err)
 					c.String(500, "Internal server error")
 					return err
 				}
 			case WebhookFieldEnumAccountReview:
-				wh.handleAccountReviewSubscriptionEvents(change.Value.AccountReviewUpdateValue)
+				var accountReviewValue AccountReviewUpdateValue
+				valueBytes, err := json.Marshal(change.Value)
+				if err != nil {
+					return c.String(http.StatusInternalServerError, "Error marshaling messages value")
+				}
+				if err := json.Unmarshal(valueBytes, &accountReviewValue); err != nil {
+					return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid accountReviewValue JSON: %v", err))
+				}
+				wh.handleAccountReviewSubscriptionEvents(accountReviewValue)
+				if err != nil {
+					fmt.Println("Error handling messages subscription events:", err)
+					c.String(500, "Internal server error")
+					return err
+				}
 			case WebhookFieldEnumAccountAlerts:
-				wh.handleAccountAlertsSubscriptionEvents(change.Value.AccountAlertsValue)
+				var accountAlertValue AccountAlertsValue
+				valueBytes, err := json.Marshal(change.Value)
+				if err != nil {
+					return c.String(http.StatusInternalServerError, "Error marshaling messages value")
+				}
+				if err := json.Unmarshal(valueBytes, &accountAlertValue); err != nil {
+					return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid accountAlertValue JSON: %v", err))
+				}
+				wh.handleAccountAlertsSubscriptionEvents(accountAlertValue)
+				if err != nil {
+					fmt.Println("Error handling messages subscription events:", err)
+					c.String(500, "Internal server error")
+					return err
+				}
 			case WebhookFieldEnumAccountUpdate:
-				wh.handleAccountUpdateSubscriptionEvents(change.Value.AccountUpdateValue)
+				var accountUpdate AccountUpdateValue
+				valueBytes, err := json.Marshal(change.Value)
+				if err != nil {
+					return c.String(http.StatusInternalServerError, "Error marshaling messages value")
+				}
+				if err := json.Unmarshal(valueBytes, &accountUpdate); err != nil {
+					return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid accountUpdate JSON: %v", err))
+				}
+				wh.handleAccountUpdateSubscriptionEvents(accountUpdate)
+				if err != nil {
+					fmt.Println("Error handling messages subscription events:", err)
+					c.String(500, "Internal server error")
+					return err
+				}
 			case WebhookFieldEnumTemplateCategoryUpdate:
-				wh.handleTemplateCategoryUpdateSubscriptionEvents(change.Value.TemplateCategoryUpdateValue)
+				var templateCategoryUpdate TemplateCategoryUpdateValue
+				valueBytes, err := json.Marshal(change.Value)
+				if err != nil {
+					return c.String(http.StatusInternalServerError, "Error marshaling messages value")
+				}
+				if err := json.Unmarshal(valueBytes, &templateCategoryUpdate); err != nil {
+					return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid templateCategoryUpdate JSON: %v", err))
+				}
+				wh.handleTemplateCategoryUpdateSubscriptionEvents(templateCategoryUpdate)
+				if err != nil {
+					fmt.Println("Error handling messages subscription events:", err)
+					c.String(500, "Internal server error")
+					return err
+				}
 			case WebhookFieldEnumMessageTemplateQuality:
-				wh.handleMessageTemplateQualitySubscriptionEvents(change.Value.TemplateQualityUpdateValue)
+				var qualityUpdate TemplateQualityUpdateValue
+				valueBytes, err := json.Marshal(change.Value)
+				if err != nil {
+					return c.String(http.StatusInternalServerError, "Error marshaling messages value")
+				}
+				if err := json.Unmarshal(valueBytes, &qualityUpdate); err != nil {
+					return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid qualityUpdate JSON: %v", err))
+				}
+				wh.handleMessageTemplateQualitySubscriptionEvents(qualityUpdate)
+				if err != nil {
+					fmt.Println("Error handling messages subscription events:", err)
+					c.String(500, "Internal server error")
+					return err
+				}
 			case WebhookFieldEnumMessageTemplateStatus:
-				wh.handleMessageTemplateStatusSubscriptionEvents(change.Value.TemplateStatusUpdateValue)
+				var statusUpdate TemplateStatusUpdateValue
+				valueBytes, err := json.Marshal(change.Value)
+				if err != nil {
+					return c.String(http.StatusInternalServerError, "Error marshaling messages value")
+				}
+				if err := json.Unmarshal(valueBytes, &statusUpdate); err != nil {
+					return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid statusUpdate JSON: %v", err))
+				}
+				wh.handleMessageTemplateStatusSubscriptionEvents(statusUpdate)
+				if err != nil {
+					fmt.Println("Error handling messages subscription events:", err)
+					c.String(500, "Internal server error")
+					return err
+				}
 			case WebhookFieldEnumPhoneNumberName:
-				wh.handlePhoneNumberNameSubscriptionEvents(change.Value.PhoneNumberNameUpdateValue)
+				var nameUpdate PhoneNumberNameUpdateValue
+				valueBytes, err := json.Marshal(change.Value)
+				if err != nil {
+					return c.String(http.StatusInternalServerError, "Error marshaling messages value")
+				}
+				if err := json.Unmarshal(valueBytes, &nameUpdate); err != nil {
+					return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid nameUpdate JSON: %v", err))
+				}
+				wh.handlePhoneNumberNameSubscriptionEvents(nameUpdate)
+				if err != nil {
+					fmt.Println("Error handling messages subscription events:", err)
+					c.String(500, "Internal server error")
+					return err
+				}
 			case WebhookFieldEnumPhoneNumberQuality:
-				wh.handlePhoneNumberQualitySubscriptionEvents(change.Value.PhoneNumberQualityUpdateValue)
+				var qualityUpdate PhoneNumberQualityUpdateValue
+				valueBytes, err := json.Marshal(change.Value)
+				if err != nil {
+					return c.String(http.StatusInternalServerError, "Error marshaling messages value")
+				}
+				if err := json.Unmarshal(valueBytes, &qualityUpdate); err != nil {
+					return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid qualityUpdate JSON: %v", err))
+				}
+				wh.handlePhoneNumberQualitySubscriptionEvents(qualityUpdate)
+				if err != nil {
+					fmt.Println("Error handling messages subscription events:", err)
+					c.String(500, "Internal server error")
+					return err
+				}
 			case WebhookFieldEnumBusinessCapability:
-				wh.handleBusinessCapabilitySubscriptionEvents(change.Value.BusinessCapabilityUpdateValue)
+				var capabilityUpdate BusinessCapabilityUpdateValue
+				valueBytes, err := json.Marshal(change.Value)
+				if err != nil {
+					return c.String(http.StatusInternalServerError, "Error marshaling messages value")
+				}
+				if err := json.Unmarshal(valueBytes, &capabilityUpdate); err != nil {
+					return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid capabilityUpdate JSON: %v", err))
+				}
+				wh.handleBusinessCapabilitySubscriptionEvents(capabilityUpdate)
+				if err != nil {
+					fmt.Println("Error handling messages subscription events:", err)
+					c.String(500, "Internal server error")
+					return err
+				}
 			case WebhookFieldEnumSecurity:
-				wh.handleSecuritySubscriptionEvents(change.Value.SecurityValue)
+				var securityChange SecurityValue
+				valueBytes, err := json.Marshal(change.Value)
+				if err != nil {
+					return c.String(http.StatusInternalServerError, "Error marshaling messages value")
+				}
+				if err := json.Unmarshal(valueBytes, &securityChange); err != nil {
+					return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid securityChange JSON: %v", err))
+				}
+				wh.handleSecuritySubscriptionEvents(securityChange)
+				if err != nil {
+					fmt.Println("Error handling messages subscription events:", err)
+					c.String(500, "Internal server error")
+					return err
+				}
 			}
 		}
 	}
@@ -480,41 +618,50 @@ func (wh *WebhookManager) handleMessagesSubscriptionEvents(messages []Message, s
 }
 
 func (wh *WebhookManager) handleAccountAlertsSubscriptionEvents(value AccountAlertsValue) {
-
+	wh.EventManager.Publish(events.AccountAlertsEventType, events.AccountAlertEvent{})
 }
 
 func (wh *WebhookManager) handleSecuritySubscriptionEvents(value SecurityValue) {
+	wh.EventManager.Publish(events.AccountAlertsEventType, events.SecurityEvent{})
 
 }
 
 func (wh *WebhookManager) handleAccountUpdateSubscriptionEvents(value AccountUpdateValue) {
+	wh.EventManager.Publish(events.AccountAlertsEventType, events.AccountUpdateEvent{})
 
 }
 
 func (wh *WebhookManager) handleAccountReviewSubscriptionEvents(value AccountReviewUpdateValue) {
+	wh.EventManager.Publish(events.AccountAlertsEventType, events.AccountReviewUpdateEvent{})
 
 }
 
 func (wh *WebhookManager) handleBusinessCapabilitySubscriptionEvents(value BusinessCapabilityUpdateValue) {
+	wh.EventManager.Publish(events.AccountAlertsEventType, events.BusinessCapabilityUpdateEvent{})
 
 }
 
 func (wh *WebhookManager) handleMessageTemplateQualitySubscriptionEvents(value TemplateQualityUpdateValue) {
+	wh.EventManager.Publish(events.AccountAlertsEventType, events.MessageTemplateQualityUpdateEvent{})
 
 }
 
 func (wh *WebhookManager) handleMessageTemplateStatusSubscriptionEvents(value TemplateStatusUpdateValue) {
+	wh.EventManager.Publish(events.AccountAlertsEventType, events.MessageTemplateStatusUpdateEvent{})
 
 }
 
 func (wh *WebhookManager) handlePhoneNumberNameSubscriptionEvents(value PhoneNumberNameUpdateValue) {
+	wh.EventManager.Publish(events.AccountAlertsEventType, events.PhoneNumberNameUpdateEvent{})
 
 }
 
 func (wh *WebhookManager) handlePhoneNumberQualitySubscriptionEvents(value PhoneNumberQualityUpdateValue) {
+	wh.EventManager.Publish(events.AccountAlertsEventType, events.PhoneNumberQualityUpdateEvent{})
 
 }
 
 func (wh *WebhookManager) handleTemplateCategoryUpdateSubscriptionEvents(value TemplateCategoryUpdateValue) {
+	wh.EventManager.Publish(events.AccountAlertsEventType, events.TemplateCategoryUpdateEvent{})
 
 }

@@ -1,6 +1,7 @@
 package events
 
 type MessageTemplateStatusUpdateEvent struct {
+	BaseBusinessAccountEvent
 }
 
 func NewMessageTemplateStatusUpdateEvent() *MessageTemplateStatusUpdateEvent {
