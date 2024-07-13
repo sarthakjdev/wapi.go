@@ -12,6 +12,7 @@ import (
 	"github.com/sarthakjdev/wapi.go/internal/request_client"
 )
 
+// BusinessClient is responsible for managing business account related operations.
 type BusinessClient struct {
 	BusinessAccountId string `json:"businessAccountId" validate:"required"`
 	AccessToken       string `json:"accessToken" validate:"required"`
@@ -20,12 +21,14 @@ type BusinessClient struct {
 	requester         *request_client.RequestClient
 }
 
+// BusinessClientConfig holds the configuration for BusinessClient.
 type BusinessClientConfig struct {
 	BusinessAccountId string `json:"businessAccountId" validate:"required"`
 	AccessToken       string `json:"accessToken" validate:"required"`
 	Requester         *request_client.RequestClient
 }
 
+// NewBusinessClient creates a new instance of BusinessClient.
 func NewBusinessClient(config *BusinessClientConfig) *BusinessClient {
 	return &BusinessClient{
 		BusinessAccountId: config.BusinessAccountId,
@@ -44,14 +47,17 @@ func NewBusinessClient(config *BusinessClientConfig) *BusinessClient {
 	}
 }
 
+// GetBusinessId returns the business account ID.
 func (bc *BusinessClient) GetBusinessId() string {
 	return bc.BusinessAccountId
 }
 
+// SetBusinessId sets the business account ID.
 func (bc *BusinessClient) SetBusinessId(id string) {
 	bc.BusinessAccountId = id
 }
 
+// WhatsappBusinessAccount represents a WhatsApp Business Account.
 type WhatsappBusinessAccount struct {
 	BusinessVerificationStatus string `json:"business_verification_status,omitempty"`
 	Country                    string `json:"country,omitempty"`
@@ -72,6 +78,7 @@ type FetchBusinessAccountResponse struct {
 	MessageTemplateNamespace string `json:"message_template_namespace" validate:"required"`
 }
 
+// This method fetches the business account details.
 func (client *BusinessClient) Fetch() FetchBusinessAccountResponse {
 	apiRequest := client.requester.NewApiRequest(client.BusinessAccountId, http.MethodGet)
 	response, err := apiRequest.Execute()
@@ -123,7 +130,8 @@ type WhatsappBusinessAccountAnalyticsResponse struct {
 	DataPoints   []AnalyticsDataPoint `json:"data_points,omitempty"`
 }
 
-func (client *BusinessClient) FetchAnalytics(options AccountAnalyticsOptions) {
+// FetchAnalytics fetches the analytics for the business account.
+func (client *BusinessClient) FetchAnalytics(options AccountAnalyticsOptions) (WhatsappBusinessAccountAnalyticsResponse, error) {
 	apiRequest := client.requester.NewApiRequest(client.BusinessAccountId, http.MethodGet)
 	analyticsField := apiRequest.AddField(request_client.ApiRequestQueryParamField{
 		Name:    "analytics",
@@ -154,7 +162,7 @@ func (client *BusinessClient) FetchAnalytics(options AccountAnalyticsOptions) {
 	}
 	var responseToReturn WhatsappBusinessAccountAnalyticsResponse
 	json.Unmarshal([]byte(response), &responseToReturn)
-	fmt.Println("Response to return is", responseToReturn)
+	return responseToReturn, nil
 }
 
 type ConversationCategoryType string
@@ -234,6 +242,7 @@ type WhatsAppConversationAnalyticsResponse struct {
 	ConversationAnalytics []WhatsAppConversationAnalyticsEdge `json:"conversation_analytics" validate:"required"`
 }
 
+// ConversationAnalytics fetches the conversation analytics for the business account.
 func (client *BusinessClient) ConversationAnalytics(options ConversationAnalyticsOptions) (*WhatsAppConversationAnalyticsResponse, error) {
 	apiRequest := client.requester.NewApiRequest(client.BusinessAccountId, http.MethodGet)
 	analyticsField := apiRequest.AddField(request_client.ApiRequestQueryParamField{
@@ -307,18 +316,23 @@ func (client *BusinessClient) ConversationAnalytics(options ConversationAnalytic
 }
 
 func (client *BusinessClient) FetchAllProductCatalogs() (string, error) {
+	// ! TODO: implement proper response struct
 	// https://developers.facebook.com/docs/graph-api/reference/whats-app-business-account/product_catalogs/#Reading
 	apiRequest := client.requester.NewApiRequest(strings.Join([]string{client.BusinessAccountId, "product_catalogs"}, "/"), http.MethodGet)
 	response, err := apiRequest.Execute()
 	return response, err
-
 }
 
-func (client *BusinessClient) CreateNewProductCatalog() (string, error) {
-	// https://developers.facebook.com/docs/graph-api/reference/whats-app-business-account/product_catalogs/#Creating
+type CreateProductCatalogOptions struct {
+	Success string `json:"success,omitempty"`
+}
+
+func (client *BusinessClient) CreateNewProductCatalog() (CreateProductCatalogOptions, error) {
 	apiRequest := client.requester.NewApiRequest(strings.Join([]string{client.BusinessAccountId, "product_catalogs"}, "/"), http.MethodPost)
 	response, err := apiRequest.Execute()
-	return response, err
+	var responseToReturn CreateProductCatalogOptions
+	json.Unmarshal([]byte(response), &responseToReturn)
+	return responseToReturn, err
 }
 
 type BusinessRole string
@@ -336,36 +350,3 @@ const (
 	BusinessRoleMessaging            BusinessRole = "MESSAGING"
 	BusinessRoleManageBusinessPhones BusinessRole = "MANAGE_BUSINESS_PHONES"
 )
-
-func (role *BusinessRole) String() string {
-	return string(*role)
-}
-
-func (client *BusinessClient) UpdateUser(userId string, tasks []BusinessRole) (string, error) {
-
-	// https://developers.facebook.com/docs/graph-api/reference/whats-app-business-account/#Updating
-
-	apiRequest := client.requester.NewApiRequest(strings.Join([]string{client.BusinessAccountId, "assigned_users."}, "/"), http.MethodPost)
-	apiRequest.AddQueryParam("user", userId)
-	roles := make([]string, len(tasks))
-	for i, task := range tasks {
-		roles[i] = task.String()
-	}
-	apiRequest.AddQueryParam("tasks", strings.Join(roles, ","))
-
-	response, err := apiRequest.Execute()
-
-	return response, err
-
-}
-
-func (client *BusinessClient) DeleteUser(userId string) (string, error) {
-
-	// https://developers.facebook.com/docs/graph-api/reference/whats-app-business-account/#Deleting
-
-	apiRequest := client.requester.NewApiRequest(strings.Join([]string{client.BusinessAccountId, "assigned_users."}, "/"), http.MethodDelete)
-	apiRequest.AddQueryParam("user", userId)
-	response, err := apiRequest.Execute()
-	return response, err
-
-}

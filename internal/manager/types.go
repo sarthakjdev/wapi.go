@@ -235,12 +235,157 @@ type Entry struct {
 	Changes []Change `json:"changes"`
 }
 
-type Change struct {
-	Value Value  `json:"value"`
-	Field string `json:"field"`
+type WebhookFieldEnum string
+
+const (
+	WebhookFieldEnumAccountAlerts          WebhookFieldEnum = "account_alerts"
+	WebhookFieldEnumMessages               WebhookFieldEnum = "messages"
+	WebhookFieldEnumSecurity               WebhookFieldEnum = "security"
+	WebhookFieldEnumAccountUpdate          WebhookFieldEnum = "account_update"
+	WebhookFieldEnumAccountReview          WebhookFieldEnum = "account_review"
+	WebhookFieldEnumBusinessCapability     WebhookFieldEnum = "business_capability"
+	WebhookFieldEnumMessageTemplateQuality WebhookFieldEnum = "message_template_quality"
+	WebhookFieldEnumMessageTemplateStatus  WebhookFieldEnum = "message_template_status"
+	WebhookFieldEnumPhoneNumberName        WebhookFieldEnum = "phone_number_name"
+	WebhookFieldEnumPhoneNumberQuality     WebhookFieldEnum = "phone_number_quality"
+	WebhookFieldEnumTemplateCategoryUpdate WebhookFieldEnum = "template_category"
+)
+
+type TemplateMessageStatusUpdateEventEnum string
+
+const (
+	TemplateMessageStatusUpdateEventEnumApproved            TemplateMessageStatusUpdateEventEnum = "APPROVED"
+	TemplateMessageStatusUpdateEventEnumRejected            TemplateMessageStatusUpdateEventEnum = "REJECTED"
+	TemplateMessageStatusUpdateEventEnumFlaggedForDisabling TemplateMessageStatusUpdateEventEnum = "FLAGGED"
+	TemplateMessageStatusUpdateEventEnumPaused              TemplateMessageStatusUpdateEventEnum = "PAUSED"
+	TemplateMessageStatusUpdateEventEnumPendingDeletion     TemplateMessageStatusUpdateEventEnum = "PENDING_DELETION"
+)
+
+type TemplateMessageStatusUpdateDisableInfo struct {
+	DisableDate string `json:"disable_date"`
 }
 
-type Value struct {
+type TemplateMessageStatusUpdateOtherInfo struct {
+	Title string `json:"title"`
+}
+
+type TemplateMessageRejectionReasonEnum string
+
+const (
+	TemplateMessageRejectionReasonEnumAbusiveContent    TemplateMessageRejectionReasonEnum = "ABUSIVE_CONTENT"
+	TemplateMessageRejectionReasonEnumIncorrectCategory TemplateMessageRejectionReasonEnum = "INCORRECT_CATEGORY"
+	TemplateMessageRejectionReasonEnumInvalidFormat     TemplateMessageRejectionReasonEnum = "INVALID_FORMAT"
+	TemplateMessageRejectionReasonEnumNone              TemplateMessageRejectionReasonEnum = "NONE"
+	TemplateMessageRejectionReasonEnumScam              TemplateMessageRejectionReasonEnum = "SCAM"
+)
+
+type TemplateStatusUpdateValue struct {
+	Event                   TemplateMessageStatusUpdateEventEnum   `json:"event"`
+	MessageTemplateId       string                                 `json:"message_template_id"`
+	MessageTemplateName     string                                 `json:"message_template_name"`
+	MessageTemplateLanguage string                                 `json:"message_template_language"`
+	Reason                  TemplateMessageRejectionReasonEnum     `json:"reason"`
+	DisableInfo             TemplateMessageStatusUpdateDisableInfo `json:"disable_info,omitempty"`
+	OtherInfo               TemplateMessageStatusUpdateOtherInfo   `json:"other_info,omitempty"`
+}
+
+type TemplateCategoryUpdateValue struct {
+	MessageTemplateId       string                  `json:"message_template_id"`
+	MessageTemplateName     string                  `json:"message_template_name"`
+	MessageTemplateLanguage string                  `json:"message_template_language"`
+	PreviousCategory        MessageTemplateCategory `json:"previous_category"`
+	NewCategory             MessageTemplateCategory `json:"new_category"`
+	CorrectCategory         MessageTemplateCategory `json:"correct_category"`
+}
+
+type TemplateQualityUpdateValue struct {
+	PreviousQualityScore    string `json:"previous_quality_score"`
+	NewQualityScore         string `json:"new_quality_score"`
+	MessageTemplateId       string `json:"message_template_id"`
+	MessageTemplateName     string `json:"message_template_name"`
+	MessageTemplateLanguage string `json:"message_template_language"`
+}
+
+type PhoneNumberNameUpdateValue struct {
+	DisplayPhoneNumber    string `json:"display_phone_number"`
+	Decision              string `json:"decision"`
+	RequestedVerifiedName string `json:"requested_verified_name"`
+	RejectionReason       string `json:"rejection_reason"`
+}
+
+type PhoneNumberQualityUpdateValue struct {
+	DisplayPhoneNumber string `json:"display_phone_number"`
+	Event              string `json:"event"`
+	CurrentLimit       string `json:"current_limit"`
+}
+
+type AccountAlertSeverityEnum string
+
+const (
+	AccountAlertSeverityEnumCritical AccountAlertSeverityEnum = "CRITICAL"
+	AccountAlertSeverityEnumWarning  AccountAlertSeverityEnum = "WARNING"
+)
+
+type AccountAlertsValue struct {
+	EntityType       string                   `json:"entity_type"`
+	EntityId         string                   `json:"entity_id"`
+	AlertSeverity    AccountAlertSeverityEnum `json:"alert_severity"`
+	AlertStatus      string                   `json:"alert_status"`
+	AlertType        string                   `json:"alert_type"`
+	AlertDescription string                   `json:"alert_description"`
+}
+
+type AccountUpdateEventEnum string
+
+type AccountUpdateBanInfo struct {
+	WabaBanState []string `json:"waba_ban_state"`
+	WabaBanDate  string   `json:"waba_ban_date"`
+}
+
+type AccountUpdateRestrictionInfo struct {
+	RestrictionType string `json:"restriction_type"`
+	Expiration      string `json:"expiration"`
+}
+
+type AccountUpdateViolationInfo struct {
+	ViolationType string `json:"violation_type"`
+}
+
+const (
+	AccountUpdateEventEnumVerifiedAccount    AccountUpdateEventEnum = "VERIFIED_ACCOUNT"
+	AccountUpdateEventEnumDisabledAccount    AccountUpdateEventEnum = "DISABLED_UPDATE"
+	AccountUpdateEventEnumAccountViolation   AccountUpdateEventEnum = "ACCOUNT_VIOLATION"
+	AccountUpdateEventEnumAccountRestriction AccountUpdateEventEnum = "ACCOUNT_RESTRICTION"
+	AccountUpdateEventEnumAccountDeleted     AccountUpdateEventEnum = "ACCOUNT_DELETED"
+	AccountUpdateEventEnumPartnerRemoved     AccountUpdateEventEnum = "PARTNER_REMOVED"
+)
+
+type AccountUpdateValue struct {
+	PhoneNumber string                 `json:"phone_number,omitempty"`
+	Event       AccountUpdateEventEnum `json:"event"`
+}
+
+type AccountReviewUpdateValue struct {
+	Decision string `json:"decision"`
+}
+
+type BusinessCapabilityUpdateValue struct {
+	MaxDailyConversationPerPhone int `json:"max_daily_conversation_per_phone"`
+	MaxPhoneNumbersPerBusiness   int `json:"max_phone_numbers_per_business"`
+}
+
+type SecurityValue struct {
+	DisplayPhoneNumber string `json:"display_phone_number"`
+	Event              string `json:"event"`
+	Requester          string `json:"requester"`
+}
+
+type Change struct {
+	Value interface{}      `json:"value"`
+	Field WebhookFieldEnum `json:"field"`
+}
+
+type MessagesValue struct {
 	MessagingProduct string    `json:"messaging_product"`
 	Metadata         Metadata  `json:"metadata"`
 	Contacts         []Contact `json:"contacts,omitempty"`
