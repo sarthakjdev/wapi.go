@@ -51,13 +51,8 @@ type WhatsappBusinessAccountPhoneNumberEdge struct {
 	Summary string                                     `json:"summary,omitempty"`
 }
 
-// FetchPhoneNumberFilters holds the filters for fetching phone numbers.
-type FetchPhoneNumberFilters struct {
-	GetSandboxNumbers bool
-}
-
 // FetchAll fetches all phone numbers based on the provided filters.
-func (manager *PhoneNumberManager) FetchAll(options FetchPhoneNumberFilters) (*WhatsappBusinessAccountPhoneNumberEdge, error) {
+func (manager *PhoneNumberManager) FetchAll(getSandBoxNumbers bool) (*WhatsappBusinessAccountPhoneNumberEdge, error) {
 	apiRequest := manager.requester.NewApiRequest(strings.Join([]string{manager.businessAccountId, "/", "phone_numbers"}, ""), http.MethodGet)
 
 	apiRequest.AddQueryParam("filtering", `[{"field":"account_mode","operator":"EQUAL","value":"LIVE"}]`)
