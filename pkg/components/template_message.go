@@ -128,13 +128,15 @@ func (t TemplateMessageButtonParameter) GetParameterType() string {
 	return string(t.Type)
 }
 
+type TemplateMessageLanguage struct {
+	Code   string `json:"code" validate:"required"`
+	Policy string `json:"policy" validate:"required"`
+}
+
 // TemplateMessage represents a template message.
 type TemplateMessage struct {
-	Name     string `json:"name" validate:"required"` // Name of the template message.
-	Language struct {
-		Code   string `json:"code" validate:"required"`
-		Policy string `json:"policy" validate:"required"` // default is "deterministic"
-	} `json:"language" validate:"required"`
+	Name       string                     `json:"name" validate:"required"` // Name of the template message.
+	Language   TemplateMessageLanguage    `json:"language" validate:"required"`
 	Components []TemplateMessageComponent `json:"components" validate:"required"` // Components of the template message.
 }
 
@@ -144,9 +146,21 @@ type TemplateMessageApiPayload struct {
 	Template TemplateMessage `json:"template" validate:"required"`
 }
 
+// TemplateMessageConfigs represents the configurations for a template message.
+type TemplateMessageConfigs struct {
+	Name     string `json:"name" validate:"required"`     // Name of the template message.
+	Language string `json:"language" validate:"required"` // Language of the template message.
+}
+
 // NewTemplateMessage creates a new instance of TemplateMessage.
-func NewTemplateMessage() (*TemplateMessage, error) {
-	return &TemplateMessage{}, nil
+func NewTemplateMessage(params *TemplateMessageConfigs) (*TemplateMessage, error) {
+	return &TemplateMessage{
+		Name: params.Name,
+		Language: TemplateMessageLanguage{
+			Code:   params.Language,
+			Policy: "deterministic",
+		},
+	}, nil
 }
 
 // AddHeader adds a header to the template message.
