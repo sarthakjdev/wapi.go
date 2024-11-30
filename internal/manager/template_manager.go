@@ -9,6 +9,15 @@ import (
 	"github.com/sarthakjdev/wapi.go/internal/request_client"
 )
 
+type MessageTemplateType string
+
+const (
+	MessageTemplateTypeHeader MessageTemplateType = "HEADER"
+	MessageTemplateTypeBody   MessageTemplateType = "BODY"
+	MessageTemplateTypeButton MessageTemplateType = "BUTTONS"
+	MessageTemplateTypeFooter MessageTemplateType = "FOOTER"
+)
+
 // MessageTemplateStatus represents the status of a WhatsApp Business message template.
 type MessageTemplateStatus string
 
@@ -31,19 +40,19 @@ const (
 
 // WhatsAppBusinessMessageTemplateNode represents a WhatsApp Business message template.
 type WhatsAppBusinessMessageTemplateNode struct {
-	Id                         string                                                  `json:"id,omitempty"`
-	Category                   MessageTemplateCategory                                 `json:"category,omitempty"`
-	Components                 []WhatsAppBusinessHSMWhatsAppHSMComponent               `json:"components,omitempty"`
-	CorrectCategory            string                                                  `json:"correct_category,omitempty"`
-	CtaUrlLinkTrackingOptedOut bool                                                    `json:"cta_url_link_tracking_opted_out,omitempty"`
-	Language                   string                                                  `json:"language,omitempty"`
-	LibraryTemplateName        string                                                  `json:"library_template_name,omitempty"`
-	MessageSendTtlSeconds      int                                                     `json:"message_send_ttl_seconds,omitempty"`
-	Name                       string                                                  `json:"name,omitempty"`
-	PreviousCategory           string                                                  `json:"previous_category,omitempty"`
-	QualityScore               WhatsAppBusinessHSMWhatsAppBusinessHSMQualityScoreShape `json:"quality_score,omitempty"`
-	RejectedReason             string                                                  `json:"rejected_reason,omitempty"`
-	Status                     MessageTemplateStatus                                   `json:"status,omitempty"`
+	Id                         string                                    `json:"id,omitempty"`
+	Category                   MessageTemplateCategory                   `json:"category,omitempty"`
+	Components                 []WhatsAppBusinessHSMWhatsAppHSMComponent `json:"components,omitempty"`
+	CorrectCategory            string                                    `json:"correct_category,omitempty"`
+	CtaUrlLinkTrackingOptedOut bool                                      `json:"cta_url_link_tracking_opted_out,omitempty"`
+	Language                   string                                    `json:"language,omitempty"`
+	LibraryTemplateName        string                                    `json:"library_template_name,omitempty"`
+	MessageSendTtlSeconds      int                                       `json:"message_send_ttl_seconds,omitempty"`
+	Name                       string                                    `json:"name,omitempty"`
+	PreviousCategory           string                                    `json:"previous_category,omitempty"`
+	QualityScore               TemplateMessageQualityScore               `json:"quality_score,omitempty"`
+	RejectedReason             string                                    `json:"rejected_reason,omitempty"`
+	Status                     MessageTemplateStatus                     `json:"status,omitempty"`
 }
 
 // TemplateManager is responsible for managing WhatsApp Business message templates.
@@ -75,37 +84,55 @@ type WhatsAppBusinessTemplatesFetchResponseEdge struct {
 	Paging internal.WhatsAppBusinessApiPaginationMeta `json:"paging,omitempty"`
 }
 
-// WhatsAppBusinessHSMWhatsAppHSMComponentCard represents a card component in a WhatsApp Business message template.
-type WhatsAppBusinessHSMWhatsAppHSMComponentCard struct {
+// TemplateMessageComponentCard represents a card component in a WhatsApp Business message template.
+type TemplateMessageComponentCard struct {
 }
 
-// WhatsAppBusinessHSMWhatsAppHSMComponentButton represents a button component in a WhatsApp Business message template.
-type WhatsAppBusinessHSMWhatsAppHSMComponentButton struct {
+type TemplateMessageButtonType string
+
+const (
+	TemplateMessageButtonTypeQuickReply  TemplateMessageButtonType = "QUICK_REPLY"
+	TemplateMessageButtonTypeUrl         TemplateMessageButtonType = "URL"
+	TemplateMessageButtonTypePhoneNumber TemplateMessageButtonType = "PHONE_NUMBER"
+	TemplateMessageButtonTypeCopyCode    TemplateMessageButtonType = "COPY_CODE"
+)
+
+// TemplateMessageComponentButton represents a button component in a WhatsApp Business message template.
+type TemplateMessageComponentButton struct {
+	Text        TemplateMessageButtonType `json:"text,omitempty"`
+	PhoneNumber string                    `json:"phone_number,omitempty"` // required when Type = PHONE_NUMBER
+	Example     string                    `json:"example,omitempty"`      // required when Type = URL and button has a variable
+	Url         string                    `json:"url,omitempty"`          // required when Type = URL
 }
 
-// WhatsAppBusinessHSMWhatsAppHSMComponentExample represents an example component in a WhatsApp Business message template.
-type WhatsAppBusinessHSMWhatsAppHSMComponentExample struct {
+// TemplateMessageComponentExample represents an example component in a WhatsApp Business message template.
+type TemplateMessageComponentExample struct {
+	HeaderHandle []string `json:"header_handle,omitempty"`
+	HeaderText   []string `json:"header_text,omitempty"`
+	BodyText     []string `json:"body_text,omitempty"`
 }
 
-// WhatsAppBusinessHSMWhatsAppLimitedTimeOfferParameterShape represents a limited time offer parameter in a WhatsApp Business message template.
-type WhatsAppBusinessHSMWhatsAppLimitedTimeOfferParameterShape struct {
+type TemplateMessageComponentButtonExample []string
+
+// TemplateMessageLimitedTimeOfferParameter represents a limited time offer parameter in a WhatsApp Business message template.
+type TemplateMessageLimitedTimeOfferParameter struct {
 }
 
 // WhatsAppBusinessHSMWhatsAppHSMComponent represents a component in a WhatsApp Business message template.
 type WhatsAppBusinessHSMWhatsAppHSMComponent struct {
-	AddSecurityRecommendation bool                                                      `json:"add_security_recommendation,omitempty"`
-	Buttons                   []WhatsAppBusinessHSMWhatsAppHSMComponentButton           `json:"buttons,omitempty"`
-	Cards                     []WhatsAppBusinessHSMWhatsAppHSMComponentCard             `json:"cards,omitempty"`
-	CodeExpirationMinutes     int                                                       `json:"code_expiration_minutes,omitempty"`
-	Example                   WhatsAppBusinessHSMWhatsAppHSMComponentExample            `json:"example,omitempty"`
-	Format                    string                                                    `json:"format,omitempty"`
-	LimitedTimeOffer          WhatsAppBusinessHSMWhatsAppLimitedTimeOfferParameterShape `json:"limited_time_offer,omitempty"`
-	Text                      string                                                    `json:"text,omitempty"`
-	Type                      string                                                    `json:"type,omitempty"`
+	AddSecurityRecommendation bool                                     `json:"add_security_recommendation,omitempty"`
+	Buttons                   []TemplateMessageComponentButton         `json:"buttons,omitempty"`
+	Cards                     []TemplateMessageComponentCard           `json:"cards,omitempty"`
+	CodeExpirationMinutes     int                                      `json:"code_expiration_minutes,omitempty"`
+	Example                   TemplateMessageComponentExample          `json:"example,omitempty"`
+	Format                    MessageTemplateComponentFormat           `json:"format,omitempty"`
+	LimitedTimeOffer          TemplateMessageLimitedTimeOfferParameter `json:"limited_time_offer,omitempty"`
+	Text                      string                                   `json:"text,omitempty"`
+	Type                      MessageTemplateStatus                    `json:"type,omitempty"`
 }
 
-// WhatsAppBusinessHSMWhatsAppBusinessHSMQualityScoreShape represents the quality score of a WhatsApp Business message template.
-type WhatsAppBusinessHSMWhatsAppBusinessHSMQualityScoreShape struct {
+// TemplateMessageQualityScore represents the quality score of a WhatsApp Business message template.
+type TemplateMessageQualityScore struct {
 	Date    int      `json:"date,omitempty"`
 	Reasons []string `json:"reasons,omitempty"`
 	Score   int      `json:"score,omitempty"`
