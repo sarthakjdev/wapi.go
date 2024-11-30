@@ -99,7 +99,8 @@ const (
 
 // TemplateMessageComponentButton represents a button component in a WhatsApp Business message template.
 type TemplateMessageComponentButton struct {
-	Text        TemplateMessageButtonType `json:"text,omitempty"`
+	Type        TemplateMessageButtonType `json:"type,omitempty"`
+	Text        string                    `json:"text,omitempty"`
 	PhoneNumber string                    `json:"phone_number,omitempty"` // required when Type = PHONE_NUMBER
 	Example     string                    `json:"example,omitempty"`      // required when Type = URL and button has a variable
 	Url         string                    `json:"url,omitempty"`          // required when Type = URL
