@@ -103,7 +103,7 @@ type TemplateMessageBodyAndHeaderParameter struct {
 	DateTime *TemplateMessageParameterDateTime `json:"date_time,omitempty"`      // Date time of the template message parameter.
 	Document *TemplateMessageParameterDocument `json:"document,omitempty"`       // Document of the template message parameter.
 	Image    *TemplateMessageParameterImage    `json:"image,omitempty"`          // Image of the template message parameter.
-	Text     *TemplateMessageParameterText     `json:"text,omitempty"`           // Text of the template message parameter.
+	Text     *string                           `json:"text,omitempty"`           // Text of the template message parameter.
 	Video    *TemplateMessageParameterVideo    `json:"video,omitempty"`          // Video of the template message parameter.
 }
 

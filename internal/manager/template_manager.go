@@ -108,9 +108,9 @@ type TemplateMessageComponentButton struct {
 
 // TemplateMessageComponentExample represents an example component in a WhatsApp Business message template.
 type TemplateMessageComponentExample struct {
-	HeaderHandle []string `json:"header_handle,omitempty"`
-	HeaderText   []string `json:"header_text,omitempty"`
-	BodyText     []string `json:"body_text,omitempty"`
+	HeaderHandle []string   `json:"header_handle,omitempty"`
+	HeaderText   []string   `json:"header_text,omitempty"`
+	BodyText     [][]string `json:"body_text,omitempty"`
 }
 
 type TemplateMessageComponentButtonExample []string
