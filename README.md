@@ -12,7 +12,7 @@ Visit the documentation of the SDK [here](https://golang.wapikit.com)
 
 Beta Version - This SDK is not stable right now. It is currently in beta version. Report issues [here](https://github.com/wapikit/wapi.go/issues).
 
-This SDK is part of a technical suite built to support the WhatsApp Business Application Development ecosystem. This SDK also has a Node.js version, you can check it out [here](https://sarthakjdev/wapi.js/js).
+This SDK is part of a technical suite built to support the WhatsApp Business Application Development ecosystem. This SDK also has a Node.js version, you can check it out [here](https://wapikit/wapi.js/js).
 
 ## About
 
