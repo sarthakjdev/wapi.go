@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/sarthakjdev/wapi.go/internal"
+	"github.com/wapikit/wapi.go/internal"
 )
 
 // LocationMessage represents a location message with latitude, longitude, address, and name.

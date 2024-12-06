@@ -1,4 +1,4 @@
-module github.com/sarthakjdev/wapi.go
+module github.com/wapikit/wapi.go
 
 go 1.21.3
 

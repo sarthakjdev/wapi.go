@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/sarthakjdev/wapi.go/internal"
-	"github.com/sarthakjdev/wapi.go/internal/request_client"
+	"github.com/wapikit/wapi.go/internal"
+	"github.com/wapikit/wapi.go/internal/request_client"
 )
 
 // PhoneNumberManager is responsible for managing phone numbers for WhatsApp Business API and phone number specific operations.

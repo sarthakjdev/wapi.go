@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/sarthakjdev/wapi.go/internal/manager"
-	"github.com/sarthakjdev/wapi.go/internal/request_client"
+	"github.com/wapikit/wapi.go/internal/manager"
+	"github.com/wapikit/wapi.go/internal/request_client"
 )
 
 // MessagingClient represents a WhatsApp client.

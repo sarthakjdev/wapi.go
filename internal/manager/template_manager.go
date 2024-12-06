@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/sarthakjdev/wapi.go/internal"
-	"github.com/sarthakjdev/wapi.go/internal/request_client"
+	"github.com/wapikit/wapi.go/internal"
+	"github.com/wapikit/wapi.go/internal/request_client"
 )
 
 type MessageTemplateType string

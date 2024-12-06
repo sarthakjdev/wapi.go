@@ -29,12 +29,12 @@
   "topbarLinks": [
     {
       "name": "Report Bugs",
-      "url": "https://github.com/sarthakjdev/wapi.go/issues/new"
+      "url": "https://github.com/wapikit/wapi.go/issues/new"
     }
   ],
   "topbarCtaButton": {
     "name": "Github",
-    "url": "https://github.com/sarthakjdev/wapi.go"
+    "url": "https://github.com/wapikit/wapi.go"
   },
   "tabs": [
     {
@@ -46,12 +46,12 @@
     {
       "name": "Star us on GitHub",
       "icon": "github",
-      "url": "https://github.com/sarthakjdev/wapi.go"
+      "url": "https://github.com/wapikit/wapi.go"
     },
     {
       "name": "Go Package",
       "icon": "code",
-      "url": "https://pkg.go.dev/github.com/sarthakjdev/wapi.go"
+      "url": "https://pkg.go.dev/github.com/wapikit/wapi.go"
     },
     {
       "name": "Community",

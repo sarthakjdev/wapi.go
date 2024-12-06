@@ -2,11 +2,11 @@ package wapi
 
 import (
 	"github.com/labstack/echo/v4"
-	"github.com/sarthakjdev/wapi.go/internal/manager"
-	"github.com/sarthakjdev/wapi.go/internal/request_client"
-	"github.com/sarthakjdev/wapi.go/pkg/business"
-	"github.com/sarthakjdev/wapi.go/pkg/events"
-	"github.com/sarthakjdev/wapi.go/pkg/messaging"
+	"github.com/wapikit/wapi.go/internal/manager"
+	"github.com/wapikit/wapi.go/internal/request_client"
+	"github.com/wapikit/wapi.go/pkg/business"
+	"github.com/wapikit/wapi.go/pkg/events"
+	"github.com/wapikit/wapi.go/pkg/messaging"
 )
 
 type ClientConfig struct {

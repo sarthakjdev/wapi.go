@@ -5,10 +5,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/sarthakjdev/wapi.go/pkg/business"
-	wapi "github.com/sarthakjdev/wapi.go/pkg/client"
-	wapiComponents "github.com/sarthakjdev/wapi.go/pkg/components"
-	"github.com/sarthakjdev/wapi.go/pkg/events"
+	"github.com/wapikit/wapi.go/pkg/business"
+	wapi "github.com/wapikit/wapi.go/pkg/client"
+	wapiComponents "github.com/wapikit/wapi.go/pkg/components"
+	"github.com/wapikit/wapi.go/pkg/events"
 )
 
 func main() {

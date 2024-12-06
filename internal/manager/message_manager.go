@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/sarthakjdev/wapi.go/internal/request_client"
-	"github.com/sarthakjdev/wapi.go/pkg/components"
+	"github.com/wapikit/wapi.go/internal/request_client"
+	"github.com/wapikit/wapi.go/pkg/components"
 )
 
 // MessageManager is responsible for managing messages.
