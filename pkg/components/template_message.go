@@ -65,6 +65,7 @@ const (
 	TemplateMessageParameterTypeImage    TemplateMessageParameterType = "image"
 	TemplateMessageParameterTypeText     TemplateMessageParameterType = "text"
 	TemplateMessageParameterTypeVideo    TemplateMessageParameterType = "video"
+	TemplateMessageParameterTypeLocation TemplateMessageParameterType = "location"
 )
 
 type TemplateMessageParameterCurrency struct {
@@ -77,20 +78,15 @@ type TemplateMessageParameterDateTime struct {
 	FallbackValue string `json:"fallback_value" validate:"required"` // Fallback value of the date time parameter.
 }
 
-type TemplateMessageParameterDocument struct {
-	Document interface{} `json:"document" validate:"required"` // Document of the document parameter.
+type TemplateMessageParameterMedia struct {
+	Link string `json:"link" validate:"required"` // link of the media parameter.
 }
 
-type TemplateMessageParameterImage struct {
-	Image interface{} `json:"image" validate:"required"` // Image of the image parameter.
-}
-
-type TemplateMessageParameterText struct {
-	Text string `json:"text" validate:"required"` // Text of the text parameter.
-}
-
-type TemplateMessageParameterVideo struct {
-	Video interface{} `json:"video" validate:"required"` // Video of the video parameter.
+type TemplateMessageParameterLocation struct {
+	Latitude  string `json:"latitude" validate:"required"`  // Latitude of the location parameter.
+	Longitude string `json:"longitude" validate:"required"` // Longitude of the location parameter.
+	Name      string `json:"name" validate:"required"`      // Name of the location parameter.
+	Address   string `json:"address" validate:"required"`   // Address of the location parameter.
 }
 
 type TemplateMessageParameter interface {
@@ -101,10 +97,11 @@ type TemplateMessageBodyAndHeaderParameter struct {
 	Type     TemplateMessageParameterType      `json:"type" validate:"required"` // Type of the template message parameter.
 	Currency *TemplateMessageParameterCurrency `json:"currency,omitempty"`       // Currency of the template message parameter.
 	DateTime *TemplateMessageParameterDateTime `json:"date_time,omitempty"`      // Date time of the template message parameter.
-	Document *TemplateMessageParameterDocument `json:"document,omitempty"`       // Document of the template message parameter.
-	Image    *TemplateMessageParameterImage    `json:"image,omitempty"`          // Image of the template message parameter.
+	Document *TemplateMessageParameterMedia    `json:"document,omitempty"`       // Document of the template message parameter.
+	Image    *TemplateMessageParameterMedia    `json:"image,omitempty"`          // Image of the template message parameter.
 	Text     *string                           `json:"text,omitempty"`           // Text of the template message parameter.
-	Video    *TemplateMessageParameterVideo    `json:"video,omitempty"`          // Video of the template message parameter.
+	Video    *TemplateMessageParameterMedia    `json:"video,omitempty"`          // Video of the template message parameter.
+	Location *TemplateMessageParameterLocation `json:"location,omitempty"`       // Location of the template message parameter.
 }
 
 func (t TemplateMessageBodyAndHeaderParameter) GetParameterType() string {
